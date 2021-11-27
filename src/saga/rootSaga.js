@@ -6,6 +6,7 @@ import {
     takeLatest,
     delay,
     select,
+    takeEvery,
 } from "redux-saga/effects";
 import {
     getCode,
@@ -14,6 +15,7 @@ import {
     setError,
     setUrl,
     updateCode,
+    getProjects,
     getProjectsSuccess,
     setIsChanging,
     setIsDeleting,
@@ -39,9 +41,14 @@ import {
     logoutSuccess,
     setErrorLogin,
     setNameCode,
+    GGLogin,
+    ggLogin,
+    fbLogin,
+    setPicture,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
+import { setLocation } from "../actions/tutorial";
 
 function* handleTest() {
     try {
@@ -64,6 +71,33 @@ function* handleTest() {
     yield put(push("/test"));
 }
 
+function* handleCheckLogin() {
+    const auth = localStorage["access_token"];
+    if (auth) {
+        setAuth(auth);
+        try {
+            const res = yield call(() =>
+                thisAxios(API_LOGIN, POST, "check-login")
+            );
+            if (res.data.success) {
+                yield put(loginSuccess(res.data.name));
+                let picture;
+                if (res.data.picture) {
+                    picture = res.data.picture.toString();
+                } else picture = null;
+                yield put(setPicture.setPictureRequest(picture));
+                console.log("PICTURE:", picture);
+                setAuth(auth);
+            }
+        } catch (err) {
+            setAuth(null);
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("name");
+            yield put(push("/login"));
+        }
+    }
+}
+
 function* handleGetCode() {
     while (true) {
         let {
@@ -73,6 +107,7 @@ function* handleGetCode() {
         yield put(closeModal());
         yield put(setError(null));
         yield put(setProgress(false));
+        yield put(setLocation.setLocation(null));
         q = q.split("/")[1].trim();
         if (q === "code") {
             console.log("DAU TIEN:", q);
@@ -272,6 +307,7 @@ function* handleUpdate(action) {
                     yield put(setProgress(false));
                     yield put(closeModal());
                     yield put(setNameCode(name));
+                    yield put(getProjects());
                     yield put(setUrl(`${res.data.url}`));
                     yield put(push(`/${res.data.url}`));
                 }
@@ -298,6 +334,7 @@ function* handleUpdate(action) {
                     yield put(setProgress(false));
                     yield put(setUrl(url));
                     yield put(closeModal());
+                    yield put(getProjects());
                     yield put(push(`/${url}`));
                 }
             } catch (err) {
@@ -322,6 +359,7 @@ function* handleLogout() {
     yield delay(300);
     setAuth(null);
     localStorage.removeItem("access_token");
+    window.FB.logout();
     yield put(logoutSuccess());
     yield put(push("/login"));
 }
@@ -393,8 +431,70 @@ function* handleDelete(action) {
     }
 }
 
+function* handleGGLogin(action) {
+    const {
+        profileObj: { email, name, imageUrl: picture, googleId: gid },
+        tokenId: access_token,
+    } = action.payload;
+    // console.log({ email, name, picture, gid, access_token });
+    const x = { email, name, picture, gid, access_token };
+    console.log({ x });
+    setAuth(access_token);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_LOGIN, POST, "gg/verify", { gid })
+        );
+        if (res.data.success) {
+            localStorage.setItem("access_token", res.data.accessToken);
+            yield put(ggLogin.ggLoginSuccess(x));
+            yield put(push("/code"));
+        } else {
+            localStorage.removeItem("access_token");
+            yield put(push("/login"));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log(err.response.data);
+        }
+    }
+}
+
+function* handleFBLogin(action) {
+    const {
+        id: fid,
+        name,
+        email,
+        picture: {
+            data: { url: picture },
+        },
+    } = action.payload;
+
+    console.log({ fid, name, email, picture });
+    try {
+        const body = { fid, name, email: email ? email : "", picture };
+        const res = yield call(() =>
+            thisAxios(API_LOGIN, POST, "fb/verify", body)
+        );
+        if (res.data.success) {
+            console.log("FB LOGIN SUCCESS");
+            localStorage.setItem("access_token", res.data.accessToken);
+            yield put(fbLogin.fbLoginSuccess(body));
+            yield put(push("/code"));
+        } else {
+            console.log("FB LOGIN FAILURE");
+            localStorage.removeItem("access_token");
+            yield put(push("/login"));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log(err.response.data);
+        }
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
+    yield takeLatest("CHECK_LOGIN", handleCheckLogin);
     yield takeLatest(LOGIN, handleLogin);
     yield takeLatest(UPDATE_CODE, handleUpdate);
     yield takeLatest("DIRECT_TO_CODE", handleDirect);
@@ -402,6 +502,8 @@ function* rootSaga() {
     yield takeLatest("GET_PROJECTS", handleGetProjects);
     yield takeLatest("CHANGE_NAME", handleChangeName);
     yield takeLatest("DELETE_PROJECT", handleDelete);
+    yield takeLatest(ggLogin.ggLoginRequest().type, handleGGLogin);
+    yield takeLatest(fbLogin.fbLoginRequest().type, handleFBLogin);
 }
 
 export default rootSaga;

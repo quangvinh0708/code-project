@@ -1,3 +1,4 @@
+import { fbLogin, ggLogin, setPicture } from "../../actions/login";
 import {
     LOGIN,
     LOGIN_SUCCESS,
@@ -8,10 +9,24 @@ import {
 const initialState = {
     account: {
         name: null,
+        picture: null,
     },
     isAuthenticated: false,
     error: null,
     nameCode: null,
+    ggAccountInfo: {
+        gid: null,
+        email: null,
+        picture: null,
+        name: null,
+        access_token: null,
+    },
+    fbAccountInfo: {
+        fid: null,
+        email: null,
+        phone: null,
+        name: null,
+    },
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -21,6 +36,18 @@ const loginReducer = (state = initialState, action) => {
                 ...state,
             };
         }
+        // case "CHECK_LOGIN": {
+        //     const name = action.payload;
+        //     return {
+        //         ...state,
+        //         account: {
+        //             ...state.account,
+        //             name,
+        //         },
+        //         isAuthenticated: true,
+        //         error: null,
+        //     };
+        // }
         case LOGIN_SUCCESS: {
             const name = action.payload;
             return {
@@ -31,6 +58,15 @@ const loginReducer = (state = initialState, action) => {
                 },
                 isAuthenticated: true,
                 error: null,
+            };
+        }
+        case setPicture.setPictureRequest().type: {
+            return {
+                ...state,
+                account: {
+                    ...state.account,
+                    picture: action.payload,
+                },
             };
         }
         case LOGIN_FAILED: {
@@ -61,7 +97,65 @@ const loginReducer = (state = initialState, action) => {
                 ...state,
                 isAuthenticated: false,
                 nameCode: null,
-            }
+                account: {
+                    ...state.account,
+                    name: null,
+                    picture: null,
+                },
+                ggAccountInfo: {
+                    gid: null,
+                    email: null,
+                    picture: null,
+                    name: null,
+                    access_token: null,
+                },
+                fbAccountInfo: {
+                    fid: null,
+                    email: null,
+                    phone: null,
+                    name: null,
+                },
+            };
+        }
+
+        case ggLogin.ggLoginSuccess().type: {
+            console.log(action.payload, "ne");
+            return {
+                ...state,
+                ggAccountInfo: {
+                    ...state.ggAccountInfo,
+                    ...action.payload,
+                },
+                account: {
+                    ...state.account,
+                    name: action.payload.name,
+                    picture: action.payload.picture,
+                },
+                isAuthenticated: true,
+                err: null,
+            };
+        }
+
+        case fbLogin.fbLoginSuccess().type: {
+            console.log(action.payload, "ne");
+            return {
+                ...state,
+                ggAccountInfo: {
+                    ...state.ggAccountInfo,
+                    ...action.payload,
+                },
+                account: {
+                    ...state.account,
+                    name: action.payload.name,
+                    picture: action.payload.picture,
+                },
+                fbAccountInfo: {
+                    ...state.fbAccountInfo,
+                    ...action.payload,
+                },
+                isAuthenticated: true,
+                err: null,
+            };
         }
 
         default:

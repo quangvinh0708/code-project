@@ -1,0 +1,169 @@
+@import url(https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css);
+@import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css);
+
+.container-content {
+    /* position: relative; */
+    font-weight: 400;
+    color: #212112;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat-back.svg") !important;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 7%;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: all 200ms linear;
+    /* display: table; */
+    width: 87% !important;
+    margin: auto !important;
+    text-align: left !important;
+    /* z-index: 3000 !important; */
+    /* min-height: max-content !important; */
+}
+body {
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat-back.svg") !important;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 7%;
+    background-color: #fff;
+    /* font-family: -apple-system, Roboto, "Open Sans", "Helvetica Neue", sans-serif; */
+}
+.lesson-title {
+    /* font-size: 37px; */
+    font-size: 42px;
+    color: #8167a9;
+    font-weight: 500;
+}
+.example {
+    font-family: "Fira Code", monospace;
+    /* position: relative; */
+    /* max-width: 400px; */
+    margin: 8px 0;
+}
+.guide {
+    padding: 2px 8px;
+    text-align: left !important;
+    font-size: 17px;
+}
+.b-guide {
+    padding: 2px 8px;
+    text-align: left !important;
+    font-size: 19px;
+}
+img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: auto !important;
+}
+.code {
+    color: crimson !important;
+}
+.title {
+    font-size: 30px;
+    color: #8167a9;
+    font-weight: 500;
+}
+.my-bread {
+    background-color: #8167a9;
+    color: #fff;
+}
+.btn-code {
+    color: #fff;
+    background: #8167a9;
+    border-radius: 5px 5px !important;
+    transition: all 1s;
+}
+.btn-code:hover {
+    color: #fff;
+    background: #8567a9;
+    outline: 2px solid #8167a9;
+    border-radius: 20px 20px !important;
+}
+
+/* 
+   .Sidebar-drawerPaper-5 {
+       position: absolute !important;
+       z-index: 1000;
+   }
+   .Tutorial-turnLeft-4 {
+       margin-left: 0 !important;
+
+   } */
+
+/**/
+@media (max-width: 550px) {
+    .container-content {
+        position: absolute;
+        max-width: 100% !important;
+    }
+    .Tutorial-content-2 {
+        margin: 0;
+    }
+    .Sidebar-drawerPaper-6 .MuiDrawer-paper {
+        position: absolute !important;
+        width: 187px !important;
+        max-width: 187px !important;
+    }
+    .Sidebar-drawerPaper-6 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        min-height: 100% !important;
+        /* margin-top: 10px; */
+    }
+    .Tutorial-turnLeft-3 {
+        margin-left: 0 !important;
+    }
+
+    /**/
+    .Tutorial-content-18 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Tutorial-content-19 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Sidebar-drawerPaper-23 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-23 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-20 {
+        margin-left: 0 !important;
+    }
+}
+/* 
+@media (max-width: 500px) {
+    .container-content {
+        position: absolute;
+        max-width: 100% !important;
+    }
+    .Tutorial-content-2 {
+        margin: 0;
+    }
+    .Sidebar-drawerPaper-6 .MuiDrawer-paper {
+        position: absolute !important;
+        width: 187px !important;
+        max-width: 187px !important;
+    }
+    .Sidebar-drawerPaper-6 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  
+        height: 100% !important;
+        min-height: 100% !important;
+        /* margin-top: 10px; 
+    }
+    .Tutorial-turnLeft-3 {
+        margin-left: 0 !important;
+    }
+} */

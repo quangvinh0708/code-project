@@ -5,6 +5,7 @@ import rootSaga from "../saga/rootSaga";
 import codeReducer from "./reducers/codeReducer"
 import loginReducer from "./reducers/loginReducer";
 import modalReducer from "./reducers/modalReducer"
+import tutorialReducer from "./reducers/tutorialReducer"
 import { connectRouter, routerMiddleware } from "connected-react-router";
 import { history } from "../components/App";
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
     code: codeReducer,
     modal: modalReducer,
     auth: loginReducer,
+    tutorial: tutorialReducer,
     router: connectRouter(history),
 });
 

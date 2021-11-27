@@ -26,7 +26,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
-        top: `50%`,
+        top: `57%`,
         left: `50%`,
         transform: `translate(-50%, -90%)`,
         position: `absolute`,
@@ -61,15 +61,15 @@ const useStyles = makeStyles((theme) => ({
     },
     textFieldOld: {
         display: `block`,
-        width: `100%`,
-        marginBottom: `50px`,
+        minWidth: `100%`,
+        // marginBottom: `50px`,
     },
     box: {
         margin: `0 15px 10px 0`,
     },
     typography1: {
-        margin: `19px 0 0 10px`,
-        fontSize: `0.57em`,
+        margin: `5px 0 0 0px`,
+        fontSize: `15.5px`,
         color: theme.color.error,
     },
     progress: {
@@ -186,8 +186,7 @@ const NameProject = (props) => {
     useEffect(() => {
         if (nameCode && isChanging) {
             setValue("");
-        } 
-        else setValue(nameCode);
+        } else setValue(nameCode);
 
         // setValue("");
     }, [isChanging]);
@@ -219,7 +218,7 @@ const NameProject = (props) => {
         } else setValue("");
         handleCloseModal();
     };
- 
+
     return (
         <Modal open={modalIsOpen}>
             <div className={classes.modal}>
@@ -267,7 +266,7 @@ const NameProject = (props) => {
                         {isChanging && nameCode && (
                             <Tooltip
                                 arrow
-                                title={"Old Project Name"}
+                                title={"Previous Project Name"}
                                 placement={nameCode ? "top" : "top"}
                             >
                                 <TextField
@@ -276,7 +275,7 @@ const NameProject = (props) => {
                                     label={"Current Project Name"}
                                     placeholder="Your Project Name"
                                     placeholder="Your Project Name"
-                                    className={classes.textFieldOld}
+                                    className={classes.textField}
                                     value={nameCode}
                                     sx={{ marginBottom: `15px` }}
                                 />
@@ -316,9 +315,11 @@ const NameProject = (props) => {
                                 value={
                                     nameCode && !isChanging
                                         ? nameCode
-                                        : isChanging 
+                                        : isChanging
                                         ? value
                                         : nameCode
+                                        ? nameCode
+                                        : value
                                 }
                                 onChange={handleChange}
                             />

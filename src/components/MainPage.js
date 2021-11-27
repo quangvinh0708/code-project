@@ -15,7 +15,6 @@ import { Redirect } from "react-router";
 import Navbar from "./Navbar";
 import Nav from "./Nav.js";
 
-
 const MainPage = ({
     updateCodeCreator,
     getCodeCreator,
@@ -52,6 +51,7 @@ const MainPage = ({
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
+        
         getCodeCreator(q);
     }, []);
 
@@ -111,7 +111,6 @@ const MainPage = ({
         closeModalCreator();
     };
 
-
     return (
         <div
             style={{
@@ -119,9 +118,12 @@ const MainPage = ({
                 flexDirection: `column`,
                 marginTop: `70px`,
             }}
-            className={isLoading ? "loading-container" : ""}
+            className={
+                isLoading
+                    ? "loading-container code-container"
+                    : "code-container"
+            }
         >
-          
             <Fragment>
                 {/* {isAuthenticated && ( */}
 
@@ -166,7 +168,7 @@ const MainPage = ({
                         q={q}
                     />
                 </div>
-                <div className="pane">
+                <div className="pane view">
                     <iframe
                         srcDoc={srcDoc}
                         title="output"
@@ -187,7 +189,7 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     err: state.code.error,
     errLogin: state.auth.error,
-    isLoading: state.modal.isLoading
+    isLoading: state.modal.isLoading,
 });
 
 const mapActionsToProps = {

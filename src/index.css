@@ -1,6 +1,22 @@
 body {
-    margin: 0;
+    margin: 0 !important;
     color: black;
+    /* overflow-y: visible !important; */
+    overflow-x: hidden !important;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat-back.svg");
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 7%;
+    background-color: #fff;
+    width: 100% !important;
+    /* display: table; */
+    overflow-x: auto !important;
+    padding: 0 !important;
+}
+
+html {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .loading-container {
@@ -77,8 +93,334 @@ textarea {
     background-color: hsl(225, 6%, 15%);
 }
 
-.CodeMirror, .CodeMirror-gutter {
-  background-color: hsl(225, 6%, 15%);
-  border-radius: 10px 10px;
+.CodeMirror,
+.CodeMirror-gutter {
+    background-color: hsl(225, 6%, 15%);
+    border-radius: 10px 10px;
 }
 
+::-webkit-scrollbar {
+    width: 17px;
+    background: #8167a9 !important;
+    color: #8167a9 !important;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 20px 20px;
+    /* background: #8167a9; */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.btn-gr {
+    margin-top: 15px;
+}
+
+.btn-fb-login {
+    margin-top: 5.5px !important;
+    height: 39.59px !important;
+}
+
+.fa-facebook {
+    margin-right: 7px;
+    width: 15px;
+}
+
+@media (max-width: 1500px) {
+    .container-content {
+        /* position: absolute; */
+    }
+    .Tutorial-container-1 {
+    }
+    .Tutorial-content-2 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+    .Sidebar-drawerPaper-6 {
+        width: 0 !important;
+    }
+    .Sidebar-drawerPaper-6 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-6 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-3 {
+        margin-left: 0 !important;
+    }
+
+    .Login-alert-2 {
+        text-align: center !important;
+        outline: none !important;
+    }
+    .MuiAlert-message {
+        text-align: center !important;
+    }
+
+    .Tutorial-content-18 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+    .Tutorial-content-19 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+    .Sidebar-drawerPaper-23 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-23 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-20 {
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .pane {
+        /* width: max-content !important; */
+    }
+    .code-mirror-wrapper {
+        /* width: max-content !important; */
+    }
+    .editor-container {
+        flex-grow: 1;
+        flex-basis: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+        background-color: hsl(225, 18%, 80%);
+        padding: 2px 1px;
+        position: relative;
+        /* background: rgba(255, 255, 255, 72%); */
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-y: visible;
+    }
+    .code-container {
+        position: relative !important;
+        display: table;
+    }
+    .code-mirror-wrapper {
+        flex-grow: 1;
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        /* overflow: visible;
+        overflow-y: visible; */
+    }
+    .top-pane {
+        z-index: 999;
+        position: relative;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+    }
+    .view {
+        position: relative;
+        margin-top: 25%;
+        /* bottom: -50%; */
+        /* z-index: 1000; */
+        /* height: 50vh; */
+        /* bottom: 20%; */
+    }
+    .container-content {
+        position: absolute;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    .Sidebar-drawerPaper-6 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-6 {
+        position: fixed !important;
+        z-index: 1000;
+        min-height: 10000% !important;
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-3 {
+        margin-left: 0 !important;
+    }
+    .Login-background-1 {
+        margin-top: -3% !important;
+    }
+    .Login-alert-2 {
+        width: 100% !important;
+        /* text-align: center !important; */
+    }
+
+    /**/
+    .Tutorial-content-18 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Tutorial-content-19 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Sidebar-drawerPaper-23 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-23 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-20 {
+        margin-left: 0 !important;
+    }
+
+    .button-direct {
+        /* width: max-content !important; */
+    }
+    .next-icon,
+    .prev-icon {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 387px) {
+    .Login-background-1 {
+        margin-top: -3% !important;
+    }
+    .Login-alert-2 {
+        width: max-content !important;
+        /* text-align: center !important; */
+    }
+}
+
+@media (max-width: 353px) {
+    .col-12 .navbar {
+        display: table !important;
+    }
+
+    .Tutorial-container-1 {
+        position: relative !important;
+        /* margin-left: -200px; */
+    }
+    .Tutorial-content-2 {
+        width: 100% !important;
+    }
+
+    .Sidebar-drawerPaper-6 {
+        position: fixed !important;
+        z-index: 1000;
+        min-height: 10000% !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        margin-top: 12px;
+    }
+    .Tutorial-turnLeft-3 {
+        /* margin-left: 0 !important; */
+    }
+    .MuiCard-root .css-bhp9pd-MuiPaper-root-MuiCard-root form {
+        /* margin-top: 12% !important; */
+    }
+    .Login-background-1 {
+        margin-top: 12% !important;
+    }
+    .Login-alert-2 {
+        width: max-content !important;
+    }
+
+    /**/
+    .Tutorial-content-18 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Tutorial-content-19 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .Sidebar-drawerPaper-23 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .Sidebar-drawerPaper-23 {
+        position: fixed !important;
+        z-index: 1000;
+        /* min-height: 10000% !important;  */
+        height: 100% !important;
+        margin-top: 12px;
+        min-height: 100% !important;
+    }
+    .Tutorial-turnLeft-20 {
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 321px) {
+    .navigation-wrap {
+        /* height: max-content !important; */
+    }
+    .navbar-brand {
+    }
+    .navbar-toggler {
+    }
+    .navbar-toggler-icon {
+    }
+    /* .Sidebar-drawerPaper-23 {
+        width: 20px !important;
+        max-width: 20px !important;
+    }
+    .Sidebar-drawerPaper-23 .MuiDrawer-paper {
+        width: 20px !important;
+        max-width: 20px !important;
+    }
+    .Sidebar-drawerPaper-6 {
+        width: 20px !important;
+        max-width: 20px !important;
+    }
+    .Sidebar-drawerPaper-6 .MuiDrawer-paper {
+        width: 20px !important;
+        max-width: 20px !important;
+        margin-left: -20px;
+    } */
+}
+
+@media (max-width: 319px) {
+    .col-12 .navbar {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 269px) {
+    .btn-gr {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+}

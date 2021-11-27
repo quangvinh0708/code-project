@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import styles from "./styles";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { compose } from "redux";
 import { withStyles } from "@mui/styles";
 
@@ -16,11 +16,24 @@ import {
     LinearProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { login, setErrorLogin } from "../../actions/login";
+import {
+    ggLogin,
+    fbLogin,
+    GGLogin,
+    login,
+    setErrorLogin,
+} from "../../actions/login";
 import { setProgress } from "../../actions/modal";
 import { set } from "mongoose";
 import Nav from "../Nav.js";
 import { Fragment } from "react";
+import GoogleLogin, { GoogleLogout } from "react-google-login";
+import FacebookLogin from "react-facebook-login";
+// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+
+import { API_GG } from "../../constant/axios";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 const Login = (props) => {
     const {
@@ -36,7 +49,7 @@ const Login = (props) => {
         email: "",
         password: "",
     });
-
+    const dispatch = useDispatch();
     useEffect(() => {
         // setErrorLoginCreator(null);
         loginCreator(null);
@@ -58,10 +71,28 @@ const Login = (props) => {
         window.open("https://youtube.com/");
     };
 
+    const responseGoogle = (res) => {
+        // console.log(res);
+        // sessionStorage.setItem("access_token", res.tokenId);
+        dispatch(ggLogin.ggLoginRequest(res));
+    };
+    const responseFailureGoogle = (res) => {
+        console.log("Just failed:", res);
+    };
+    const check = () => {
+        console.log("CHECK!!!");
+    };
+    const logout = (res) => {
+        console.log(res);
+    };
+
+    const responseFacebook = (res) => {
+        dispatch(fbLogin.fbLoginRequest(res));
+        console.log("FB Login:", res);
+    };
+
     return (
         <Fragment>
-            <Nav />
-
             <div className={classes.background}>
                 <div className={classes.login}>
                     <Card>
@@ -116,6 +147,59 @@ const Login = (props) => {
                                         Login
                                     </Button>
                                 </Box>
+                                <div style={{ width: `100%` }}>
+                                    <GoogleLogin
+                                        clientId={API_GG}
+                                        render={(renderProps) => (
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={renderProps.onClick}
+                                                style={{
+                                                    fontSize: `16.7px`,
+                                                    width: `max-content`,
+                                                    margin: `7px 0 0 0`,
+                                                }}
+                                            >
+                                                <GoogleIcon
+                                                    sx={{ marginRight: `5px` }}
+                                                />
+                                                Login with Google
+                                            </button>
+                                        )}
+                                        buttonText="Login with Google"
+                                        onSuccess={responseGoogle}
+                                        onFailure={responseFailureGoogle}
+                                        cookiePolicy={"single_host_origin"}
+                                    />
+                                </div>
+
+                                <FacebookLogin
+                                    // appId="430041831912720"
+                                    appId="738343767123877"
+                                    autoLoad={false}
+                                    fields="name,email,picture"
+                                    cssClass="btn btn-primary my-facebook-button-class pr-2 pl-2 btn-fb-login"
+                                    icon="fa-facebook"
+                                    // onClick={componentClicked}
+                                    // render={(renderProps) => (
+                                    //     <button
+                                    //         className="btn btn-primary"
+                                    //         onClick={renderProps.onClick}
+                                    //         disabled={renderProps.disabled}
+                                    //         style={{
+                                    //             fontSize: `16.7px`,
+                                    //             width: `max-content`,
+                                    //             margin: `7px 0 0 0`,
+                                    //         }}
+                                    //     >
+                                    //         <FacebookIcon
+                                    //             sx={{ marginRight: `5px` }}
+                                    //         />
+                                    //         Login with Facebook
+                                    //     </button>
+                                    // )}
+                                    callback={responseFacebook}
+                                />
 
                                 <div className="pt-1 text md-center">
                                     <Link

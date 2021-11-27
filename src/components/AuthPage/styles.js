@@ -17,7 +17,8 @@ const styles = (theme) => ({
     },
     alert: {},
     btn: {
-        marginTop: `15px`,
+        marginTop: 0,
+        fontSize: `16px`,
     },
 });
 
