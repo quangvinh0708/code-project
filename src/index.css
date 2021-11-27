@@ -136,9 +136,9 @@ textarea {
     width: 15px;
 }
 
+/** LOCAL */
 @media (max-width: 1500px) {
     .container-content {
-        /* position: absolute; */
     }
     .Tutorial-container-1 {
     }
@@ -148,7 +148,7 @@ textarea {
         margin-left: 200px;
     }
     
-    /**/
+ 
     .Sidebar-drawerPaper-6 {
         width: 0 !important;
     }
@@ -159,7 +159,6 @@ textarea {
     .Sidebar-drawerPaper-6 {
         position: fixed !important;
         z-index: 1000;
-        /* min-height: 10000% !important;  */
         height: 100% !important;
         min-height: 100% !important;
     }
@@ -192,7 +191,6 @@ textarea {
     .Sidebar-drawerPaper-23 {
         position: fixed !important;
         z-index: 1000;
-        /* min-height: 10000% !important;  */
         height: 100% !important;
         min-height: 100% !important;
     }
@@ -200,6 +198,67 @@ textarea {
         margin-left: 0 !important;
     }
 }
+/** HOST */
+/* @media (max-width: 1500px) {
+    .container-content {
+    }
+    .Tutorial-container-1 {
+    }
+    .jss2 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+
+    .MuiDrawer-root {
+        width: 0 !important;
+    }
+    .MuiDrawer-root .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .MuiDrawer-root {
+        position: fixed !important;
+        z-index: 1000;
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .jss3 {
+        margin-left: 0 !important;
+    }
+
+    .jss11 {
+        text-align: center !important;
+        outline: none !important;
+    }
+    .MuiAlert-message {
+        text-align: center !important;
+    }
+
+    .jss2 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+    .jss3 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 200px;
+    }
+    .MuiDrawer-root .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .MuiDrawer-root {
+        position: fixed !important;
+        z-index: 1000;
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .jss3 {
+        margin-left: 0 !important;
+    }
+} */
 
 @media (max-width: 500px) {
     .pane {
