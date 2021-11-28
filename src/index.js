@@ -10,8 +10,8 @@ import { CssBaseline } from "@mui/material";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { StylesProvider, createGenerateClassName } from "@mui/styles";
 const generateClassName = createGenerateClassName({
-    productionPrefix: "c",
-    disableGlobal: true,
+    productionPrefix: "cApp",
+    seed: "ABC"
 });
 
 ReactDOM.render(
