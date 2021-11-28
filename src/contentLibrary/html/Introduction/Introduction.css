@@ -131,7 +131,7 @@ img {
 /** HOST */
 @media (max-width: 550px) {
     .container-content {
-        position: fixed;
+        position: absolute;
         max-width: 100% !important;
     }
     .jss2 {
@@ -153,12 +153,12 @@ img {
     }
 
   
-    .jss18 {
+    .jss14 {
         position: relative !important;
         width: 100%;
         margin-left: 0;
     }
-    .jss19 {
+    .jss15 {
         position: relative !important;
         width: 100%;
         margin-left: 0;
