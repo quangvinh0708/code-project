@@ -496,6 +496,8 @@ function* handleDelete(action) {
 }
 
 function* handleGGLogin(action) {
+    yield put(setProgress(true));
+    yield delay(500);
     const {
         profileObj: { email, name, imageUrl: picture, googleId: gid },
         tokenId: access_token,
@@ -511,19 +513,29 @@ function* handleGGLogin(action) {
         if (res.data.success) {
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(ggLogin.ggLoginSuccess(x));
+            yield delay(500);
+            yield put(setProgress(false));
             yield put(push("/code"));
         } else {
             localStorage.removeItem("access_token");
+            yield delay(500);
+            yield put(setProgress(false));
             yield put(push("/login"));
         }
     } catch (err) {
         if (err.response.data) {
+            yield delay(500);
+            yield put(setProgress(false));
             console.log(err.response.data);
         }
     }
+    yield delay(500);
+    yield put(setProgress(false));
 }
 
 function* handleFBLogin(action) {
+    yield put(setProgress(true));
+    yield delay(500);
     const {
         id: fid,
         name,
@@ -543,17 +555,23 @@ function* handleFBLogin(action) {
             console.log("FB LOGIN SUCCESS");
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(fbLogin.fbLoginSuccess(body));
+            yield delay(500);
+            yield put(setProgress(false));
             yield put(push("/code"));
         } else {
             console.log("FB LOGIN FAILURE");
             localStorage.removeItem("access_token");
+            yield put(setProgress(false));
             yield put(push("/login"));
         }
     } catch (err) {
         if (err.response.data) {
+            yield put(setProgress(false));
             console.log(err.response.data);
         }
+        yield put(setProgress(false));
     }
+    yield put(setProgress(false));
 }
 
 function* rootSaga() {
