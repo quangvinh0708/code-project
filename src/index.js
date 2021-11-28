@@ -11,18 +11,18 @@ import { CssBaseline } from "@mui/material";
 import { StylesProvider, createGenerateClassName } from "@mui/styles";
 const generateClassName = createGenerateClassName({
     productionPrefix: "cApp",
-    seed: "ABC"
+    seed: "ABC",
 });
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <StylesProvider generateClassName={generateClassName}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <App />
-                </ThemeProvider>
-            </StylesProvider>
+            {/* <StylesProvider generateClassName={generateClassName}> */}
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <App />
+            </ThemeProvider>
+            {/* </StylesProvider> */}
         </Provider>
     </React.StrictMode>,
     document.getElementById("root")

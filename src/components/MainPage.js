@@ -51,7 +51,6 @@ const MainPage = ({
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        
         getCodeCreator(q);
     }, []);
 

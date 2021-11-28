@@ -28,6 +28,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import { CSS_TUTORIALS } from "../common/constants/CSSconstants";
 import { JS_TUTORIALS } from "../common/constants/JSconstants";
 import { Divider } from "@mui/material";
+import Register from './AuthPage/Register'
 
 export const history = createBrowserHistory();
 
@@ -95,6 +96,11 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                         path="/"
                         exact
                         component={() => <Redirect to="/login"></Redirect>}
+                    />
+                    <Route
+                        path="/register"
+                        exact
+                        component={Register}
                     />
 
                     <Route

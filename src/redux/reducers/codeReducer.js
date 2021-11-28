@@ -34,6 +34,7 @@ const codeReducer = (state = initialState, action) => {
 
         case "SET_CODE": {
             const { name, html, css, js } = action.payload;
+            console.log("CATCHED:", action.payload);
             return {
                 ...state,
                 codeData: {

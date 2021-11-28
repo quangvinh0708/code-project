@@ -23,6 +23,7 @@ import {
 import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { closeModal } from "../actions/modal";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -125,6 +126,7 @@ const NameProject = (props) => {
         deleteProjectCreator,
         setIsDeletingCreator,
         setErrorCreator,
+        closeModalCreator,
     } = props;
 
     const renderCheck = () => {
@@ -186,10 +188,12 @@ const NameProject = (props) => {
     useEffect(() => {
         if (nameCode && isChanging) {
             setValue("");
-        } else setValue(nameCode);
+        } else if (nameCode) {
+            setValue(nameCode);
+        } else setValue("");
 
         // setValue("");
-    }, [isChanging]);
+    }, [isChanging, nameCode]);
 
     const handleChange = (e) => {
         setValue(e.target.value);
@@ -212,7 +216,7 @@ const NameProject = (props) => {
         setErrorCreator(null);
         setIsChangingCreator(false);
         setIsDeletingCreator(false);
-
+        closeModalCreator();
         if (nameCode && !isChanging) {
             setValue(nameCode);
         } else setValue("");
@@ -399,7 +403,7 @@ const mapActionsToProps = {
     setErrorCreator: setError,
     // getCodeCreator: getCode,
     // openModalCreator: openModal,
-    // closeModalCreator: closeModal,
+    closeModalCreator: closeModal,
     // loginCreator: login,
     // setProgressCreator: setProgress,
     // setErrorLoginCreator: setErrorLogin,

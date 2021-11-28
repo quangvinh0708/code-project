@@ -67,9 +67,9 @@ const Login = (props) => {
         loginCreator(account);
     };
 
-    const onClick = (e) => {
-        window.open("https://youtube.com/");
-    };
+    // const onClick = (e) => {
+    //     window.open("https://youtube.com/");
+    // };
 
     const responseGoogle = (res) => {
         // console.log(res);
@@ -78,12 +78,6 @@ const Login = (props) => {
     };
     const responseFailureGoogle = (res) => {
         console.log("Just failed:", res);
-    };
-    const check = () => {
-        console.log("CHECK!!!");
-    };
-    const logout = (res) => {
-        console.log(res);
     };
 
     const responseFacebook = (res) => {
@@ -99,7 +93,10 @@ const Login = (props) => {
                         <CardContent>
                             <form action="">
                                 <div className="text-xs-center pb-xs">
-                                    <Typography variant="caption">
+                                    <Typography
+                                        variant="caption"
+                                        sx={{ fontSize: `14.2px` }}
+                                    >
                                         Login to continue
                                     </Typography>
                                 </div>
@@ -147,67 +144,61 @@ const Login = (props) => {
                                         Login
                                     </Button>
                                 </Box>
-                                <div style={{ width: `100%` }}>
+                                <div
+                                    style={{
+                                        display: `flex`,
+                                        flexDirection: `column`,
+                                    }}
+                                >
                                     <GoogleLogin
                                         clientId={API_GG}
                                         render={(renderProps) => (
-                                            <button
-                                                className="btn btn-primary"
+                                            <Button
+                                                variant="outlined"
                                                 onClick={renderProps.onClick}
                                                 style={{
-                                                    fontSize: `16.7px`,
+                                                    fontSize: `14.7px`,
                                                     width: `max-content`,
-                                                    margin: `7px 0 0 0`,
+                                                    margin: `7px auto 0 auto`,
                                                 }}
                                             >
                                                 <GoogleIcon
-                                                    sx={{ marginRight: `5px` }}
+                                                    sx={{
+                                                        marginRight: `5px`,
+                                                    }}
                                                 />
                                                 Login with Google
-                                            </button>
+                                            </Button>
                                         )}
                                         buttonText="Login with Google"
                                         onSuccess={responseGoogle}
                                         onFailure={responseFailureGoogle}
                                         cookiePolicy={"single_host_origin"}
                                     />
-                                </div>
 
-                                <FacebookLogin
-                                    // appId="430041831912720"
-                                    appId="738343767123877"
-                                    autoLoad={false}
-                                    fields="name,email,picture"
-                                    cssClass="btn btn-primary my-facebook-button-class pr-2 pl-2 btn-fb-login"
-                                    icon="fa-facebook"
-                                    // onClick={componentClicked}
-                                    // render={(renderProps) => (
-                                    //     <button
-                                    //         className="btn btn-primary"
-                                    //         onClick={renderProps.onClick}
-                                    //         disabled={renderProps.disabled}
-                                    //         style={{
-                                    //             fontSize: `16.7px`,
-                                    //             width: `max-content`,
-                                    //             margin: `7px 0 0 0`,
-                                    //         }}
-                                    //     >
-                                    //         <FacebookIcon
-                                    //             sx={{ marginRight: `5px` }}
-                                    //         />
-                                    //         Login with Facebook
-                                    //     </button>
-                                    // )}
-                                    callback={responseFacebook}
-                                />
+                                    <FacebookLogin
+                                        // appId="430041831912720"
+                                        appId="738343767123877"
+                                        autoLoad={false}
+                                        fields="name,email,picture"
+                                        cssClass="btn btn-primary my-facebook-button-class pr-2 pl-2 btn-fb-login"
+                                        icon="fa-facebook"
+                                        callback={responseFacebook}
+                                    />
+                                </div>
 
                                 <div className="pt-1 text md-center">
                                     <Link
-                                        onClick={onClick}
-                                        target="_blank"
-                                        to=""
+                                        // onClick={onClick}
+                                        to="/register"
                                     >
-                                        <Button>Register new account!</Button>
+                                        <Button
+                                            onClick={() =>
+                                                dispatch(setErrorLogin(null))
+                                            }
+                                        >
+                                            Register new account?
+                                        </Button>
                                     </Link>
                                 </div>
                             </form>

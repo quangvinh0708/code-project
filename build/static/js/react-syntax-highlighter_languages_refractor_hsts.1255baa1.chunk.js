@@ -1,0 +1,2 @@
+(this["webpackJsonpcodepen-clone"]=this["webpackJsonpcodepen-clone"]||[]).push([[55],{418:function(e,a,s){"use strict";function n(e){e.languages.hsts={directive:{pattern:/\b(?:max-age=|includeSubDomains|preload)/,alias:"keyword"},safe:{pattern:/\d{8,}/,alias:"selector"},unsafe:{pattern:/\d{1,7}/,alias:"function"}}}e.exports=n,n.displayName="hsts",n.aliases=[]}}]);
+//# sourceMappingURL=react-syntax-highlighter_languages_refractor_hsts.1255baa1.chunk.js.map

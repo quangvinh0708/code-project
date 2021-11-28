@@ -1,6 +1,12 @@
-import { Button, IconButton, Typography } from "@mui/material";
+import {
+    Button,
+    IconButton,
+    LinearProgress,
+    Typography,
+    Box,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -20,7 +26,9 @@ import { HTML_TUTORIALS } from "../common/constants/HTMLconstants";
 import { CSS_TUTORIALS } from "../common/constants/CSSconstants";
 import { JS_TUTORIALS } from "../common/constants/JSconstants";
 import { GoogleLogout } from "react-google-login";
-import { API_GG } from "../constant/axios";
+import { API_GG, CODE } from "../constant/axios";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { push } from "connected-react-router";
 
 const Nav = ({
     openModalSuccessCreator,
@@ -39,7 +47,12 @@ const Nav = ({
     const [expanded, setExpanded] = React.useState(false);
     const openSidebar = useSelector((state) => state.tutorial.openSidebar);
     const picture = useSelector((state) => state.auth.account.picture);
+    const progress = useSelector((state) => state.modal.progress);
     const dispatch = useDispatch();
+
+    let [html, setHtml] = useLocalStorage("html", "");
+    const [css, setCss] = useLocalStorage("css", "");
+    const [js, setJs] = useLocalStorage("js", "");
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -48,16 +61,18 @@ const Nav = ({
         e.preventDefault();
         openModalSuccessCreator();
     };
-    // const nameCode = localStorage['name'];
 
     const handleDirect = () => {
         directToCodeCreator();
+        dispatch(setNameCode(null));
     };
 
     const handleLogout = (e, x) => {
         e.preventDefault();
         x();
-        // window.FB.logout();
+
+        // console.log("Answer", typeof window.FB.logout === 'function');
+
         localStorage.removeItem("access_token");
         logoutCreator();
     };
@@ -83,12 +98,92 @@ const Nav = ({
         setIsDeletingCreator(true);
         openModalSuccessCreator();
     };
+    const newProject = (e) => {
+        e.preventDefault();
+        localStorage.setItem(
+            "code-html",
+            JSON.stringify(`<div style="parent">
+            <div class="text-type">
+              <p>Welcome to code-online&nbsp;</p>
+            </div>
+            <div class="text-type flow">
+                <p>Type something to-start&nbsp;</p>
+            </div>
+        </div>
+        `)
+        );
+        localStorage.setItem(
+            "code-css",
+            JSON.stringify(`body {
+            margin:0px;
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+  			color: #fff;
+  		
+          }
+          .parent {
+            display: flex;
+            flex-direction: column;
+          }
+          .text-type {
+            padding:20px 30px;
+            background:#f5f5f5;
+            font-size:35px;
+            font-family:monospace;
+            border-radius:50px;
+            position: relative;
+            top: -60px;
+             margin-top: 15px;
+            	background: #8167a9
+          }
+          .text-type p {
+            margin:0px;
+            white-space:nowrap;
+            overflow:hidden;
+            animation:typing 4s steps(22,end) forwards,
+                      blink 1s infinite;
+          
+          }
+          .flow {
+            display: none;
+          }
+          @keyframes typing {
+            0% { width:0% }
+            100% { width:100% }
+          }
+          @keyframes blink {
+            0%,100% {
+              border-right:2px solid transparent;
+            }
+            50% {
+              border-right:2px solid #222;
+            }
+          }`)
+        );
+        localStorage.setItem(
+            "code-js",
+            JSON.stringify(`setTimeout(() => {
+            var x = document.getElementsByClassName('flow')[0];
+           x.style.cssText = "display: flex !important"
+          },1000)`)
+        );
+        // window.open("http://localhost:3000/code");
+        // dispatch(push("/code"));
+        window.location.href = CODE;
 
+    };
     const renderProjects = () => {
         let jsx;
         jsx = (
             <div className="dropdown-menu">
-                <a href="/code" className="dropdown-item">
+                <a
+                    href={CODE}
+                    // to="/code"
+                    className="dropdown-item"
+                    onClick={(e) => newProject(e)}
+                >
                     New Project
                 </a>
                 {projects.map((project, key) => (
@@ -127,6 +222,10 @@ const Nav = ({
             dispatch(setSidebar.setSidebar(!openSidebar));
         }, 70);
     };
+
+    useEffect(() => {
+        getProjectsCreator();
+    }, [nameCode, name]);
 
     return (
         <div className="navigation-wrap bg-light start-header start-style">
@@ -429,6 +528,17 @@ const Nav = ({
                     </div>
                 </div>
             </div>
+            {progress && (
+                <Box
+                    sx={{
+                        width: "100%",
+                        marginBottom: `-25.5px`,
+                        paddingBottom: 0,
+                    }}
+                >
+                    <LinearProgress />
+                </Box>
+            )}
         </div>
     );
 };

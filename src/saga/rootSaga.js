@@ -28,7 +28,7 @@ import { API, API_LOGIN, DELETE, GET, POST, PUT } from "../constant/axios";
 import { GET_CODE, UPDATE_CODE } from "../constant/code";
 import { CSS, HTML, JS } from "../constant/localStorage";
 import { toast } from "react-toastify";
-import { OPEN_MODAL } from "../constant/modal";
+import { OPEN_MODAL, OPEN_MODAL_SUCCESS } from "../constant/modal";
 import {
     closeModal,
     openModalSuccess,
@@ -45,11 +45,11 @@ import {
     ggLogin,
     fbLogin,
     setPicture,
+    register,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
 import { setLocation } from "../actions/tutorial";
-
 function* handleTest() {
     try {
         const res = yield call(() => thisAxios(API, GET, "test"));
@@ -155,14 +155,19 @@ function* handleGetCode() {
                 console.log("q:", q);
                 const { html, css, js, name } = res.data.code;
                 if (res.data.status && q !== "code") {
+                    // setHtml(html);
+                    // setCss(css);
+                    // setJs(js);
                     setLocal(HTML, html);
                     setLocal(CSS, css);
                     setLocal(JS, js);
-                    console.log(res);
+                    yield put(setCode({ html, css, js, name }));
+                    console.log('res ne', res);
                     yield put(setNameCode(name));
                     localStorage.setItem("name", res.data.code.name);
                     // localStorage.setItem('access_token', JSON.stringify(auth));
                     yield put(setUrl(q));
+                    yield put(push(`/${q}`));
                 }
             } catch (err) {
                 // toast.error("You don't have permission to access this page");
@@ -183,6 +188,36 @@ function* handleGetCode() {
             yield put(push("/login"));
         }
     }
+}
+
+function* handleRegister(action) {
+    yield put(setErrorLogin(null));
+    yield put(setProgress(true));
+    yield delay(550);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_LOGIN, POST, "register", action.payload)
+        );
+        if (res.data.success) {
+            console.log("HERE");
+            yield put(loginSuccess(action.payload.name));
+            localStorage.setItem("access_token", res.data.accessToken);
+            yield delay(500);
+            yield put(setProgress(false));
+            yield put(push("/login"));
+        } else {
+            yield put(setProgress(false));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log(err.response.data);
+            yield delay(500);
+            yield put(setProgress(false));
+            yield put(setErrorLogin(err.response.data.message));
+            return;
+        }
+    }
+    yield put(setProgress(false));
 }
 
 function* handleLogin(action) {
@@ -229,7 +264,7 @@ function* handleLogin(action) {
                 if (url !== "code") {
                     try {
                         const res1 = yield call(() => thisAxios(API, GET, url));
-                        console.log(res1);
+                        console.log("res1", res1);
                         const { html, css, js, name } = res1.data.code;
                         if (res1.data.status) {
                             setLocal(HTML, html);
@@ -268,17 +303,16 @@ function* handleChange() {}
 
 function* handleOpenModal(action) {
     yield delay(150);
-
     const access = localStorage.getItem("access_token");
     if (!access) {
         yield put(setError("Looks like you are not logged in!"));
-        yield put(openModalSuccess());
+        // yield put(openModalSuccess());
         yield delay(3000);
         // yield put(closeModal());
     } else {
         yield put(setError(null));
-        yield put(openModalSuccess());
-        yield fork(handleChange);
+        // yield put(openModalSuccess());
+        // yield fork(handleChange);
     }
     // yield put(openModalSuccess());
 }
@@ -350,8 +384,8 @@ function* handleUpdate(action) {
 }
 
 function* handleDirect() {
-    yield put(setUrl("code"));
     yield put(setNameCode(null));
+    yield put(setUrl("code"));
     yield put(push("/code"));
 }
 
@@ -359,7 +393,7 @@ function* handleLogout() {
     yield delay(300);
     setAuth(null);
     localStorage.removeItem("access_token");
-    window.FB.logout();
+    // window.FB.logout();
     yield put(logoutSuccess());
     yield put(push("/login"));
 }
@@ -408,7 +442,7 @@ function* handleDelete(action) {
     try {
         const res = yield call(() => thisAxios(API, DELETE, url));
         console.log("DELETE:", res);
-
+        yield put(getProjects());
         yield put(setIsDeleting(false));
         // yield put(deleteProjectSuccess(res.data.project));
         yield put(setProgress(false));
@@ -496,6 +530,7 @@ function* rootSaga() {
     yield fork(handleGetCode);
     yield takeLatest("CHECK_LOGIN", handleCheckLogin);
     yield takeLatest(LOGIN, handleLogin);
+    yield takeLatest(register.registerRequest().type, handleRegister);
     yield takeLatest(UPDATE_CODE, handleUpdate);
     yield takeLatest("DIRECT_TO_CODE", handleDirect);
     yield takeLatest("LOGOUT", handleLogout);
@@ -504,6 +539,7 @@ function* rootSaga() {
     yield takeLatest("DELETE_PROJECT", handleDelete);
     yield takeLatest(ggLogin.ggLoginRequest().type, handleGGLogin);
     yield takeLatest(fbLogin.fbLoginRequest().type, handleFBLogin);
+    // yield takeLatest(OPEN_MODAL_SUCCESS, handleOpenModal);
 }
 
 export default rootSaga;

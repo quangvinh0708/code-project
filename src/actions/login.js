@@ -6,6 +6,12 @@ import {
 } from "../constant/login";
 import { createActions } from "redux-actions";
 
+export const register = createActions({
+    registerRequest: (val) => val,
+    registerSuccess: (val) => val,
+    registerFailure: (val) => val,
+});
+
 export const login = (acc) => ({
     type: LOGIN,
     payload: acc,
@@ -17,7 +23,7 @@ export const loginSuccess = (name = null) => ({
 });
 
 export const setPicture = createActions({
-    setPictureRequest: val => val
+    setPictureRequest: (val) => val,
 });
 
 export const loginFailed = (err = null) => ({
