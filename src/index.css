@@ -515,9 +515,9 @@ textarea {
         display: table !important;
     }
 
-    .jss1 {
+    /* .jss1 {
         position: relative !important;
-    }
+    } */
     .jss2 {
         width: 100% !important;
     }
@@ -535,7 +535,7 @@ textarea {
         margin-top: 12% !important;
     }
     .jss2 {
-        width: max-content !important;
+        width: 100% !important;
     }
 
     .jss14 {

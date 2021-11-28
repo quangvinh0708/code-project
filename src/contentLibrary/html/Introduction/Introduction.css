@@ -136,6 +136,7 @@ img {
     }
     .jss2 {
         margin: 0 !important;
+        width: 100% !important;
     }
     .jss6 .MuiDrawer-paper {
         position: absolute !important;
@@ -152,7 +153,6 @@ img {
         margin-left: 0 !important;
     }
 
-  
     .jss14 {
         position: relative !important;
         width: 100%;
@@ -177,7 +177,6 @@ img {
         margin-left: 0 !important;
     }
 }
-
 
 /* 
 @media (max-width: 500px) {
