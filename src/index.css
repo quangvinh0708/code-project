@@ -196,7 +196,7 @@ textarea {
 } */
 /** HOST */
 @media (max-width: 1500px) {
-    .Tutorial-content-2 {
+    .jss2 {
         position: relative !important;
         width: 100%;
         margin-left: 200px;
