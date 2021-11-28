@@ -131,11 +131,11 @@ img {
 /** HOST */
 @media (max-width: 550px) {
     .container-content {
-        position: absolute;
+        position: fixed;
         max-width: 100% !important;
     }
     .jss2 {
-        margin: 0;
+        margin: 0 !important;
     }
     .jss6 .MuiDrawer-paper {
         position: absolute !important;
