@@ -223,9 +223,9 @@ const Nav = ({
         }, 70);
     };
 
-    useEffect(() => {
-        getProjectsCreator();
-    }, [nameCode, name]);
+    // useEffect(() => {
+    //     getProjectsCreator();
+    // }, [nameCode, name]);
 
     return (
         <div className="navigation-wrap bg-light start-header start-style">

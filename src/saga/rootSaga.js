@@ -162,7 +162,7 @@ function* handleGetCode() {
                     setLocal(CSS, css);
                     setLocal(JS, js);
                     yield put(setCode({ html, css, js, name }));
-                    console.log('res ne', res);
+                    console.log("res ne", res);
                     yield put(setNameCode(name));
                     localStorage.setItem("name", res.data.code.name);
                     // localStorage.setItem('access_token', JSON.stringify(auth));
@@ -401,8 +401,38 @@ function* handleLogout() {
 function* handleGetProjects(action) {
     const auth = localStorage["access_token"];
     yield setAuth(auth);
-    const res = yield call(() => thisAxios(API, GET, "projects"));
-    yield put(getProjectsSuccess(res.data.projects));
+    if (auth) {
+        setAuth(auth);
+        try {
+            const res = yield call(() =>
+                thisAxios(API_LOGIN, POST, "check-login")
+            );
+            if (res.data.success) {
+                yield put(loginSuccess(res.data.name));
+                let picture;
+                if (res.data.picture) {
+                    picture = res.data.picture.toString();
+                } else picture = null;
+                yield put(setPicture.setPictureRequest(picture));
+                console.log("PICTURE:", picture);
+                setAuth(auth);
+            }
+            try {
+                const res = yield call(() => thisAxios(API, GET, "projects"));
+                yield put(getProjectsSuccess(res.data.projects));
+            } catch (err) {
+                setAuth(null);
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("name");
+                yield put(push("/login"));
+            }
+        } catch (err) {
+            setAuth(null);
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("name");
+            yield put(push("/login"));
+        }
+    }
 }
 
 function* handleChangeName(action) {
@@ -539,7 +569,7 @@ function* rootSaga() {
     yield takeLatest("DELETE_PROJECT", handleDelete);
     yield takeLatest(ggLogin.ggLoginRequest().type, handleGGLogin);
     yield takeLatest(fbLogin.fbLoginRequest().type, handleFBLogin);
-    // yield takeLatest(OPEN_MODAL_SUCCESS, handleOpenModal);
+    yield takeLatest(OPEN_MODAL_SUCCESS, handleOpenModal);
 }
 
 export default rootSaga;
