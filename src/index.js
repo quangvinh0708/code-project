@@ -11,6 +11,7 @@ import { CssBaseline } from "@mui/material";
 import { StylesProvider, createGenerateClassName } from "@mui/styles";
 const generateClassName = createGenerateClassName({
     productionPrefix: "c",
+    disableGlobal: true,
 });
 
 ReactDOM.render(
