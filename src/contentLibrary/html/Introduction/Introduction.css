@@ -89,8 +89,8 @@ img {
 
    } */
 
-/**/
-@media (max-width: 550px) {
+/** LOCAL */
+/* @media (max-width: 550px) {
     .container-content {
         position: absolute;
         max-width: 100% !important;
@@ -103,19 +103,12 @@ img {
         width: 187px !important;
         max-width: 187px !important;
     }
-    .Sidebar-drawerPaper-6 {
-        position: fixed !important;
-        z-index: 1000;
-        /* min-height: 10000% !important;  */
-        height: 100% !important;
-        min-height: 100% !important;
-        /* margin-top: 10px; */
-    }
+  
     .Tutorial-turnLeft-3 {
         margin-left: 0 !important;
     }
 
-    /**/
+   
     .Tutorial-content-18 {
         position: relative !important;
         width: 100%;
@@ -130,17 +123,62 @@ img {
         width: 200px !important;
         max-width: 200px !important;
     }
-    .Sidebar-drawerPaper-23 {
-        position: fixed !important;
-        z-index: 1000;
-        /* min-height: 10000% !important;  */
-        height: 100% !important;
-        min-height: 100% !important;
-    }
+   
     .Tutorial-turnLeft-20 {
         margin-left: 0 !important;
     }
+} */
+/** HOST */
+@media (max-width: 550px) {
+    .container-content {
+        position: absolute;
+        max-width: 100% !important;
+    }
+    .jss2 {
+        margin: 0;
+    }
+    .jss6 .MuiDrawer-paper {
+        position: absolute !important;
+        width: 187px !important;
+        max-width: 187px !important;
+    }
+    .jss6 {
+        position: fixed !important;
+        z-index: 1000;
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .jss3 {
+        margin-left: 0 !important;
+    }
+
+  
+    .jss18 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .jss19 {
+        position: relative !important;
+        width: 100%;
+        margin-left: 0;
+    }
+    .jss23 .MuiDrawer-paper {
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+    .jss23 {
+        position: fixed !important;
+        z-index: 1000;
+        height: 100% !important;
+        min-height: 100% !important;
+    }
+    .jss20 {
+        margin-left: 0 !important;
+    }
 }
+
+
 /* 
 @media (max-width: 500px) {
     .container-content {

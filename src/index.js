@@ -8,20 +8,15 @@ import { ThemeProvider } from "@mui/styles";
 import theme from "./common/theme/theme.js";
 import { CssBaseline } from "@mui/material";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import { StylesProvider, createGenerateClassName } from "@mui/styles";
-const generateClassName = createGenerateClassName({
-    productionPrefix: "c",
-});
+
 ReactDOM.render(
     <React.StrictMode>
-        {/* <StylesProvider generateClassName={generateClassName}> */}
         <Provider store={store}>
-            <ThemeProvider theme={theme} generateClassName={generateClassName}>
+            <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <App />
             </ThemeProvider>
         </Provider>
-        {/* </StylesProvider> */}
     </React.StrictMode>,
     document.getElementById("root")
 );
