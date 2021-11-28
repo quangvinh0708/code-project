@@ -88,6 +88,7 @@ function* handleCheckLogin() {
                 yield put(setPicture.setPictureRequest(picture));
                 console.log("PICTURE:", picture);
                 setAuth(auth);
+                yield put(push("/login"));
             }
         } catch (err) {
             setAuth(null);
