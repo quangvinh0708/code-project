@@ -152,7 +152,7 @@ const Register = (props) => {
                                         />
                                         <TextField
                                             id="name"
-                                            label="name"
+                                            label="Name"
                                             className={classes.textField}
                                             fullWidth
                                             margin="normal"

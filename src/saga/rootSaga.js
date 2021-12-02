@@ -846,8 +846,10 @@ function* handleGetProfile(action) {
             console.log("CHECK handleGetPRofile LINE 843");
 
             if (res.data.user.password) {
-                res.data.user.password = res.data.user.password.slice(0, 15);
-            }
+                res.data.user.password = res.data.user.password.slice(0, 18);
+            } else
+                res.data.user.password =
+                    Math.random() * 1000000000 + res.data.user.objId;
             yield put(updateProfile.updateProfileSuccess(res.data.user));
             return;
         }
