@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import { Redirect } from "react-router-dom";
 import styles from "./styles";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { compose } from "redux";
 import { withStyles } from "@mui/styles";
 
@@ -35,6 +35,7 @@ import FacebookLogin from "react-facebook-login";
 import { API_GG } from "../../constant/axios";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import Login from "./Login";
 
 const Register = (props) => {
     const {
@@ -44,6 +45,7 @@ const Register = (props) => {
         setProgressCreator,
         progress,
         setErrorLoginCreator,
+        isAuthenticated,
     } = props;
     // const [email, setEmail] = useState("");
     const [account, setAccount] = useState({
@@ -53,10 +55,13 @@ const Register = (props) => {
         confirmPassword: "",
     });
     const dispatch = useDispatch();
+    const errorStatus = useSelector((state) => state.auth.errorStatus);
+
     useEffect(() => {
         // setErrorLoginCreator(null);
         loginCreator(null);
     }, []);
+    console.log("Register Component render");
 
     const onChange = (e) => {
         setAccount({
@@ -94,97 +99,118 @@ const Register = (props) => {
         console.log("FB Login:", res);
     };
 
+    const jsx = (
+        <Redirect
+            to="/login"
+            component={({ match }) => <Login match={match} />}
+        ></Redirect>
+    );
+    console.log(`isAuthenticated ${isAuthenticated}`);
     return (
         <Fragment>
-            <div
-                className={classes.background}
-                style={{ marginTop: `4.9%`, height: `300px` }}
-            >
-                <div className={classes.login1}>
-                    <Card
-                        sx={{
-                            ["@media(max-width: 1500px)"]: { marginTop: `-6%` },
-                            ["@media(max-width: 900px)"]: { marginTop: `3%` },
-                            ["@media(max-width: 550px)"]: { marginTop: `10%` },
-                        }}
+            {localStorage["access_token"] ? (
+                jsx
+            ) : (
+                <Fragment>
+                    <div
+                        className={classes.background1}
+                        style={{ marginTop: `4.9%`, height: `300px` }}
                     >
-                        <CardContent style={{ width: `100%` }}>
-                            <form action="">
-                                <div className="text-xs-center pb-xs mt-3">
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ fontSize: `14.2px` }}
-                                    >
-                                        Register to continue
-                                    </Typography>
-                                </div>
-                                <TextField
-                                    id="email"
-                                    label="Email"
-                                    className={classes.textField}
-                                    fullWidth
-                                    margin="normal"
-                                    name="email"
-                                    value={account.email}
-                                    onChange={onChange}
-                                />
-                                <TextField
-                                    id="name"
-                                    label="name"
-                                    className={classes.textField}
-                                    fullWidth
-                                    margin="normal"
-                                    name="name"
-                                    value={account.name}
-                                    onChange={onChange}
-                                />
-                                <TextField
-                                    id="password"
-                                    label="Password"
-                                    className={classes.textField}
-                                    fullWidth
-                                    margin="normal"
-                                    type="password"
-                                    name="password"
-                                    value={account.password}
-                                    onChange={onChange}
-                                />
-                                <TextField
-                                    id="confirmPassword"
-                                    label="Confirm Password"
-                                    className={classes.textField}
-                                    fullWidth
-                                    margin="normal"
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={account.confirmPassword}
-                                    onChange={onChange}
-                                />
+                        <div className={classes.login1}>
+                            <Card
+                                sx={{
+                                    ["@media(max-width: 1500px)"]: {
+                                        marginTop: `-6%`,
+                                    },
+                                    ["@media(max-width: 900px)"]: {
+                                        marginTop: `3%`,
+                                    },
+                                    ["@media(max-width: 550px)"]: {
+                                        marginTop: `10%`,
+                                    },
+                                }}
+                            >
+                                <CardContent style={{ width: `100%` }}>
+                                    <form action="">
+                                        <div className="text-xs-center pb-xs mt-3">
+                                            <Typography
+                                                variant="caption"
+                                                sx={{ fontSize: `14.2px` }}
+                                            >
+                                                Register to continue
+                                            </Typography>
+                                        </div>
+                                        <TextField
+                                            id="email"
+                                            label="Email"
+                                            className={classes.textField}
+                                            fullWidth
+                                            margin="normal"
+                                            name="email"
+                                            value={account.email}
+                                            onChange={onChange}
+                                        />
+                                        <TextField
+                                            id="name"
+                                            label="name"
+                                            className={classes.textField}
+                                            fullWidth
+                                            margin="normal"
+                                            name="name"
+                                            value={account.name}
+                                            onChange={onChange}
+                                        />
+                                        <TextField
+                                            id="password"
+                                            label="Password"
+                                            className={classes.textField}
+                                            fullWidth
+                                            margin="normal"
+                                            type="password"
+                                            name="password"
+                                            value={account.password}
+                                            onChange={onChange}
+                                        />
+                                        <TextField
+                                            id="confirmPassword"
+                                            label="Confirm Password"
+                                            className={classes.textField}
+                                            fullWidth
+                                            margin="normal"
+                                            type="password"
+                                            name="confirmPassword"
+                                            value={account.confirmPassword}
+                                            onChange={onChange}
+                                        />
 
-                                {err && (
-                                    <Alert
-                                        variant="outlined"
-                                        severity="error"
-                                        className={classes.alert}
-                                    >
-                                        {err}
-                                    </Alert>
-                                )}
+                                        {err && (
+                                            <Alert
+                                                variant="outlined"
+                                                severity={
+                                                    errorStatus
+                                                        ? "error"
+                                                        : "success"
+                                                }
+                                                className={classes.alert}
+                                            >
+                                                {err}
+                                            </Alert>
+                                        )}
 
-                                <Box mt={2}>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        fullWidth
-                                        type="submit"
-                                        className={classes.btn}
-                                        onClick={handleRegister}
-                                    >
-                                        Register
-                                    </Button>
-                                </Box>
+                                        <Box mt={2}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                fullWidth
+                                                type="submit"
+                                                className={classes.btn}
+                                                onClick={handleRegister}
+                                            >
+                                                Register
+                                            </Button>
+                                        </Box>
 
-                                <div
+                                        {/* <div
                                     style={{
                                         display: `flex`,
                                         flexDirection: `column`,
@@ -225,39 +251,46 @@ const Register = (props) => {
                                         icon="fa-facebook"
                                         callback={responseFacebook}
                                     />
-                                </div>
+                                </div> */}
 
-                                <div className="pt-1 text md-center">
-                                    <Link
-                                        // onClick={onClick}
-                                        // target="_blank"
-                                        to="/login"
+                                        <div className="pt-1 text md-center">
+                                            <Link
+                                                // onClick={onClick}
+                                                // target="_blank"
+                                                to="/login"
+                                            >
+                                                <Button
+                                                    sx={{
+                                                        textTransform: `none`,
+                                                        fontSize: `15.7px`,
+                                                        margin: `0 0 0 0`,
+                                                        padding: 0,
+                                                    }}
+                                                    onClick={() =>
+                                                        dispatch(
+                                                            setErrorLogin(null)
+                                                        )
+                                                    }
+                                                >
+                                                    Already have an account?
+                                                    Login
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </form>
+                                </CardContent>
+                                {progress && (
+                                    <Box
+                                        sx={{ width: "100%", marginBottom: 0 }}
                                     >
-                                        <Button
-                                            sx={{
-                                                textTransform: `none`,
-                                                fontSize: `14.7px`,
-                                                margin: `0 0 0 0`,
-                                                padding: 0,
-                                            }}
-                                            onClick={() =>
-                                                dispatch(setErrorLogin(null))
-                                            }
-                                        >
-                                            Already have an account? Login
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </form>
-                        </CardContent>
-                        {progress && (
-                            <Box sx={{ width: "100%", marginBottom: 0 }}>
-                                <LinearProgress />
-                            </Box>
-                        )}
-                    </Card>
-                </div>
-            </div>
+                                        <LinearProgress />
+                                    </Box>
+                                )}
+                            </Card>
+                        </div>
+                    </div>
+                </Fragment>
+            )}
         </Fragment>
     );
 };

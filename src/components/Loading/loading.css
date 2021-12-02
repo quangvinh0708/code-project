@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&family=Poppins:wght@100;200;300;400;500;600;700&family=Ubuntu:ital,wght@0,300;1,400&display=swap");
+
+h1.h1-type {
+    width: 99%;
+    position: relative;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-transform: capitalize;
+    font-family: Poppins;
+    letter-spacing: 5px;
+    margin: 0;
+    color: transparent;
+    font-size: 25px;
+    font-weight: 500;
+    padding: 9px 0;
+    border: 2px solid #fff;
+}
+
+h1.h1-type1 {
+    position: absolute;
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-transform: uppercase;
+    font-family: Poppins;
+    letter-spacing: 5px;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-size: 22px;
+    white-space: nowrap;
+}
+
+h1.h1-type:before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #000;
+    overflow: hidden;
+    border-right: 1px solid rgba(189, 142, 186, 50%);
+    animation: type 4s steps(45) infinite;
+    white-space: nowrap;
+    padding: 9px 8px;
+    border: 2px solid #fff;
+    background: #fff;
+}
+h1.h1-type1:before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #000;
+    overflow: hidden;
+    border-right: 1px solid #000;
+    animation: type 5s steps(40) infinite;
+    white-space: nowrap;
+}
+@keyframes type {
+    0% {
+        width: 0;
+    }
+    25% {
+        width: 25%;
+    }
+
+    50% {
+        width: 70%;
+    }
+    90% {
+        width: 99%;
+    }
+
+    100% {
+        width: 5%;
+    }
+}
+.contain {
+    width: 100%;
+    height: 100vh;
+    background: rgba(189, 142, 186, 50%) !important;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+    font-weight: bold;
+    overflow: hidden !important;
+}
+
+.link-title {
+    font-size: 35px;
+}
+
+.link-direct {
+    font-size: 25px;
+    color: #fff;
+    text-align: center !important;
+    display: block;
+    transition: all 1s;
+    /* border-bottom: 2px solid #fff; */
+}
+
+.link-direct:hover {
+    font-size: 35px;
+    color: rgba(255, 255, 255, 150%);
+    text-decoration: none;
+    border-bottom: 2px solid #fff;
+    width: 80%;
+    margin: auto !important;
+    transition: all 1s;
+}
+
+.link-title:hover {
+    font-size: 39px;
+    color: rgba(255, 255, 255, 150%);
+    text-decoration: none;
+    border-bottom: 2px solid #fff;
+    width: 80%;
+    margin: auto !important;
+    transition: all 1s;
+}
+.server-content {
+    position: relative;
+    top: 90px;
+}

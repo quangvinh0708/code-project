@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import {
     BrowserRouter as Router,
     Route,
@@ -28,11 +28,17 @@ import Sidebar from "./Sidebar/Sidebar";
 import { CSS_TUTORIALS } from "../common/constants/CSSconstants";
 import { JS_TUTORIALS } from "../common/constants/JSconstants";
 import { Divider } from "@mui/material";
-import Register from './AuthPage/Register'
+import Register from "./AuthPage/Register";
+import ForgotPassword from "./AuthPage/ForgotPassword";
+import HandleForgot from "./AuthPage/HandleForgot";
+import RecoveryPassword from "./AuthPage/RecoveryPassword";
+import AvatarUser from "./Avatar/AvatarUser";
+import Profile from "./AuthPage/Profile.js/Profile";
 
 export const history = createBrowserHistory();
 
 function App({ updateCodeCreator, codeData, checkLoginCreator }) {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     let [html, setHtml] = useLocalStorage("html", "");
 
     // if (!html) {
@@ -49,24 +55,24 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
     //   </html>`)
     // }
 
-    const [css, setCss] = useLocalStorage("css", "");
-    const [js, setJs] = useLocalStorage("js", "");
-    const [srcDoc, setSrcDoc] = useState("");
+    // const [css, setCss] = useLocalStorage("css", "");
+    // const [js, setJs] = useLocalStorage("js", "");
+    // const [srcDoc, setSrcDoc] = useState("");
     checkLoginCreator();
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setSrcDoc(`
-        <html>
-          <body>${html}</body>
-          <style>${css}</style>
-          <script defer async>${js}</script>
-        </html>
-      `);
-        }, 250);
+    // useEffect(() => {
+    //     const timeout = setTimeout(() => {
+    //         setSrcDoc(`
+    //     <html>
+    //       <body>${html}</body>
+    //       <style>${css}</style>
+    //       <script defer async>${js}</script>
+    //     </html>
+    //   `);
+    //     }, 250);
 
-        return () => clearTimeout(timeout);
-    }, [html, css, js]);
+    //     return () => clearTimeout(timeout);
+    // }, [html, css, js]);
 
     const renderHTMLTutorials = () =>
         HTML_TUTORIALS.map((route) => {
@@ -93,6 +99,23 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                 <Switch>
                     {/* <Route to="/Sidebar" exact component={Sidebar}/> */}
                     <Route
+                        path="/users/profile/:id"
+                        exact
+                        component={({ match }) => <Profile match={match} />}
+                    />
+                    <Route
+                        path="/recover/user/pwd/:id"
+                        exact
+                        component={({ match }) => (
+                            <RecoveryPassword match={match} />
+                        )}
+                    />
+                    <Route
+                        path="/identify/user"
+                        exact
+                        component={ForgotPassword}
+                    />
+                    <Route
                         path="/"
                         exact
                         component={() => <Redirect to="/login"></Redirect>}
@@ -100,6 +123,11 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                     <Route
                         path="/register"
                         exact
+                        // render={() => {
+                        //     if (isAuthenticated) {
+                        //         return <Redirect to="/login"></Redirect>;
+                        //     } else return <Register />;
+                        // }}
                         component={Register}
                     />
 

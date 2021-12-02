@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import Code from "./Code";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { compose } from "redux";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { getCode, updateCode } from "../actions/code";
 import { closeModal, openModal } from "../actions/modal";
 // import { toast } from "react-toastify";
@@ -10,7 +10,7 @@ import { closeModal, openModal } from "../actions/modal";
 // import "react-toastify/dist/ReactToastify.css";
 import NameProject from "./NameProject";
 import Login from "./AuthPage/Login";
-import { login } from "../actions/login";
+import { login, setErrorLogin } from "../actions/login";
 import { Redirect } from "react-router";
 import Navbar from "./Navbar";
 import Nav from "./Nav.js";
@@ -49,6 +49,9 @@ const MainPage = ({
     const [js, setJs] = useLocalStorage("js", "");
     const [srcDoc, setSrcDoc] = useState("");
     const [openModal, setOpenModal] = useState(false);
+
+    const dispatch = useDispatch();
+    dispatch(setErrorLogin(null));
 
     useEffect(() => {
         getCodeCreator(q);

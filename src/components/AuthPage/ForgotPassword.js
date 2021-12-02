@@ -35,32 +35,28 @@ import { API_GG } from "../../constant/axios";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { push } from "connected-react-router";
-
-const Login = (props) => {
+import { checkLastPwd } from "../../actions/login";
+const ForgotPassword = (props) => {
     const {
         classes,
         err,
         loginCreator,
         setProgressCreator,
         progress,
-        isAuthenticated,
         setErrorLoginCreator,
     } = props;
     // const [email, setEmail] = useState("");
     const [account, setAccount] = useState({
         email: "",
-        password: "",
+        recentPassword: "",
     });
-    const nameCode = useSelector(state => state.auth.nameCode)
     const dispatch = useDispatch();
-    console.log("Login Component render");
-    useEffect(() => {
-        // setErrorLoginCreator(null);
-        loginCreator(null);
-        if (nameCode === null && !isAuthenticated) {
-            dispatch(setErrorLogin(null));
-        }
-    }, []);
+    const errorStatus = useSelector((state) => state.auth.errorStatus);
+    // useEffect(() => {
+    //     // setErrorLoginCreator(null);
+    //     loginCreator(null);
+    // }, []);
+    console.log("ForgotPassword Component render");
 
     const onChange = (e) => {
         setAccount({
@@ -68,44 +64,14 @@ const Login = (props) => {
             [e.target.name]: e.target.value,
         });
     };
-
-    const handleLogin = (e) => {
+    const handleCheckLastPwd = (e) => {
         e.preventDefault();
-        loginCreator(account);
+        dispatch(checkLastPwd.checkLastPwdRequest(account));
     };
-
-    // const onClick = (e) => {
-    //     window.open("https://youtube.com/");
-    // };
-
-    const responseGoogle = (res) => {
-        // console.log(res);
-        // sessionStorage.setItem("access_token", res.tokenId);
-        dispatch(ggLogin.ggLoginRequest(res));
-    };
-    const responseFailureGoogle = (res) => {
-        console.log("Just failed:", res);
-        dispatch(push("/login"));
-    };
-
-    const responseFacebook = (res) => {
-        dispatch(fbLogin.fbLoginRequest(res));
-        console.log("FB Login:", res);
-        // dispatch(setProgress(false));
-    };
-
-    const responseFacebookFailure = (res) => {
-        // console.log("FB Login failure:", res);
-    };
-
-    // const directForgotPassword = (e) => {
-    //     e.preventDefault();
-    //     dispatch(push('/identify/user'))
-    // }
 
     return (
         <Fragment>
-            <div className={classes.background}>
+            <div className={classes.background2}>
                 <div className={classes.login}>
                     <Card>
                         <CardContent>
@@ -113,9 +79,12 @@ const Login = (props) => {
                                 <div className="text-xs-center pb-xs">
                                     <Typography
                                         variant="caption"
-                                        sx={{ fontSize: `14.2px` }}
+                                        sx={{
+                                            fontSize: `17.2px`,
+                                            fontWeight: `499`,
+                                        }}
                                     >
-                                        Login to continue
+                                        Recover account
                                     </Typography>
                                 </div>
                                 <TextField
@@ -128,22 +97,40 @@ const Login = (props) => {
                                     value={account.email}
                                     onChange={onChange}
                                 />
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        fontSize: `15.9px`,
+                                        textAlign: `left`,
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            textAlign: `left`,
+                                            width: `auto`,
+                                        }}
+                                    >
+                                        Enter the last password you remember to
+                                        use with this Google Account
+                                    </span>
+                                </Typography>
                                 <TextField
-                                    id="password"
-                                    label="Password"
+                                    id="recentPassword"
+                                    label="Enter the most recent password"
                                     className={classes.textField}
                                     fullWidth
                                     margin="normal"
                                     type="password"
-                                    name="password"
-                                    value={account.password}
+                                    name="recentPassword"
+                                    value={account.recentPassword}
+                                    placeholder={`Enter the most recent password`}
                                     onChange={onChange}
                                 />
 
                                 {err && (
                                     <Alert
                                         variant="outlined"
-                                        severity="error"
+                                        severity={errorStatus ? "error" : "success"} 
                                         className={classes.alert}
                                     >
                                         {err}
@@ -157,20 +144,20 @@ const Login = (props) => {
                                         fullWidth
                                         type="submit"
                                         className={classes.btn}
-                                        onClick={handleLogin}
+                                        onClick={(e) => handleCheckLastPwd(e)}
                                     >
-                                        Login
+                                        Continue
                                     </Button>
-                                    <Link to="/identify/user" className={classes.link}>
+                                    <Link to="/register" className={classes.link1}>
                                         <Button
                                             sx={{
                                                 display: `block`,
                                                 margin: `5px 0 2px 0`,
                                                 padding: 0,
                                                 width: `100%`,
-                                                textAlign: `right`,
+                                                textAlign: `center`,
                                                 textTransform: `none`,
-                                                fontSize: `15px`,
+                                                fontSize: `16.5px`,
                                                 "&:focus": {
                                                     outline: `none`,
                                                 },
@@ -178,71 +165,11 @@ const Login = (props) => {
                                             onClick={() =>
                                                 dispatch(setErrorLogin(null))
                                             }
-                                            // onClick={(e) => directForgotPassword(e)}
-                                        >
-                                            Forgot the password?
-                                        </Button>
-                                    </Link>
-                                </Box>
-                                <div
-                                    style={{
-                                        display: `flex`,
-                                        flexDirection: `column`,
-                                    }}
-                                >
-                                    <GoogleLogin
-                                        clientId={API_GG}
-                                        render={(renderProps) => (
-                                            <Button
-                                                variant="outlined"
-                                                onClick={renderProps.onClick}
-                                                style={{
-                                                    fontSize: `14.7px`,
-                                                    width: `max-content`,
-                                                    margin: `7px auto 0 auto`,
-                                                }}
-                                            >
-                                                <GoogleIcon
-                                                    sx={{
-                                                        marginRight: `5px`,
-                                                    }}
-                                                />
-                                                Login with Google
-                                            </Button>
-                                        )}
-                                        buttonText="Login with Google"
-                                        onSuccess={responseGoogle}
-                                        onFailure={responseFailureGoogle}
-                                        cookiePolicy={"single_host_origin"}
-                                    />
-
-                                    <FacebookLogin
-                                        // appId="430041831912720"
-                                        appId="738343767123877"
-                                        autoLoad={false}
-                                        fields="name,email,picture"
-                                        cssClass="btn btn-primary my-facebook-button-class pr-2 pl-2 btn-fb-login"
-                                        icon="fa-facebook"
-                                        callback={responseFacebook}
-                                        onFailure={responseFacebookFailure}
-                                    />
-                                </div>
-
-                                <div className="pt-1 text md-center">
-                                    <Link
-                                        // onClick={onClick}
-                                        to="/register"
-                                    >
-                                        <Button
-                                            sx={{ fontSize: `15px` }}
-                                            onClick={() =>
-                                                dispatch(setErrorLogin(null))
-                                            }
                                         >
                                             Register new account?
                                         </Button>
                                     </Link>
-                                </div>
+                                </Box>
                             </form>
                         </CardContent>
                         {progress && (
@@ -279,4 +206,4 @@ const mapActionsToProps = {
 
 const withConnect = connect(mapStateToProps, mapActionsToProps);
 
-export default compose(withConnect, withStyles(styles))(Login);
+export default compose(withConnect, withStyles(styles))(ForgotPassword);

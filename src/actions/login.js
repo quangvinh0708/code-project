@@ -67,3 +67,25 @@ export const fbLogin = createActions({
     fbLoginSuccess: (val) => val,
     fbLoginFailure: (val) => val,
 });
+
+export const setErrorStatus = createActions({
+    setErrorStatusRequest: (val) => val,
+});
+export const checkLastPwd = createActions({
+    checkLastPwdRequest: (val) => val,
+    checkLastPwdSuccess: (val) => val,
+    checkLastPwdFailure: (val) => val,
+});
+
+export const recoverPassword = createActions({
+    recoverPasswordRequest: (val) => val,
+    recoverPasswordSuccess: (val) => val,
+    recoverPasswordFailure: (val) => val,
+});
+
+export const updateFID = createActions({
+    updateFIDRequest: (val) => val,
+});
+export const updateGID = createActions({
+    updateGIDRequest: (val) => val,
+});

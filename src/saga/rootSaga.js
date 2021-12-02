@@ -24,7 +24,15 @@ import {
 import { setAuth, thisAxios } from "../common/axios/axios";
 import { setLocal } from "../common/LocalStorage/setLocal";
 import { getLocal } from "../common/LocalStorage/getLocal";
-import { API, API_LOGIN, DELETE, GET, POST, PUT } from "../constant/axios";
+import {
+    API,
+    API_LOGIN,
+    API_USER,
+    DELETE,
+    GET,
+    POST,
+    PUT,
+} from "../constant/axios";
 import { GET_CODE, UPDATE_CODE } from "../constant/code";
 import { CSS, HTML, JS } from "../constant/localStorage";
 import { toast } from "react-toastify";
@@ -46,10 +54,18 @@ import {
     fbLogin,
     setPicture,
     register,
+    setErrorStatus,
+    recoverPassword,
+    updateGID,
+    updateFID,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
 import { setLocation } from "../actions/tutorial";
+import { checkLastPwd } from "../actions/login";
+import { direct, verifyUrlRecover } from "../actions/direct";
+import { getProfile, updateProfile } from "../actions/profile";
+
 function* handleTest() {
     try {
         const res = yield call(() => thisAxios(API, GET, "test"));
@@ -73,6 +89,7 @@ function* handleTest() {
 
 function* handleCheckLogin() {
     const auth = localStorage["access_token"];
+    const url = yield select((state) => state.code.url);
     if (auth) {
         setAuth(auth);
         try {
@@ -86,9 +103,15 @@ function* handleCheckLogin() {
                     picture = res.data.picture.toString();
                 } else picture = null;
                 yield put(setPicture.setPictureRequest(picture));
+                if (res.data.user.fid) {
+                    yield put(updateFID.updateFIDRequest(res.data.user.fid));
+                } else if (res.data.user.gid) {
+                    yield put(updateGID.updateGIDRequest(res.data.user.gid));
+                }
                 console.log("PICTURE:", picture);
+
                 setAuth(auth);
-                yield put(push("/login"));
+                // yield put(push(`/${url}`));
             }
         } catch (err) {
             setAuth(null);
@@ -104,6 +127,7 @@ function* handleGetCode() {
         let {
             payload: { q },
         } = yield take(GET_CODE);
+        console.log("this is q in handleGetCodeSaga:", q);
         const auth = localStorage["access_token"];
         yield put(closeModal());
         yield put(setError(null));
@@ -201,16 +225,21 @@ function* handleRegister(action) {
         );
         if (res.data.success) {
             console.log("HERE");
-            yield put(loginSuccess(action.payload.name));
-            localStorage.setItem("access_token", res.data.accessToken);
+            // yield put(loginSuccess(action.payload.name));
+            // localStorage.setItem("access_token", res.data.accessToken);
             yield delay(500);
             yield put(setProgress(false));
-            yield put(push("/login"));
+            // yield put(push("/login"));
+            yield put(setErrorStatus.setErrorStatusRequest(false));
+            yield put(setErrorLogin(res.data.message));
+            // yield fork(handleGetCode);
+            return;
         } else {
             yield put(setProgress(false));
         }
     } catch (err) {
         if (err.response.data) {
+            yield put(setErrorStatus.setErrorStatusRequest(true));
             console.log(err.response.data);
             yield delay(500);
             yield put(setProgress(false));
@@ -330,7 +359,12 @@ function* handleUpdate(action) {
     const css = JSON.parse(getLocal(CSS));
     const js = JSON.parse(getLocal(JS));
     const body = { html, css, js, name };
-    if (isAuthenticated) {
+    if (!html && !css && !js) {
+        yield delay(500);
+
+        yield put(setError("Write something before save"));
+        yield put(setProgress(false));
+    } else if (isAuthenticated) {
         if (url === "code") {
             console.log("in here:", url);
             try {
@@ -478,11 +512,18 @@ function* handleDelete(action) {
         // yield put(deleteProjectSuccess(res.data.project));
         yield put(setProgress(false));
         yield put(setNameCode(null));
-        yield put(setUrl(null));
+        yield put(setUrl("code"));
         yield put(closeModal());
-        setLocal(HTML, "");
-        setLocal(CSS, "");
-        setLocal(JS, "");
+
+        // setLocal(HTML, "");
+        // setLocal(CSS, "");
+        // setLocal(JS, "");
+        // delete all data project after delete
+        // yield put(
+        //     setCode({ html: "", css: "", js: "", nameCode: null, q: "code" })
+        // );
+        // yield put(setUrl("code"));
+
         yield put(push("/code"));
 
         return;
@@ -575,6 +616,315 @@ function* handleFBLogin(action) {
     yield put(setProgress(false));
 }
 
+function* handleCheckLastPwd(action) {
+    yield put(setProgress(true));
+    yield delay(500);
+    const { email, recentPassword: password } = action.payload;
+    console.log({ email, password });
+    try {
+        const res = yield call(() =>
+            thisAxios(API_LOGIN, POST, "verify/last-pwd", { email, password })
+        );
+        if (res.data.success && res.data.accessToken) {
+            localStorage.setItem("access_token", res.data.accessToken);
+            yield delay(500);
+            yield put(setProgress(false));
+            yield put(loginSuccess(res.data.name));
+            yield put(push("/login"));
+        } else {
+            yield delay(500);
+            yield put(setProgress(false));
+            yield put(setErrorStatus.setErrorStatusRequest(false));
+            yield put(setErrorLogin(res.data.message));
+        }
+    } catch (err) {
+        yield delay(500);
+        yield put(setProgress(false));
+        if (err.response.data) {
+            console.log(err);
+            yield put(setErrorStatus.setErrorStatusRequest(true));
+            yield put(setErrorLogin(err.response.data.message));
+        }
+    }
+}
+
+function* handleRecoverPassword(action) {
+    yield put(setProgress(true));
+    yield delay(500);
+    const { newPassword, confirmPassword, url } = action.payload;
+    const body = { newPassword, confirmPassword, url };
+    try {
+        const res = yield call(() => thisAxios(API_LOGIN, POST, url, body));
+        if (res.data.success && res.data.accessToken) {
+            yield delay(500);
+            yield put(setProgress(false));
+            yield put(setErrorStatus.setErrorStatusRequest(false));
+            yield put(setErrorLogin(res.data.message));
+            yield delay(2900);
+            yield put(setProgress(true));
+            yield put(direct.directSuccess(5));
+            yield delay(5800);
+            localStorage.setItem("access_token", res.data.accessToken);
+            yield put(loginSuccess(res.data.name));
+            yield put(push("/login"));
+
+            console.log(body);
+        }
+    } catch (err) {
+        if (err.response.data) {
+            yield delay(500);
+            console.log(err.response.data);
+            yield put(setProgress(false));
+            yield put(setErrorStatus.setErrorStatusRequest(true));
+            yield put(setErrorLogin(err.response.data.message));
+            yield delay(2900);
+            if (err.response.data.redirect) {
+                yield put(setProgress(true));
+                yield put(direct.directSuccess(5));
+                yield delay(5000);
+                yield put(setProgress(false));
+                yield put(direct.directFailure(false));
+                yield put(setErrorLogin(null));
+                yield put(push("/identify/user"));
+            }
+        }
+    }
+}
+
+function* handleVerifyUrl(action) {
+    const { url } = action.payload;
+    console.log("Url:", url);
+    yield put(setProgress(true));
+    // yield put(
+    //     verifyUrlRecover.verifyUrlRecoverSuccess({
+    //         isVerify: true,
+    //         isWaiting: false,
+    //         message: "We're setting for you! Please wait in a second",
+    //     })
+    // );
+    yield delay(500);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_LOGIN, POST, `check/${url}`)
+        );
+        if (res.data.success) {
+            yield delay(4000);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: res.data.message,
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(2900);
+            yield put(direct.directFailure(false));
+            yield put(direct.directSuccess(5));
+            yield delay(5700);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: false,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+        }
+    } catch (err) {
+        if (err.response.data && err.response.data.redirect) {
+            yield delay(4000);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: "Please wait! We're setting for you...",
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(4000);
+            yield put(direct.directFailure(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    // message: err.response.data.message,
+                    message:
+                        "This session has expired or it might be used! Auto return in 5 seconds",
+                })
+            );
+            yield delay(4000);
+            yield put(direct.directSuccess(5));
+            yield delay(5700);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            yield put(push("/identify/user"));
+        } else {
+            yield delay(4000);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: "Please wait! We're setting for you...",
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(4000);
+            yield put(direct.directFailure(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    // message: err.response.data.message,
+                    message:
+                        "This session has expired or it might be used! Auto return in 5 seconds",
+                })
+            );
+            yield delay(4000);
+            yield put(direct.directSuccess(5));
+            yield delay(5700);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            yield put(push("/identify/user"));
+        }
+    }
+}
+
+function* handleGetProfile(action) {
+    const url = action.payload.url;
+    const auth = localStorage["access_token"];
+    try {
+        setAuth(auth);
+        const res = yield call(() =>
+            thisAxios(API_USER, GET, `profile/${url}}`)
+        );
+        if (res.data.success) {
+            console.log(res);
+            yield delay(2000);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: res.data.message,
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(2000);
+            yield put(direct.directFailure(false));
+            yield put(direct.directSuccess(2));
+            yield delay(2700);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: false,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            res.data.user.password = res.data.user.password.slice(0, 15);
+            yield put(updateProfile.updateProfileSuccess(res.data.user));
+        }
+    } catch (err) {
+        yield delay(4000);
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                message: "Please wait! We're setting for you...",
+            })
+        );
+        yield put(direct.directSuccess(""));
+        yield delay(4000);
+        yield put(direct.directFailure(false));
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                // message: err.response.data.message,
+                message: "Sorry! Looks like something went wrong! Return in 5s",
+            })
+        );
+        yield delay(4000);
+        yield put(direct.directSuccess(5));
+        yield delay(5700);
+        yield put(setProgress(false));
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                message: "",
+            })
+        );
+        localStorage.setItem("access_token", "");
+        yield put(loginFailed(""));
+        yield put(push("/login"));
+    }
+}
+
+function* handleUpdateProfile(action) {
+    const {
+        account: { name, job, country, phone, picture, fid, gid },
+        url,
+    } = action.payload;
+    const auth = localStorage["access_token"];
+    setAuth(auth);
+    yield put(setProgress(true));
+    yield delay(1500);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_USER, POST, `profile/${url}`, {
+                name,
+                job,
+                picture,
+                country,
+                phone,
+                fid,
+                gid,
+            })
+        );
+        if (res.data.success) {
+            yield delay(250);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: res.data.message,
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(2000);
+            yield put(direct.directFailure(false));
+            yield put(direct.directSuccess(1));
+            yield delay(1500);
+            yield put(setProgress(false));
+            yield put(updateProfile.updateProfileSuccess(res.data.user));
+            yield put(loginSuccess(name));
+            yield put(setPicture.setPictureRequest(res.data.user.picture));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: false,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            yield put(push(`/users/profile/${url}`));
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
     yield takeLatest("CHECK_LOGIN", handleCheckLogin);
@@ -589,6 +939,24 @@ function* rootSaga() {
     yield takeLatest(ggLogin.ggLoginRequest().type, handleGGLogin);
     yield takeLatest(fbLogin.fbLoginRequest().type, handleFBLogin);
     yield takeLatest(OPEN_MODAL_SUCCESS, handleOpenModal);
+    yield takeLatest(
+        updateProfile.updateProfileRequest().type,
+        handleUpdateProfile
+    );
+
+    yield takeLatest(getProfile.getProfileRequest().type, handleGetProfile);
+    yield takeLatest(
+        verifyUrlRecover.verifyUrlRecoverRequest().type,
+        handleVerifyUrl
+    );
+    yield takeLatest(
+        checkLastPwd.checkLastPwdRequest().type,
+        handleCheckLastPwd
+    );
+    yield takeLatest(
+        recoverPassword.recoverPasswordRequest().type,
+        handleRecoverPassword
+    );
 }
 
 export default rootSaga;

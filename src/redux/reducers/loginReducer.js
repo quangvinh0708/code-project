@@ -1,4 +1,11 @@
-import { fbLogin, ggLogin, setPicture } from "../../actions/login";
+import {
+    fbLogin,
+    ggLogin,
+    setErrorStatus,
+    setPicture,
+    updateFID,
+    updateGID,
+} from "../../actions/login";
 import {
     LOGIN,
     LOGIN_SUCCESS,
@@ -13,6 +20,7 @@ const initialState = {
     },
     isAuthenticated: false,
     error: null,
+    errorStatus: false,
     nameCode: null,
     ggAccountInfo: {
         gid: null,
@@ -155,6 +163,33 @@ const loginReducer = (state = initialState, action) => {
                 },
                 isAuthenticated: true,
                 err: null,
+            };
+        }
+
+        case setErrorStatus.setErrorStatusRequest().type: {
+            return {
+                ...state,
+                errorStatus: action.payload,
+            };
+        }
+
+        case updateFID.updateFIDRequest().type: {
+            return {
+                ...state,
+                fbAccountInfo: {
+                    ...state.fbAccountInfo,
+                    fid: action.payload,
+                },
+            };
+        }
+
+        case updateGID.updateGIDRequest().type: {
+            return {
+                ...state,
+                ggAccountInfo: {
+                    ...state.ggAccountInfo,
+                    gid: action.payload,
+                },
             };
         }
 

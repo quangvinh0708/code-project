@@ -75,6 +75,7 @@ const Nav = ({
 
         localStorage.removeItem("access_token");
         logoutCreator();
+        dispatch(push("/login"));
     };
 
     const onLogoutGGSuccess = (res) => {
@@ -103,76 +104,84 @@ const Nav = ({
         localStorage.setItem(
             "code-html",
             JSON.stringify(`<div style="parent">
-            <div class="text-type">
-              <p>Welcome to code-online&nbsp;</p>
-            </div>
-            <div class="text-type flow">
-                <p>Type something to-start&nbsp;</p>
-            </div>
-        </div>
-        `)
+  <div class="text-type">
+    <p>WELCOME to CODE-ONLINE&nbsp;</p>
+  </div>
+  <div class="text-type flow">
+    <p>Type something to-start&nbsp;</p>
+  </div>
+</div>
+      `)
         );
         localStorage.setItem(
             "code-css",
             JSON.stringify(`body {
-            margin:0px;
-            height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-  			color: #fff;
-  		
-          }
-          .parent {
-            display: flex;
-            flex-direction: column;
-          }
-          .text-type {
-            padding:20px 30px;
-            background:#f5f5f5;
-            font-size:35px;
-            font-family:monospace;
-            border-radius:50px;
-            position: relative;
-            top: -60px;
-             margin-top: 15px;
-            	background: #8167a9
-          }
-          .text-type p {
-            margin:0px;
-            white-space:nowrap;
-            overflow:hidden;
-            animation:typing 4s steps(22,end) forwards,
-                      blink 1s infinite;
-          
-          }
-          .flow {
-            display: none;
-          }
-          @keyframes typing {
-            0% { width:0% }
-            100% { width:100% }
-          }
-          @keyframes blink {
-            0%,100% {
-              border-right:2px solid transparent;
-            }
-            50% {
-              border-right:2px solid #222;
-            }
-          }`)
+  margin:0px;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: #fff;
+
+}
+.parent {
+  display: flex;
+  flex-direction: column;
+}
+.text-type {
+  padding:20px 30px;
+  background:#f5f5f5;
+  font-size:35px;
+  font-family:monospace;
+  border-radius:50px;
+  position: relative;
+  font-weight: 650;
+  top: -60px;
+  margin-top: 15px;
+  background-image: linear-gradient(45deg, #98DBC6 45.02%, #ffe6e1 10%);
+}
+.text-type p {
+  margin:0px;
+  white-space:nowrap;
+  overflow:hidden;
+  animation:typing 4s steps(22,end) forwards, blink 1s infinite;
+
+}
+.flow {
+  display: none;
+  padding:20px 30px;
+  background:#f5f5f5;
+  font-size:35px;
+  font-family:monospace;
+  border-radius:50px;
+  position: relative;
+  font-weight: 550;
+  top: -60px;
+  margin-top: 15px;
+  background-image: linear-gradient(to right, #98EDC6 60%, #98EDC6);
+}
+@keyframes typing {
+  0% { width:0% }
+  100% { width:100% }
+}
+@keyframes blink {
+  0%,100% {
+    border-right:2px solid transparent;
+  }
+  50% {
+    border-right:2px solid #222;
+  }
+}`)
         );
         localStorage.setItem(
             "code-js",
             JSON.stringify(`setTimeout(() => {
             var x = document.getElementsByClassName('flow')[0];
-           x.style.cssText = "display: flex !important"
-          },1000)`)
+            x.style.cssText = "display: flex !important" },1000)`)
         );
         // window.open("http://localhost:3000/code");
         // dispatch(push("/code"));
         window.location.href = CODE;
-
     };
     const renderProjects = () => {
         let jsx;
@@ -223,9 +232,9 @@ const Nav = ({
         }, 70);
     };
 
-    // useEffect(() => {
-    //     getProjectsCreator();
-    // }, [nameCode, name]);
+    useEffect(() => {
+        getProjectsCreator();
+    }, [nameCode, name]);
 
     return (
         <div className="navigation-wrap bg-light start-header start-style">
@@ -359,7 +368,7 @@ const Nav = ({
                                                 </p>
                                                 <p
                                                     className="dropdown-item"
-                                                    to="/Employee/Shareholder"
+                                                    to=""
                                                     style={{
                                                         cursor: `pointer`,
                                                     }}
@@ -442,6 +451,12 @@ const Nav = ({
                                             >
                                                 Sign out
                                             </Link> */}
+                                            <Link
+                                                className="dropdown-item"
+                                                to={`/users/profile/${localStorage["access_token"]}`}
+                                            >
+                                                Profile
+                                            </Link>
                                             <GoogleLogout
                                                 clientId={API_GG}
                                                 render={(renderProps) => (
