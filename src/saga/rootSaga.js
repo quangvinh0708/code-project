@@ -58,6 +58,7 @@ import {
     recoverPassword,
     updateGID,
     updateFID,
+    updateUID,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
@@ -97,6 +98,8 @@ function* handleCheckLogin() {
                 thisAxios(API_LOGIN, POST, "check-login")
             );
             if (res.data.success) {
+                console.log("CHECK LOGIN SAGA LINE 100");
+
                 yield put(loginSuccess(res.data.name));
                 let picture;
                 if (res.data.picture) {
@@ -104,9 +107,14 @@ function* handleCheckLogin() {
                 } else picture = null;
                 yield put(setPicture.setPictureRequest(picture));
                 if (res.data.user.fid) {
+                    console.log("Go into if FID");
                     yield put(updateFID.updateFIDRequest(res.data.user.fid));
                 } else if (res.data.user.gid) {
+                    console.log("Go into if GID");
+
                     yield put(updateGID.updateGIDRequest(res.data.user.gid));
+                } else {
+                    yield put(updateUID.updateUIDRequest(res.data.user.objId));
                 }
                 console.log("PICTURE:", picture);
 
@@ -114,6 +122,7 @@ function* handleCheckLogin() {
                 // yield put(push(`/${url}`));
             }
         } catch (err) {
+            console.log("CHECK LOGIN SAGA LINE 120");
             setAuth(null);
             localStorage.removeItem("access_token");
             localStorage.removeItem("name");
@@ -663,7 +672,7 @@ function* handleRecoverPassword(action) {
             yield delay(2900);
             yield put(setProgress(true));
             yield put(direct.directSuccess(5));
-            yield delay(5800);
+            yield delay(5200);
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(loginSuccess(res.data.name));
             yield put(push("/login"));
@@ -681,7 +690,7 @@ function* handleRecoverPassword(action) {
             if (err.response.data.redirect) {
                 yield put(setProgress(true));
                 yield put(direct.directSuccess(5));
-                yield delay(5000);
+                yield delay(5200);
                 yield put(setProgress(false));
                 yield put(direct.directFailure(false));
                 yield put(setErrorLogin(null));
@@ -810,6 +819,8 @@ function* handleGetProfile(action) {
             thisAxios(API_USER, GET, `profile/${url}}`)
         );
         if (res.data.success) {
+            console.log("CHECK handleGetPRofile LINE 819");
+
             console.log(res);
             yield delay(2000);
             yield put(
@@ -823,7 +834,7 @@ function* handleGetProfile(action) {
             yield delay(2000);
             yield put(direct.directFailure(false));
             yield put(direct.directSuccess(2));
-            yield delay(2700);
+            yield delay(2200);
             yield put(setProgress(false));
             yield put(
                 verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -832,10 +843,16 @@ function* handleGetProfile(action) {
                     message: "",
                 })
             );
-            res.data.user.password = res.data.user.password.slice(0, 15);
+            console.log("CHECK handleGetPRofile LINE 843");
+
+            if (res.data.user.password) {
+                res.data.user.password = res.data.user.password.slice(0, 15);
+            }
             yield put(updateProfile.updateProfileSuccess(res.data.user));
+            return;
         }
     } catch (err) {
+        console.log("error lan 1", err);
         yield delay(4000);
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -847,6 +864,8 @@ function* handleGetProfile(action) {
         yield put(direct.directSuccess(""));
         yield delay(4000);
         yield put(direct.directFailure(false));
+        console.log("CHECK handleGetPRofile LINE 859");
+
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
                 isVerify: true,
@@ -866,10 +885,11 @@ function* handleGetProfile(action) {
                 message: "",
             })
         );
-        localStorage.setItem("access_token", "");
-        yield put(loginFailed(""));
-        yield put(push("/login"));
+        console.log("Eror lan 2", err);
     }
+    localStorage.setItem("access_token", "");
+    yield put(loginFailed(""));
+    yield put(push("/login"));
 }
 
 function* handleUpdateProfile(action) {
@@ -905,8 +925,8 @@ function* handleUpdateProfile(action) {
             yield put(direct.directSuccess(""));
             yield delay(2000);
             yield put(direct.directFailure(false));
-            yield put(direct.directSuccess(1));
-            yield delay(1500);
+            yield put(direct.directSuccess(2));
+            yield delay(2100);
             yield put(setProgress(false));
             yield put(updateProfile.updateProfileSuccess(res.data.user));
             yield put(loginSuccess(name));
@@ -922,6 +942,39 @@ function* handleUpdateProfile(action) {
         }
     } catch (err) {
         console.log(err);
+        yield delay(1500);
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                message: "Looks like something went wrong...",
+            })
+        );
+        yield put(direct.directSuccess(""));
+        yield delay(1500);
+        yield put(direct.directFailure(false));
+
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                // message: err.response.data.message,
+                message:
+                    "Your name should be long than 5 characters! Auto Return in 5s",
+            })
+        );
+        yield delay(2000);
+        yield put(direct.directSuccess(5));
+        yield delay(5200);
+        yield put(setProgress(false));
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                message: "",
+            })
+        );
+        yield put(push(`/code`));
     }
 }
 

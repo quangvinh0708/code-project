@@ -89,3 +89,6 @@ export const updateFID = createActions({
 export const updateGID = createActions({
     updateGIDRequest: (val) => val,
 });
+export const updateUID = createActions({
+    updateUIDRequest: (val) => val,
+});

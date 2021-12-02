@@ -39,6 +39,7 @@ const DirectHelper = () => {
                 color: `#000`,
                 position: `relative`,
                 zIndex: `5000`,
+                marginBottom: `8px`,
             }}
         >
             <Box

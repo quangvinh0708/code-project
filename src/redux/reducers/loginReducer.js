@@ -5,6 +5,7 @@ import {
     setPicture,
     updateFID,
     updateGID,
+    updateUID,
 } from "../../actions/login";
 import {
     LOGIN,
@@ -17,6 +18,7 @@ const initialState = {
     account: {
         name: null,
         picture: null,
+        uid: null,
     },
     isAuthenticated: false,
     error: null,
@@ -109,6 +111,7 @@ const loginReducer = (state = initialState, action) => {
                     ...state.account,
                     name: null,
                     picture: null,
+                    uid: null,
                 },
                 ggAccountInfo: {
                     gid: null,
@@ -189,6 +192,16 @@ const loginReducer = (state = initialState, action) => {
                 ggAccountInfo: {
                     ...state.ggAccountInfo,
                     gid: action.payload,
+                },
+            };
+        }
+
+        case updateUID.updateUIDRequest().type: {
+            return {
+                ...state,
+                account: {
+                    ...state.account,
+                    uid: action.payload,
                 },
             };
         }

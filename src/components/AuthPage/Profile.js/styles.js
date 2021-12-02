@@ -13,7 +13,7 @@ const styles = () => ({
         // alignItems: `center`,
         justifyContent: `center`,
         textAlign: `center`,
-        marginTop: `0%`,
+        marginTop: `-1.5%`,
         ["@media(max-width:787px)"]: {
             marginTop: `2.5% !important`,
             width: "100%",
@@ -58,6 +58,8 @@ const styles = () => ({
     },
     title: {
         borderBottom: `1px solid #000`,
+        fontWeight: `525`,
+        fontFamily: `Poppins`,
     },
     left: {
         // marginRight: `5px`,
@@ -83,8 +85,14 @@ const styles = () => ({
     avatar: {
         width: `89%`,
         margin: `auto`,
-        paddingTop: `12px`,
-        height: `350px !important`,
+        padding: `12px 0 0 0px`,
+        // height: `350px !important`,
+        height: `420px !important`,
+        ["@media(max-width:500px)"]: {
+            width: "100%",
+            // height: `auto`,
+        },
+        // height: `auto !important`,
 
         // height: `auto`,
         // height: `300px`,
