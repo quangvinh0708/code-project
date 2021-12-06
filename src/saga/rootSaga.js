@@ -32,6 +32,7 @@ import {
     GET,
     POST,
     PUT,
+    SHARE_CODE,
 } from "../constant/axios";
 import { GET_CODE, UPDATE_CODE } from "../constant/code";
 import { CSS, HTML, JS } from "../constant/localStorage";
@@ -66,6 +67,8 @@ import { setLocation } from "../actions/tutorial";
 import { checkLastPwd } from "../actions/login";
 import { direct, verifyUrlRecover } from "../actions/direct";
 import { getProfile, updateProfile } from "../actions/profile";
+import { openModalShare } from "../actions/modalShareCode";
+import { getShareCode } from "../actions/getShareCode";
 
 function* handleTest() {
     try {
@@ -91,6 +94,7 @@ function* handleTest() {
 function* handleCheckLogin() {
     const auth = localStorage["access_token"];
     const url = yield select((state) => state.code.url);
+    console.log("Handle Check Login", url);
     if (auth) {
         setAuth(auth);
         try {
@@ -120,14 +124,33 @@ function* handleCheckLogin() {
 
                 setAuth(auth);
                 // yield put(push(`/${url}`));
+                if (url !== "code") {
+                    try {
+                        const res1 = yield call(() => thisAxios(API, GET, url));
+                        console.log("res1", res1);
+                        const { html, css, js, name } = res1.data.code;
+                        if (res1.data.status) {
+                            yield put(push(`/${url}`));
+                        }
+                    } catch (err) {
+                        yield put(setProgress(false));
+                        yield put(push(`/code`));
+                        return;
+                    }
+                }
             }
         } catch (err) {
-            console.log("CHECK LOGIN SAGA LINE 120");
+            console.log("LINE 129 CHECK LOGIN SAGA", err);
+            yield put(setProgress(false));
             setAuth(null);
             localStorage.removeItem("access_token");
             localStorage.removeItem("name");
             yield put(push("/login"));
         }
+    } else {
+        yield put(setProgress(false));
+        console.log("Line 136: Else not auth");
+        yield put(push("/login"));
     }
 }
 
@@ -166,6 +189,8 @@ function* handleGetCode() {
             localStorage.removeItem("name");
             yield put(setNameCode(null));
             yield put(setUrl("code"));
+
+            //! BELOW
             yield put(push("/code"));
         } else if (auth && q !== "code") {
             setAuth(auth);
@@ -201,6 +226,8 @@ function* handleGetCode() {
                     localStorage.setItem("name", res.data.code.name);
                     // localStorage.setItem('access_token', JSON.stringify(auth));
                     yield put(setUrl(q));
+
+                    //! RECOMMEND IN THIS BELOW
                     yield put(push(`/${q}`));
                 }
             } catch (err) {
@@ -299,38 +326,45 @@ function* handleLogin(action) {
                 localStorage.setItem("access_token", res.data.accessToken);
                 console.log("Check 1:", res.data.accessToken);
                 yield put(loginSuccess(res.data.name));
-
+                console.log("Line 314 Login successfully and have code in url");
                 if (url !== "code") {
                     try {
                         const res1 = yield call(() => thisAxios(API, GET, url));
                         console.log("res1", res1);
                         const { html, css, js, name } = res1.data.code;
                         if (res1.data.status) {
+                            console.log(
+                                "Line 321 Login successfully and have code in url"
+                            );
                             setLocal(HTML, html);
                             setLocal(CSS, css);
                             setLocal(JS, js);
                             yield put(setCode({ html, css, js }));
                             yield put(setNameCode(name));
                             localStorage.setItem("name", name);
+                            yield put(setProgress(false));
                             yield put(push(`/${url}`));
                         }
                     } catch (err) {
                         yield put(setProgress(false));
                         yield put(push(`/code`));
+                        return;
                     }
                 }
 
-                yield put(setProgress(false));
-                yield put(push(`/${url}`));
+                // yield put(setProgress(false));
+                // yield put(push(`/${url}`));
             }
         } catch (err) {
             if (err.response.data) {
+                console.log("Line 346 Error", err);
                 yield put(loginFailed(err.response.data));
                 console.log(err.response.data);
 
                 yield put(setProgress(false));
                 return;
             }
+            console.log("Line 353 Error", err);
         }
     } else {
         yield delay(370);
@@ -413,7 +447,8 @@ function* handleUpdate(action) {
                     yield put(setUrl(url));
                     yield put(closeModal());
                     yield put(getProjects());
-                    yield put(push(`/${url}`));
+                    //! BELOW
+                    // yield put(push(`/${url}`));
                 }
             } catch (err) {
                 if (err.response.data) {
@@ -533,6 +568,8 @@ function* handleDelete(action) {
         // );
         // yield put(setUrl("code"));
 
+        // ! BELOW
+        // window.location.href = "http://localhost:3000/code";
         yield put(push("/code"));
 
         return;
@@ -702,7 +739,7 @@ function* handleRecoverPassword(action) {
 
 function* handleVerifyUrl(action) {
     const { url } = action.payload;
-    console.log("Url:", url);
+    console.log("Url after dispatch:", url);
     yield put(setProgress(true));
     // yield put(
     //     verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -834,7 +871,7 @@ function* handleGetProfile(action) {
             yield delay(2000);
             yield put(direct.directFailure(false));
             yield put(direct.directSuccess(2));
-            yield delay(2200);
+            yield delay(2100);
             yield put(setProgress(false));
             yield put(
                 verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -899,6 +936,8 @@ function* handleUpdateProfile(action) {
         account: { name, job, country, phone, picture, fid, gid },
         url,
     } = action.payload;
+    console.log("FID la: ", fid);
+    console.log("GID la: ", gid);
     const auth = localStorage["access_token"];
     setAuth(auth);
     yield put(setProgress(true));
@@ -980,8 +1019,130 @@ function* handleUpdateProfile(action) {
     }
 }
 
+function* handleOpenModalShare(action) {
+    const url = action.payload;
+    try {
+        const res = yield call(() => thisAxios(API, POST, `share/${url}`));
+        if (res.data.success) {
+            yield delay(2200);
+            console.log("Res successfully", res);
+            yield put(
+                openModalShare.openModalShareSuccess(
+                    `${SHARE_CODE}/${res.data.endLink}`
+                )
+            );
+            return;
+        }
+    } catch (err) {
+        yield put(openModalShare.openModalShareFailure());
+        console.log(err);
+    }
+}
+
+function* handleGetShareCode(action) {
+    yield put(setProgress(true));
+    yield delay(1500);
+    const id = action.payload;
+    try {
+        const res = yield call(() => thisAxios(API, POST, `cs/share/${id}`));
+        if (res.data.success) {
+            const { html, css, js } = res.data.code;
+            console.log({ html, css, js });
+            yield delay(1500);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: res.data.message,
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(1000);
+            yield put(direct.directFailure(false));
+            yield put(direct.directSuccess(2));
+            yield delay(2100);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: false,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            setLocal(HTML, html);
+            setLocal(CSS, css);
+            setLocal(JS, js);
+            yield put(setCode({ html, css, js }));
+            yield put(getShareCode.getShareCodeSuccess());
+
+            yield put(push("/code"));
+            return;
+            // yield put(push(`/users/profile/${url}`));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log("err data", err);
+
+            yield delay(1500);
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: true,
+                    isWaiting: false,
+                    message: err.response.data.message,
+                })
+            );
+            yield put(direct.directSuccess(""));
+            yield delay(2000);
+            yield put(direct.directFailure(false));
+            yield put(direct.directSuccess(2));
+            yield delay(2100);
+            yield put(setProgress(false));
+            yield put(
+                verifyUrlRecover.verifyUrlRecoverSuccess({
+                    isVerify: false,
+                    isWaiting: false,
+                    message: "",
+                })
+            );
+            yield put(getShareCode.getShareCodeFailure());
+            yield put(push("/code"));
+            return;
+        }
+        // else
+        console.log("err except", err);
+        yield delay(1500);
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: true,
+                isWaiting: false,
+                message: err.response.data.message,
+            })
+        );
+        yield put(direct.directSuccess(""));
+        yield delay(2000);
+        yield put(direct.directFailure(false));
+        yield put(direct.directSuccess(2));
+        yield delay(2100);
+        yield put(setProgress(false));
+        yield put(
+            verifyUrlRecover.verifyUrlRecoverSuccess({
+                isVerify: false,
+                isWaiting: false,
+                message: "",
+            })
+        );
+        yield put(getShareCode.getShareCodeFailure());
+        yield put(push("/code"));
+        return;
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
+    yield takeLatest(
+        openModalShare.openModalShareRequest().type,
+        handleOpenModalShare
+    );
     yield takeLatest("CHECK_LOGIN", handleCheckLogin);
     yield takeLatest(LOGIN, handleLogin);
     yield takeLatest(register.registerRequest().type, handleRegister);
@@ -994,6 +1155,11 @@ function* rootSaga() {
     yield takeLatest(ggLogin.ggLoginRequest().type, handleGGLogin);
     yield takeLatest(fbLogin.fbLoginRequest().type, handleFBLogin);
     yield takeLatest(OPEN_MODAL_SUCCESS, handleOpenModal);
+    yield takeLatest(
+        getShareCode.getShareCodeRequest().type,
+        handleGetShareCode
+    );
+
     yield takeLatest(
         updateProfile.updateProfileRequest().type,
         handleUpdateProfile

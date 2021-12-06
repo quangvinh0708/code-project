@@ -628,6 +628,10 @@ body {
     text-align: center;
 }
 
+.limit-drop {
+    padding-bottom: 0 !important;
+}
+
 /* .dropbtn {
     color: white;
     font-size: 16px;

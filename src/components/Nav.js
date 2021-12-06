@@ -29,6 +29,8 @@ import { GoogleLogout } from "react-google-login";
 import { API_GG, CODE } from "../constant/axios";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { push } from "connected-react-router";
+import { openModalShare } from "../actions/modalShareCode";
+import { setFullScreen, setView, setLargeScreen } from "../actions/view";
 
 const Nav = ({
     openModalSuccessCreator,
@@ -48,6 +50,9 @@ const Nav = ({
     const openSidebar = useSelector((state) => state.tutorial.openSidebar);
     const picture = useSelector((state) => state.auth.account.picture);
     const progress = useSelector((state) => state.modal.progress);
+    const fullScreen = useSelector((state) => state.view.fullScreen);
+    const largeScreen = useSelector((state) => state.view.largeScreen);
+
     const dispatch = useDispatch();
 
     let [html, setHtml] = useLocalStorage("html", "");
@@ -198,10 +203,26 @@ const Nav = ({
                 {projects.map((project, key) => (
                     <a
                         key={key}
-                        className="dropdown-item"
+                        className="dropdown-item limit-drop"
                         href={`/${project._id}`}
+                        style={{
+                            background: project.name === nameCode && `#8167a9`,
+                            color: project.name === nameCode && `#fff`,
+                        }}
                     >
-                        {project.name}
+                        {" "}
+                        <span
+                            style={{
+                                display: "inline-block",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                maxWidth: "30ch",
+                                padding: `0`,
+                            }}
+                        >
+                            {project.name}
+                        </span>
                     </a>
                 ))}
             </div>
@@ -231,6 +252,12 @@ const Nav = ({
             dispatch(setSidebar.setSidebar(!openSidebar));
         }, 70);
     };
+
+    const handleShare = () => {
+        dispatch(openModalShare.openModalShareRequest(url));
+    };
+
+    const status = useSelector((state) => state.view.status);
 
     useEffect(() => {
         getProjectsCreator();
@@ -272,7 +299,18 @@ const Nav = ({
 
                                 <Link
                                     to="/code"
-                                    onClick={handleDirect}
+                                    // onClick={handleDirect}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (!status)
+                                            dispatch(
+                                                setView.setViewSuccess(true)
+                                            );
+                                        else
+                                            dispatch(
+                                                setView.setViewSuccess(false)
+                                            );
+                                    }}
                                     style={{
                                         color: "#8167a9",
                                         fontSize: `1.5rem`,
@@ -285,6 +323,26 @@ const Nav = ({
                                     {"<Code Yourself />"}
                                 </Link>
                             </div>
+
+                            {/* <Button
+                                sx={{
+                                    color: "#8167a9",
+                                    ["@media(max-width: 600px"]: {
+                                        float: "right",
+                                        border: "none",
+                                        paddingRight: "0",
+                                        padding: 0,
+                                        margin: 0,
+                                        marginBottom: `-5px`,
+                                        color: "#8167a9",
+                                    },
+                                }}
+                                onClick={() => {
+                                    dispatch(setView.setViewSuccess(!status));
+                                }}
+                            >
+                                View 2
+                            </Button> */}
 
                             <button
                                 className="navbar-toggler"
@@ -304,6 +362,133 @@ const Nav = ({
                                 style={{ marginRight: 17 }}
                             >
                                 <ul className="navbar-nav ml-auto py-4 py-md-0">
+                                    <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <Link
+                                            className="nav-link dropdown-toggle"
+                                            data-toggle="dropdown"
+                                            type="button"
+                                            role="button"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            // onClick={(e) => {
+                                            //     e.preventDefault();
+                                            //     dispatch(
+                                            //         setView.setViewSuccess(
+                                            //             !status
+                                            //         )
+                                            //     );
+                                            // }}
+                                            style={{
+                                                color: "#8167a9 !important",
+                                                fontWeight: 780,
+                                                padding: `2px 8px`,
+                                            }}
+                                            to="/"
+                                        >
+                                            {" "}
+                                            View
+                                        </Link>
+                                        <div className="dropdown-menu">
+                                            <p
+                                                style={{
+                                                    cursor: `pointer`,
+                                                    background:
+                                                        status === false &&
+                                                        fullScreen === false &&
+                                                        `#8167a9`,
+                                                    color:
+                                                        status === false &&
+                                                        fullScreen === false &&
+                                                        `#fff`,
+                                                }}
+                                                className="dropdown-item"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    dispatch(
+                                                        setView.setViewSuccess(
+                                                            false
+                                                        )
+                                                    );
+                                                }}
+                                            >
+                                                View 1
+                                            </p>
+                                            <p
+                                                style={{
+                                                    cursor: `pointer`,
+                                                    background:
+                                                        status === true &&
+                                                        !largeScreen &&
+                                                        `#8167a9`,
+                                                    color:
+                                                        status === true &&
+                                                        !largeScreen &&
+                                                        `#fff`,
+                                                }}
+                                                className="dropdown-item"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    dispatch(
+                                                        setView.setViewSuccess(
+                                                            true
+                                                        )
+                                                    );
+                                                }}
+                                            >
+                                                View 2
+                                            </p>
+                                            <p
+                                                style={{
+                                                    cursor: `pointer`,
+                                                    background:
+                                                        largeScreen === true &&
+                                                        `#8167a9`,
+                                                    color:
+                                                        largeScreen === true &&
+                                                        `#fff`,
+                                                }}
+                                                className="dropdown-item"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    dispatch(
+                                                        setLargeScreen.setLargeScreenSuccess(
+                                                            !largeScreen
+                                                        )
+                                                    );
+                                                }}
+                                            >
+                                                Large Screen
+                                            </p>
+                                            <p
+                                                className="dropdown-item"
+                                                to=""
+                                                style={{
+                                                    cursor: `pointer`,
+                                                    background:
+                                                        fullScreen === true &&
+                                                        `#8167a9`,
+                                                    color:
+                                                        fullScreen === true &&
+                                                        `#fff`,
+                                                }}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    if (!fullScreen) {
+                                                        dispatch(
+                                                            setFullScreen.setFullScreenSuccess()
+                                                        );
+                                                    } else
+                                                        dispatch(
+                                                            setFullScreen.setFullScreenFailure()
+                                                        );
+                                                }}
+                                            >
+                                                {!fullScreen
+                                                    ? "Full Screen"
+                                                    : "Display Code"}
+                                            </p>
+                                        </div>
+                                    </li>
                                     {isAuthenticated && (
                                         <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                             {isAuthenticated && name && (
@@ -325,10 +510,42 @@ const Nav = ({
                                                             handleGetProjects
                                                         }
                                                     >
-                                                        Your Project
-                                                        {nameCode
-                                                            ? `: ${nameCode}`
-                                                            : ""}
+                                                        <span
+                                                            style={{
+                                                                display:
+                                                                    "inline-block",
+                                                                whiteSpace:
+                                                                    "nowrap",
+                                                                overflow:
+                                                                    "hidden",
+                                                                textOverflow:
+                                                                    "ellipsis",
+                                                                maxWidth:
+                                                                    "14ch",
+                                                                padding: `0`,
+                                                            }}
+                                                        >
+                                                            Your Project
+                                                        </span>
+                                                        <span
+                                                            style={{
+                                                                display:
+                                                                    "inline-block",
+                                                                whiteSpace:
+                                                                    "nowrap",
+                                                                overflow:
+                                                                    "hidden",
+                                                                textOverflow:
+                                                                    "ellipsis",
+                                                                maxWidth:
+                                                                    "14ch",
+                                                                padding: `0`,
+                                                            }}
+                                                        >
+                                                            {nameCode
+                                                                ? `: ${nameCode}`
+                                                                : ""}
+                                                        </span>
                                                     </Link>
                                                     {renderProjects()}
                                                 </>
@@ -350,6 +567,15 @@ const Nav = ({
                                                         style={{
                                                             color: `#8167a9 !important`,
                                                             fontWeight: `780`,
+                                                            display:
+                                                                "inline-block",
+                                                            whiteSpace:
+                                                                "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow:
+                                                                "ellipsis",
+                                                            maxWidth: "14ch",
+                                                            padding: `0`,
                                                         }}
                                                     >
                                                         {nameCode}
@@ -357,6 +583,15 @@ const Nav = ({
                                                 </p>
                                             )}
                                             <div className="dropdown-menu">
+                                                <p
+                                                    style={{
+                                                        cursor: `pointer`,
+                                                    }}
+                                                    className="dropdown-item"
+                                                    onClick={handleShare}
+                                                >
+                                                    Share
+                                                </p>
                                                 <p
                                                     style={{
                                                         cursor: `pointer`,
@@ -420,7 +655,11 @@ const Nav = ({
                                                                 <span
                                                                     style={{
                                                                         marginRight: `5px`,
+                                                                        marginTop: `1.9px`,
                                                                         display: `block`,
+                                                                        alignSelf: `center`,
+                                                                        width: "25px important",
+                                                                        height: `25px !important`,
                                                                     }}
                                                                 >
                                                                     <img
@@ -430,6 +669,11 @@ const Nav = ({
                                                                         alt=""
                                                                         width="25px"
                                                                         heigh="25px"
+                                                                        style={{
+                                                                            width: "25px important",
+                                                                            maxHeight: `25px !important`,
+                                                                        }}
+                                                                        className="avatar-user"
                                                                     />
                                                                 </span>
                                                             ) : (
@@ -437,7 +681,11 @@ const Nav = ({
                                                             )}
                                                         </Fragment>
                                                         <Fragment>
-                                                            {` ${name}`}
+                                                            <span
+                                                                style={{
+                                                                    alignSelf: `center`,
+                                                                }}
+                                                            >{` ${name}`}</span>
                                                         </Fragment>
                                                     </div>
                                                 </span>

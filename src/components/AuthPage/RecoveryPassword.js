@@ -81,6 +81,7 @@ const RecoveryPassword = (props) => {
     };
 
     useEffect(() => {
+        console.log("VerifyUrlRecover: ", match.url.slice(1));
         dispatch(
             verifyUrlRecover.verifyUrlRecoverRequest({
                 isVerify: true,

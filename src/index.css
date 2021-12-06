@@ -39,6 +39,7 @@ textarea {
     display: flex;
 }
 
+
 .editor-container {
     flex-grow: 1;
     flex-basis: 0;
@@ -57,6 +58,10 @@ textarea {
 .editor-container.collapsed .CodeMirror-scroll {
     position: absolute;
     overflow: hidden !important;
+}
+
+.basically {
+    
 }
 
 .expand-collapse-btn {
@@ -135,6 +140,41 @@ textarea {
 .fa-facebook {
     margin-right: 7px;
     width: 15px;
+}
+
+.avatar-user {
+    width: 25px !important;
+    height: 25px !important;
+}
+
+@media (max-width: 354px) {
+    .code-container {
+        margin-top: 120px !important;
+    }
+}
+
+/** */
+.code-container {
+    /* display: flex !important;
+    flex-direction: column !important;
+    margin-top: 70px, */
+    /* background: #000; */
+}
+.top-pane {
+    /* width: 50% !important;
+    float: right;
+    display: flex !important;
+    flex-direction: column !important;
+    height: min-content !important;
+    background: #000; */
+}
+.view {
+    /* width: 50% !important;
+    float: left !important;
+    z-index: 1000;
+    position: fixed;
+    right: 0;
+    height: 100%; */
 }
 
 /** LOCAL */
@@ -339,6 +379,11 @@ textarea {
     }
 } */
 /** HOST */
+/* @media (max-width: 418px) {
+    .code-container {
+        margin-top: 12px !important;
+    }
+} */
 @media (max-width: 500px) {
     .pane {
         /* width: max-content !important; */

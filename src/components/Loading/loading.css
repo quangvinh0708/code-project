@@ -3,7 +3,7 @@
 h1.h1-type {
     width: 99%;
     position: relative;
-    top: 40%;
+    top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-transform: capitalize;
@@ -91,6 +91,7 @@ h1.h1-type1:before {
     box-sizing: border-box;
     font-weight: bold;
     overflow: hidden !important;
+    z-index: 999;
 }
 
 .link-title {
@@ -127,5 +128,13 @@ h1.h1-type1:before {
 }
 .server-content {
     position: relative;
+    margin-top: 2.5%;
     top: 140px;
+}
+
+@media (max-width: 768px) {
+    .server-content {
+        position: relative;
+        margin-top: 10%;
+    }
 }

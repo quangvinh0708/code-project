@@ -34,6 +34,8 @@ import HandleForgot from "./AuthPage/HandleForgot";
 import RecoveryPassword from "./AuthPage/RecoveryPassword";
 import AvatarUser from "./Avatar/AvatarUser";
 import Profile from "./AuthPage/Profile.js/Profile";
+import GetShareCode from "./GetShareCode";
+import { makeStyles } from "@mui/styles";
 
 export const history = createBrowserHistory();
 
@@ -58,7 +60,12 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
     // const [css, setCss] = useLocalStorage("css", "");
     // const [js, setJs] = useLocalStorage("js", "");
     // const [srcDoc, setSrcDoc] = useState("");
+
+    // const name = useSelector((state) => state.auth.account.name);
     checkLoginCreator();
+    // useEffect(() => {
+    //     checkLoginCreator();
+    // }, []);
 
     // useEffect(() => {
     //     const timeout = setTimeout(() => {
@@ -73,6 +80,74 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
 
     //     return () => clearTimeout(timeout);
     // }, [html, css, js]);
+    // const status = useSelector((state) => state.view.status);
+
+    // const fullScreen = useSelector((state) => state.view.fullScreen);
+    // const largeScreen = useSelector((state) => state.view.largeScreen);
+
+    const useStyles = makeStyles((theme) => ({
+        codeContainer: {
+            // background: `#fff`,
+            display: `flex`,
+            flexDirection: `column`,
+            marginTop: `70px`,
+            transitionTimingFunction: `linear`,
+            transition: `all 2s`,
+            zIndex: `0 !important`,
+        },
+        "@keyframes fadeInFromBot": {
+            "0%": {
+                marginTop: "500px",
+            },
+            "100%": {
+                opacity: 1,
+                marginTop: "0px",
+            },
+        },
+        "@keyframes fadeInFromLeft": {
+            "0%": {
+                marginLeft: "-700px",
+            },
+            "100%": {
+                opacity: 1,
+                marginLeft: "0px",
+            },
+        },
+        topPane: {
+            width: "42% !important",
+            // width: "50% !important",
+            float: "right",
+            display: "flex !important",
+            flexDirection: "column !important",
+            height: "min-content !important",
+            transitionTimingFunction: `linear`,
+            transition: `all 2s`,
+            animation: `$fadeInFromLeft .5s ease-in-out`,
+        },
+        view: {
+            width: "58% !important",
+            // width: "50% !important",
+            float: "left !important",
+            zIndex: "0",
+            position: "fixed !important",
+            right: "0",
+            height: "100%",
+            transitionTimingFunction: `linear`,
+            transition: `all 2s`,
+            animation: `$fadeInFromBot .4s ease-in-out`,
+            ["@media(max-width: 500px)"]: {
+                marginTop: `1% !important`,
+            },
+        },
+        fullScreen: {
+            display: `none !important`,
+        },
+        fullHeight: {
+            height: `150vh`,
+            minHeight: `150vh`,
+            // overflowY: `hidden !important`,
+        },
+    }));
 
     const renderHTMLTutorials = () =>
         HTML_TUTORIALS.map((route) => {
@@ -98,6 +173,14 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                 <TutorialList />
                 <Switch>
                     {/* <Route to="/Sidebar" exact component={Sidebar}/> */}
+                    <Route
+                        path="/cs/share/:id"
+                        exact
+                        component={({ match }) => (
+                            <GetShareCode match={match} />
+                        )}
+                    />
+
                     <Route
                         path="/users/profile/:id"
                         exact
@@ -139,10 +222,17 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                     {renderHTMLTutorials()}
                     {renderCSSTutorials()}
                     {renderJSTutorials()}
+                    {/* <Route
+                        path="/code"
+                        exact
+                        component={({ match }) => <MainPage match={match} />}
+                    /> */}
                     <Route
                         path="/:id"
                         exact
-                        component={({ match }) => <MainPage match={match} />}
+                        component={({ match }) => (
+                            <MainPage useStyles2={useStyles} match={match} />
+                        )}
                     />
                     <Route component={NotFound}></Route>
                 </Switch>

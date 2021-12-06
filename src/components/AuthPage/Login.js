@@ -51,14 +51,14 @@ const Login = (props) => {
         email: "",
         password: "",
     });
-    const nameCode = useSelector(state => state.auth.nameCode)
+    const nameCode = useSelector((state) => state.auth.nameCode);
     const dispatch = useDispatch();
     console.log("Login Component render");
     useEffect(() => {
         // setErrorLoginCreator(null);
         loginCreator(null);
         if (nameCode === null && !isAuthenticated) {
-            dispatch(setErrorLogin(null));
+            setErrorLoginCreator(null);
         }
     }, []);
 
@@ -161,7 +161,10 @@ const Login = (props) => {
                                     >
                                         Login
                                     </Button>
-                                    <Link to="/identify/user" className={classes.link}>
+                                    <Link
+                                        to="/identify/user"
+                                        className={classes.link}
+                                    >
                                         <Button
                                             sx={{
                                                 display: `block`,
@@ -176,7 +179,7 @@ const Login = (props) => {
                                                 },
                                             }}
                                             onClick={() =>
-                                                dispatch(setErrorLogin(null))
+                                                setErrorLoginCreator(null)
                                             }
                                             // onClick={(e) => directForgotPassword(e)}
                                         >
@@ -218,7 +221,8 @@ const Login = (props) => {
 
                                     <FacebookLogin
                                         // appId="430041831912720"
-                                        appId="738343767123877"
+                                        // appId="738343767123877" // focus
+                                        appId="1061825257933510" // codesonline
                                         autoLoad={false}
                                         fields="name,email,picture"
                                         cssClass="btn btn-primary my-facebook-button-class pr-2 pl-2 btn-fb-login"
@@ -236,7 +240,7 @@ const Login = (props) => {
                                         <Button
                                             sx={{ fontSize: `15px` }}
                                             onClick={() =>
-                                                dispatch(setErrorLogin(null))
+                                                setErrorLoginCreator(null)
                                             }
                                         >
                                             Register new account?
