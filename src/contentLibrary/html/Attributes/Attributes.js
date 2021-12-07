@@ -6,7 +6,7 @@ import { styles } from "../Introduction/styles";
 import "../Introduction/Introduction.css";
 import { CopyBlock, googlecode } from "react-code-blocks";
 import ex from "./example";
-import { API, CODE, SHARE_CODE } from "../../../constant/axios";
+import { API, CODE, CODES_ONLINE, SHARE_CODE } from "../../../constant/axios";
 
 const Attributes = () => {
     return (
@@ -21,6 +21,7 @@ const Attributes = () => {
                 </div>
             </nav>
             <div className="h4 title mt-5">HTML Attributes</div>
+            <LineDivider size="small" />
             <ul className="list-group mt-3">
                 <li className="list-group-item ">
                     All HTML elements can have attributes
@@ -56,10 +57,11 @@ const Attributes = () => {
                 target="_blank"
             >
                 <button className="btn btn-code btn-large">
-                    Code Yourself
+                    {CODES_ONLINE}
                 </button>
             </a>
             <div className="title h5 mt-5">The src Attribute</div>
+            <LineDivider size="small" />
             <nav className="breadcrumb mt-3">
                 The <code>{`<img>`}</code> tag is used to embed an image in an
                 HTML page. The src attribute specifies the path to the image to
@@ -80,7 +82,7 @@ const Attributes = () => {
                 target="_blank"
             >
                 <button className="btn btn-code btn-large">
-                    Code Yourself
+                    {CODES_ONLINE}
                 </button>
             </a>
             <nav className="breadcrumb mt-3">
@@ -102,11 +104,16 @@ const Attributes = () => {
                 width="500px"
                 height="450px"
             />
-            There are two ways to specify the URL in the src attribute:
+            <div className="mt-5">
+                There are two ways to specify the URL in the src attribute:
+            </div>
             <nav className="breadcrumb mt-3">
                 Absolute URL - Links to an external image that is hosted on
                 another website. Example:
-                src="https://www.conan-img.com/images/img_girl.jpg".
+                <code>
+                    {" "}
+                    src="https://www.conan-img.com/images/img_girl.jpg".
+                </code>
             </nav>
             <nav className="breadcrumb mt-3">
                 Notes: External images might be under copyright. If you do not
@@ -118,10 +125,254 @@ const Attributes = () => {
                 Relative URL - Links to an image that is hosted within the
                 website. Here, the URL does not include the domain name. If the
                 URL begins without a slash, it will be relative to the current
-                page. Example: src="img_girl.jpg". If the URL begins with a
-                slash, it will be relative to the domain. Example:
+                page. Example: <code>src="img_girl.jpg"</code>. If the URL
+                begins with a slash, it will be relative to the domain. Example:
                 src="/images/img_girl.jpg".
             </nav>
+            <div className="title h5 mt-5">The width and height Attributes</div>
+            <LineDivider size="small" />
+            <div>
+                <b>
+                    The <code>{"<img>"}</code> tag should also contain the width
+                    and height attributes, which specifies the width and height
+                    of the image (in pixels):
+                </b>
+            </div>
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag4"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>{" "}
+            <a
+                href={`${SHARE_CODE}/KyhKtKUcGznIt9xEquxRLisuDHnTxr`}
+                target="_blank"
+                className="mt-5"
+            >
+                <button className="btn btn-code btn-large">
+                    {CODES_ONLINE}
+                </button>
+            </a>
+            <div className="title h5 mt-5">The alt Attribute</div>
+            <LineDivider size="small" />
+            <div>
+                <b>
+                    The required alt attribute for the <code>{`<img>`}</code>{" "}
+                    tag specifies an alternate text for an image, if the image
+                    for some reason cannot be displayed. This can be due to slow
+                    connection, or an error in the src attribute, or if the user
+                    uses a screen reader.
+                </b>
+            </div>{" "}
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag5"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>{" "}
+            <a
+                href={`${SHARE_CODE}/BAed7waozdYprIms6gWeWT4SpjNSgH`}
+                target="_blank"
+                className="mt-5"
+            >
+                <button className="btn btn-code btn-large">
+                    {CODES_ONLINE}
+                </button>
+            </a>
+            <div className="title h5 mt-5">
+                <div className="title h5 mt-5">
+                    The width and height Attributes
+                </div>
+                <LineDivider size="small" />
+            </div>
+            <nav className="breadcrumb mt-4">
+                The <code>style</code> attribute is used to add styles to an
+                element, such as color, font, size, and more.
+            </nav>{" "}
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag6"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>{" "}
+            <a
+                href={`${SHARE_CODE}/SVvl6WIVJvsu0YkhLgEE8Z6T3mbDhV`}
+                target="_blank"
+                className="mt-5"
+            >
+                <button className="btn btn-code btn-large">
+                    {CODES_ONLINE}
+                </button>
+            </a>
+            <div className="title h5 mt-5">
+                <div className="title h5 mt-5">The lang Attribute</div>
+                <LineDivider size="small" />
+            </div>
+            <nav className="breadcrumb mt-5">
+                You should always include the lang attribute inside the{" "}
+                <code>{`<html>`}</code> tag, to declare the language of the Web
+                page. This is meant to assist search engines and browsers.
+            </nav>
+            <b>The following example specifies English as the language:</b>
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag7"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>{" "}
+            <nav className="breadcrumb mt-5">
+                Country codes can also be added to the language code in the lang
+                attribute. So, the first two characters define the language of
+                the HTML page, and the last two characters define the country.
+            </nav>
+            <b>
+                The following example specifies English as the language and
+                United States as the country:
+            </b>{" "}
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag8"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>{" "}
+            <div className="title h5 mt-5">
+                <div className="title h5 mt-5">The title Attribute</div>
+                <LineDivider size="small" />
+            </div>
+            <nav className="breadcrumb mt-5">
+                The title attribute defines some extra information about an
+                element.
+            </nav>
+            <div>
+                <b>
+                    The value of the title attribute will be displayed as a
+                    tooltip when you mouse over the element:
+                </b>
+            </div>
+            <div className="example mt-3">
+                <div className="guide">An example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag9"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>
+            <a
+                href={`${SHARE_CODE}/k3ogOruOI7ANlcRRVd9cSzENR4wSog`}
+                target="_blank"
+                className="mt-5"
+            >
+                <button className="btn btn-code btn-large">
+                    {CODES_ONLINE}
+                </button>
+            </a>
+            <nav className="breadcrumb mt-5">
+                <div>
+                    <b>NOTE</b>
+                </div>
+                The HTML standard does not require lowercase attribute names.
+                The title attribute (and all other attributes) can be written
+                with uppercase or lowercase like title or TITLE. However,
+                recommends lowercase attributes in HTML, and demands lowercase
+                attributes for stricter document types like XHTML.
+            </nav>
+            <nav className="breadcrumb mt-5">
+                {" "}
+                <div>
+                    The HTML standard does not require quotes around attribute
+                    values.
+                </div>
+                <b>
+                    However, recommends quotes in HTML, and demands quotes for
+                    stricter document types like XHTML. Good:
+                </b>
+            </nav>{" "}
+            <div className="example mt-3">
+                <div className="guide">An good example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag10"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>
+            <nav className="breadcrumb mt-5">
+                <div className="example mt-3">
+                    <div className="guide">Bad example</div>
+
+                    <CopyBlock
+                        language={"html"}
+                        text={ex["exTag11"]}
+                        showLineNumbers={true}
+                        theme={googlecode}
+                        wrapLines={true}
+                        codeBlock
+                    />
+                </div>
+            </nav>
+            <div className="title h5 mt-5">
+                <div className="title h5 mt-5">Single or Double Quotes?</div>
+                <LineDivider size="small" />
+            </div>
+            <nav className="breadcrumb mt-5">
+                Double quotes around attribute values are the most common in
+                HTML, but single quotes can also be used.
+            </nav>
+            <div>
+                <b>
+                    In some situations, when the attribute value itself contains
+                    double quotes, it is necessary to use single quotes:
+                </b>
+            </div>{" "}
+            <div className="example mt-3">
+                <div className="guide">Bad example</div>
+
+                <CopyBlock
+                    language={"html"}
+                    text={ex["exTag12"]}
+                    showLineNumbers={true}
+                    theme={googlecode}
+                    wrapLines={true}
+                    codeBlock
+                />
+            </div>
             <Direct />
         </div>
     );

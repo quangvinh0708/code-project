@@ -6,7 +6,7 @@ import {
     Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -31,7 +31,10 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import { push } from "connected-react-router";
 import { openModalShare } from "../actions/modalShareCode";
 import { setFullScreen, setView, setLargeScreen } from "../actions/view";
-
+import SearchIcon from "@mui/icons-material/Search";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import FolderIcon from "@mui/icons-material/Folder";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 const Nav = ({
     openModalSuccessCreator,
     updateCodeCreator,
@@ -188,19 +191,75 @@ const Nav = ({
         // dispatch(push("/code"));
         window.location.href = CODE;
     };
+
+    const [projectsFiltered, setProjectsFiltered] = useState(projects);
+    const [keySearch, setKeySearch] = useState("");
+    useEffect(() => {
+        setProjectsFiltered(
+            projects.filter(
+                (x) =>
+                    x.name
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(keySearch.toLowerCase()) > -1 && x
+            )
+        );
+    }, [keySearch, projects]);
+    const onSearch = (e) => {
+        const value = e.target.value;
+        setKeySearch(value);
+    };
     const renderProjects = () => {
         let jsx;
         jsx = (
-            <div className="dropdown-menu">
+            <div
+                className="dropdown-menu"
+                style={{
+                    maxHeight: `500px`,
+                    overflowY: `scroll`,
+                    maxWidth: `290px`,
+                    overflowX: `auto`,
+                }}
+            >
                 <a
                     href={CODE}
                     // to="/code"
                     className="dropdown-item"
                     onClick={(e) => newProject(e)}
                 >
-                    New Project
+                    <div
+                        style={{
+                            display: `flex`,
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        {" "}
+                        <div>New Project</div>
+                        <div>
+                            {" "}
+                            <CreateNewFolderIcon sx={{ fontSize: `20px` }} />
+                        </div>
+                    </div>
                 </a>
-                {projects.map((project, key) => (
+                <div style={{ position: `relative` }}>
+                    <SearchIcon
+                        sx={{
+                            position: `absolute`,
+                            left: 7,
+                            top: 5.9,
+                            borderRight: `1px solid #000`,
+                            padding: `0 5px 0 0`,
+                        }}
+                    />
+                    <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder="Search.."
+                        onChange={onSearch}
+                    />
+                </div>
+                {projectsFiltered.map((project, key) => (
                     <a
                         key={key}
                         className="dropdown-item limit-drop"
@@ -217,10 +276,32 @@ const Nav = ({
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
-                                maxWidth: "30ch",
+                                maxWidth: "25ch",
                                 padding: `0`,
                             }}
                         >
+                            {project.name === nameCode ? (
+                                <FolderIcon
+                                    sx={{
+                                        fontSize: `20px`,
+                                        paddingRight: `5px`,
+                                    }}
+                                />
+                            ) : (
+                                <FolderOpenIcon
+                                    sx={{
+                                        fontSize: `20px`,
+                                        paddingRight: `5px`,
+                                    }}
+                                />
+                            )}
+                            {/* <FolderOpenIcon
+                                sx={{
+                                    fontSize: `20px`,
+                                    paddingRight: `5px`,
+                                }}
+                            /> */}
+
                             {project.name}
                         </span>
                     </a>
