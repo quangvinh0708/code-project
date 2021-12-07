@@ -645,6 +645,24 @@ body {
     height: 34px;
 }
 
+/* .drop-projects {
+    max-height: 500px !important;
+    overflow-y: visible;
+    max-width: 220px;
+    overflow-x: auto;
+    overflow: hidden !important;
+} */
+@media (max-width: 700px) {
+    .drop-projects {
+        /* position: relative !important;
+        max-height: none !important;
+        overflow-y: hidden !important;
+        max-width: none !important;
+        overflow-x: hidden !important; */
+        /* overflow: hidden !important; */
+    }
+}
+
 /* .dropbtn {
     color: white;
     font-size: 16px;

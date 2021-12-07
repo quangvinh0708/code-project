@@ -32,8 +32,8 @@ export const API_USER = "https://code-project-app.herokuapp.com/users";
 // export const API_GG =
 //     "611618134293-o12vgbqu47jkpjec3o9frup2qk5ivaiq.apps.googleusercontent.com";
 /** HOST */
-export const API_GG =
-    "611618134293-pvnp50vd2gr5bug0n8cp8blapq8l13lf.apps.googleusercontent.com";
-/** DOMAIN CODESONLINE */
 // export const API_GG =
-//     "611618134293-ku6l99dlitthhqk3hdvd179155ina3nr.apps.googleusercontent.com";
+//     "611618134293-pvnp50vd2gr5bug0n8cp8blapq8l13lf.apps.googleusercontent.com";
+/** DOMAIN CODESONLINE */
+export const API_GG =
+    "611618134293-ku6l99dlitthhqk3hdvd179155ina3nr.apps.googleusercontent.com";

@@ -216,9 +216,13 @@ const Nav = ({
                 className="dropdown-menu"
                 style={{
                     maxHeight: `500px`,
-                    overflowY: `scroll`,
+                    position: `absolute`,
+                    background: `#fff`,
+                    zIndex: `2000`,
+                    overflowY: projects.length >= 15 ? `scroll` : "hidden",
                     maxWidth: `290px`,
                     overflowX: `auto`,
+                    left: 0,
                 }}
             >
                 <a
@@ -237,11 +241,23 @@ const Nav = ({
                         <div>New Project</div>
                         <div>
                             {" "}
-                            <CreateNewFolderIcon sx={{ fontSize: `20px` }} />
+                            <CreateNewFolderIcon
+                                sx={{
+                                    fontSize:
+                                        projects.length !== 0 ? `20px` : `18px`,
+                                    // paddingLeft: `3px`,
+                                }}
+                            />
                         </div>
                     </div>
                 </a>
-                <div style={{ position: `relative` }}>
+                <div
+                    style={{
+                        position: `relative`,
+                        marginBottom: `2.9px`,
+                        marginTop: `2.9px`,
+                    }}
+                >
                     <SearchIcon
                         sx={{
                             position: `absolute`,
@@ -350,7 +366,7 @@ const Nav = ({
                 <div className="row">
                     <div className="col-12">
                         <nav
-                            className="navbar navbar-expand-md navbar-light static"
+                            className="navbar navbar-expand-lg navbar-light static"
                             style={{
                                 position: `relative`,
                             }}
@@ -571,7 +587,10 @@ const Nav = ({
                                         </div>
                                     </li>
                                     {isAuthenticated && (
-                                        <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <li
+                                            className="nav-item pl-4 pl-md-0 ml-0 ml-md-4"
+                                            style={{ position: `relative` }}
+                                        >
                                             {isAuthenticated && name && (
                                                 <>
                                                     <Link
