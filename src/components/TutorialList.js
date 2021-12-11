@@ -72,7 +72,7 @@ function TutorialList() {
             ? tutorialList.map((lesson) => {
                   console.log("lesson path: ", lesson.path);
                   return (
-                      <React.Fragment>
+                      <React.Fragment key={lesson.path}>
                           {/* <ListItemText primary="Phone ringtone" /> */}
                           <NavLink
                               to={`${lesson.path}`}

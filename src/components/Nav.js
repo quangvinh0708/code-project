@@ -35,6 +35,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import { makeStyles } from "@mui/styles";
 const Nav = ({
     openModalSuccessCreator,
     updateCodeCreator,
@@ -49,6 +50,16 @@ const Nav = ({
     setIsDeletingCreator,
     url,
 }) => {
+    const useStyles = makeStyles((theme) => ({
+        displaySave: {
+            ["@media(max-width:960px)"]: {
+                display: nameCode ? `none !important` : `block !important`,
+            },
+        },
+    }));
+
+    const classes = useStyles();
+
     const [expanded, setExpanded] = React.useState(false);
     const openSidebar = useSelector((state) => state.tutorial.openSidebar);
     const picture = useSelector((state) => state.auth.account.picture);
@@ -362,11 +373,11 @@ const Nav = ({
 
     return (
         <div className="navigation-wrap bg-light start-header start-style">
-            <div className="container">
+            <div className="container1">
                 <div className="row">
                     <div className="col-12">
                         <nav
-                            className="navbar navbar-expand-lg navbar-light static"
+                            className="navbar navbar-expand-md navbar-light static ml-auto"
                             style={{
                                 position: `relative`,
                             }}
@@ -459,7 +470,7 @@ const Nav = ({
                                 style={{ marginRight: 17 }}
                             >
                                 <ul className="navbar-nav ml-auto py-4 py-md-0">
-                                    <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <li className="nav-item pl-4 pl-md-0 ml-0 md-4 v">
                                         <Link
                                             className="nav-link dropdown-toggle"
                                             data-toggle="dropdown"
@@ -594,7 +605,7 @@ const Nav = ({
                                             {isAuthenticated && name && (
                                                 <>
                                                     <Link
-                                                        className="nav-link dropdown-toggle"
+                                                        className="nav-link dropdown-toggle yp"
                                                         data-toggle="dropdown"
                                                         role="button"
                                                         aria-haspopup="true"
@@ -641,6 +652,7 @@ const Nav = ({
                                                                     "14ch",
                                                                 padding: `0`,
                                                             }}
+                                                            className="span-nameCode"
                                                         >
                                                             {nameCode
                                                                 ? `: ${nameCode}`
@@ -674,9 +686,10 @@ const Nav = ({
                                                             overflow: "hidden",
                                                             textOverflow:
                                                                 "ellipsis",
-                                                            maxWidth: "14ch",
+                                                            maxWidth: "8ch",
                                                             padding: `0`,
                                                         }}
+                                                        className="nameCode"
                                                     >
                                                         {nameCode}
                                                     </span>
@@ -691,6 +704,17 @@ const Nav = ({
                                                     onClick={handleShare}
                                                 >
                                                     Share
+                                                </p>
+                                                <p
+                                                    style={{
+                                                        cursor: `pointer`,
+                                                    }}
+                                                    className="dropdown-item"
+                                                    onClick={(e) =>
+                                                        handleSave(e)
+                                                    }
+                                                >
+                                                    Save
                                                 </p>
                                                 <p
                                                     style={{
@@ -714,7 +738,9 @@ const Nav = ({
                                             </div>
                                         </li>
                                     )}
-                                    <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <li
+                                        className={`nav-item pl-4 pl-md-0 ml-0 ml-md-4 ${classes.displaySave}`}
+                                    >
                                         <Link
                                             className="nav-link"
                                             type="button"
@@ -729,7 +755,7 @@ const Nav = ({
                                             Save
                                         </Link>
                                     </li>
-                                    <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <li className="nav-item pl-4 pl-md-0 ml-0 ml-md-4 contain-profile">
                                         {isAuthenticated && name && (
                                             <Link
                                                 className="nav-link dropdown-toggle"

@@ -79,6 +79,7 @@ const useStyles = makeStyles((them) => ({
     fullHeight: {
         height: `150vh`,
         minHeight: `150vh`,
+        marginTop: `1.5%`,
         // overflowY: `hidden !important`,
     },
 }));

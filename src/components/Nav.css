@@ -652,6 +652,164 @@ body {
     overflow-x: auto;
     overflow: hidden !important;
 } */
+
+@media (max-width: 2000px) {
+    /* ul.ml-auto {
+        margin-left: 0 !important;
+    } */
+    .container1 {
+        width: 95% !important;
+        margin: auto !important;
+    }
+}
+@media (max-width: 1029px) {
+    /* ul.ml-auto {
+        margin-left: 0 !important;
+    } */
+    .container1 {
+        width: 95% !important;
+        margin: auto !important;
+    }
+}
+@media (max-width: 1024px) {
+    .contain-profile {
+        margin-left: 11px !important;
+    }
+    img.avatar-user {
+        /* margin-left: 2px !important; */
+    }
+    .span-nameCode {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 8ch !important;
+    }
+}
+@media (max-width: 960px) {
+    /* .span-nameCode {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 8ch !important;
+    } */
+}
+@media (max-width: 769px) {
+    .name-project2 {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis !important;
+        max-width: 0ch !important;
+    }
+}
+/* li.contain-profile {
+    margin-left: 12px !important;
+} */
+@media (max-width: 1200px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+}
+@media (max-width: 866px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+    a.save-button {
+        display: none !important;
+    }
+    li.contain-profile {
+        margin-left: 8px !important;
+    }
+}
+@media (max-width: 830px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+    .yp {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 10ch !important;
+    }
+}
+@media (max-width: 782px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+    .v {
+        margin-left: -8px !important;
+    }
+}
+@media (max-width: 768px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+    .v {
+        margin-left: -5px !important;
+    }
+}
+@media (max-width: 767px) {
+    /* li.nav-item .save-button .nav-link {
+        visibility: hidden !important;
+        display: none !important;
+    } */
+    .v {
+        margin-left: 0px !important;
+    }
+    .yp {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: ellipsis !important;
+        max-width: 10ch !important;
+    }
+    .span-nameCode {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 50ch !important;
+    }
+    .nameCode {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 50ch !important;
+    }
+    a.save-button {
+        display: block !important;
+    }
+    li.contain-profile {
+        margin-left: 0 !important;
+    }
+    .container1 {
+        width: 89% !important;
+        margin: auto !important;
+    }
+}
+/* @media (max-width: 1024px) {
+    div.navigation-wrap {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    div.col-12 {
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+} */
 @media (max-width: 700px) {
     .drop-projects {
         /* position: relative !important;

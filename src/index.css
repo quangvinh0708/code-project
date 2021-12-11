@@ -39,7 +39,6 @@ textarea {
     display: flex;
 }
 
-
 .editor-container {
     flex-grow: 1;
     flex-basis: 0;
@@ -61,7 +60,6 @@ textarea {
 }
 
 .basically {
-    
 }
 
 .expand-collapse-btn {
@@ -150,6 +148,39 @@ textarea {
 @media (max-width: 354px) {
     .code-container {
         margin-top: 120px !important;
+    }
+}
+/* @media (max-width: 866px) {
+    li.nav-item .save-button .nav-link {
+        display: none !important;
+    }
+} */
+@media (max-width: 1045px) {
+    .pane {
+        overflow-x: auto !important;
+    }
+    
+}
+@media (max-width: 810px) {
+    .pane {
+        overflow-x: auto !important;
+    }
+}
+@media (max-width: 769px) {
+    .pane {
+        overflow-x: auto !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .pane {
+        overflow-x: auto !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .pane {
+        overflow: visible !important;
     }
 }
 
@@ -384,6 +415,13 @@ textarea {
         margin-top: 12px !important;
     }
 } */
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-nav {
+        -ms-flex-direction: row;
+        flex-direction: row;
+        margin-top: 8px;
+    }
+}
 @media (max-width: 500px) {
     .pane {
         /* width: max-content !important; */

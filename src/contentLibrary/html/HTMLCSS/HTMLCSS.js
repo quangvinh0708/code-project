@@ -8,7 +8,7 @@ import { CopyBlock, googlecode } from "react-code-blocks";
 import ex from "./example";
 import { API, CODE, CODES_ONLINE, SHARE_CODE } from "../../../constant/axios";
 
-const Formatting = () => {
+const HTMLCSS = () => {
     return (
         <div className="container-content">
             <p className="lesson-title">HTML Styles - CSS</p>
@@ -125,7 +125,6 @@ const Formatting = () => {
                 To use an external style sheet, add a link to it in the{" "}
                 <code>{`<head> `}</code>section of each HTML page:
             </nav>
-            v
             <div className="example mt-3">
                 <div className="guide">An example</div>
 
@@ -328,4 +327,4 @@ const Formatting = () => {
     );
 };
 
-export default withStyles(styles)(Formatting);
+export default withStyles(styles)(HTMLCSS);

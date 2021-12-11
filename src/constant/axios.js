@@ -3,7 +3,7 @@ export const POST = "POST";
 export const PUT = "PUT";
 export const DELETE = "DELETE";
 
-export const CODES_ONLINE = "CODES ONLINE";
+export const CODES_ONLINE = "CODES - ONLINE";
 
 /** LOCAL */
 // export const CODE = "http://localhost:3000/code";

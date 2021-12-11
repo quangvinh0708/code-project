@@ -4,10 +4,44 @@ const styles = (theme) => ({
         flexDirection: `row`,
         minHeight: `100vh`,
         marginTop: 69,
+        ["@media(max-width:550px)"]: {
+            position: `relative !important`,
+            width: `100% !important`,
+            // marginLeft: `6px !important`,
+        },
+        ["@media(max-width:441px)"]: {
+            position: `relative !important`,
+            width: `100% !important`,
+            marginLeft: `5px !important`,
+        },
+        ["@media(max-width:376px)"]: {
+            position: `relative !important`,
+            width: `100% !important`,
+            marginLeft: `0 !important`,
+        },
         ["@media(max-width:353px)"]: {
             position: `relative !important`,
             width: `100% !important`,
         },
+        // ["@media(max-width:353px)"]: {
+        //     position: `relative !important`,
+        //     width: `100% !important`,
+        // },
+        // ["@media(max-width:550px)"]: {
+        //     position: `relative !important`,
+        //     width: `100% !important`,
+        //     marginLeft: `15px !important`,
+        // },
+        // ["@media(max-width:441px)"]: {
+        //     position: `relative !important`,
+        //     width: `100% !important`,
+        //     marginLeft: `5px !important`,
+        // },
+        // ["@media(max-width:376px)"]: {
+        //     position: `relative !important`,
+        //     width: `100% !important`,
+        //     marginLeft: `0 !important`,
+        // },
     },
     content: {
         width: `100%`,
