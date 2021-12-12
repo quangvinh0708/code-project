@@ -50,6 +50,11 @@ const styles = (theme) => ({
             easing: theme.transitions.easing.sharp, // sharp or entering
             duration: theme.transitions.duration.enteringScreen,
         }),
+        ["@media(min-width:1501px)"]: {
+            position: `relative !important`,
+            width: `100%`,
+            margin: `auto !important`,
+        },
         ["@media(max-width:1500px)"]: {
             position: `relative !important`,
             width: `100%`,
