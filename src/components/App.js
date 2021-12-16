@@ -45,11 +45,13 @@ var createGuest = require("cross-domain-storage/guest");
 var createHost = require("cross-domain-storage/host");
 var storageHost = createHost([
     {
-        origin: "http://localhost:3000",
+        // origin: "http://localhost:3000",
+        origin: "https://focused-ritchie-73a1e5.netlify.app",
         allowedMethods: ["get", "set", "remove"],
     },
     {
-        origin: "http://localhost:3001",
+        // origin: "http://localhost:3001",
+        origin: "https://serene-payne-13995e.netlify.app",
         allowedMethods: ["get", "set", "remove"],
     },
 ]);
