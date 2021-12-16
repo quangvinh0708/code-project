@@ -1,4 +1,4 @@
-@import url(https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css);
+/* @import url(https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css); */
 @import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css);
 
 .container-content {
@@ -53,6 +53,7 @@ img {
     max-width: 100% !important;
     height: auto !important;
     margin: auto !important;
+    display: block;
 }
 .code {
     color: crimson !important;

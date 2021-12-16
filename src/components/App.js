@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
     BrowserRouter as Router,
     Route,
@@ -36,6 +36,23 @@ import AvatarUser from "./Avatar/AvatarUser";
 import Profile from "./AuthPage/Profile.js/Profile";
 import GetShareCode from "./GetShareCode";
 import { makeStyles } from "@mui/styles";
+import Forum from "./Forum/Forum";
+import Question from "./Forum/Question";
+import { getThreads, setLoadingForum } from "../actions/forum";
+import ScrollHandler from "./Forum/ScrollHandler";
+
+var createGuest = require("cross-domain-storage/guest");
+var createHost = require("cross-domain-storage/host");
+var storageHost = createHost([
+    {
+        origin: "http://localhost:3000",
+        allowedMethods: ["get", "set", "remove"],
+    },
+    {
+        origin: "http://localhost:3001",
+        allowedMethods: ["get", "set", "remove"],
+    },
+]);
 
 export const history = createBrowserHistory();
 
@@ -164,6 +181,14 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
             return <TutorialLayout {...route} key={route.path} />;
         });
 
+    const dp = useDispatch();
+    // dp(setLoadingForum.setLoadingForumRequest());
+    // dp(
+    //     getThreads.getThreadsRequest({
+    //         match: null,
+    //     })
+    // );
+
     return (
         // <Router>
         <ConnectedRouter history={history}>
@@ -171,8 +196,33 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
             <div style={{ marginTop: 90 }}>
                 <ToastContainer />
                 <TutorialList />
+
                 <Switch>
                     {/* <Route to="/Sidebar" exact component={Sidebar}/> */}
+                    <Route
+                        path="/questions/:title/:id/"
+                        exact
+                        component={({ match }) => (
+                            <Redirect to={`${match.url}/1`}></Redirect>
+                        )}
+                    />
+                    <Route
+                        path="/questions/:title/:id/:page"
+                        exact
+                        component={({ match }) => <Question match={match} />}
+                    />
+                    <Route
+                        path="/forum"
+                        exact
+                        component={({ match }) => (
+                            <Redirect to="/forum/1"></Redirect>
+                        )}
+                    />
+                    <Route
+                        path="/forum/:page"
+                        exact
+                        component={({ match }) => <Forum match={match} />}
+                    />
                     <Route
                         path="/cs/share/:id"
                         exact

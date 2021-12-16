@@ -149,7 +149,8 @@ const Profile = (props) => {
                                             <CardMedia
                                                 className={classes.avatar}
                                                 component="img"
-                                                image="https://images.pexels.com/photos/1461974/pexels-photo-1461974.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                                                // image="https://images.pexels.com/photos/1461974/pexels-photo-1461974.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                                                image="https://res.cloudinary.com/deoymeupe/image/upload/v1638436015/user_images/tdqnnrbo31ykrk8saaot.png"
                                             />
                                         )}
                                         {account.picture && (

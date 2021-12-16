@@ -23,10 +23,12 @@ export const SHARE_CODE = "https://focused-ritchie-73a1e5.netlify.app/cs/share";
 // export const API = "http://localhost:5000/codes";
 // export const API_LOGIN = "http://localhost:5000/auth";
 // export const API_USER = "http://localhost:5000/users";
+// export const API_FORUM = "http://localhost:5000/forum";
 /** HOST */
 export const API = "https://code-project-app.herokuapp.com/codes";
 export const API_LOGIN = "https://code-project-app.herokuapp.com/auth";
 export const API_USER = "https://code-project-app.herokuapp.com/users";
+export const API_FORUM = "https://code-project-app.herokuapp.com/forum";
 
 /** LOCAL */
 // export const API_GG =

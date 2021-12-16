@@ -26,6 +26,7 @@ import { setLocal } from "../common/LocalStorage/setLocal";
 import { getLocal } from "../common/LocalStorage/getLocal";
 import {
     API,
+    API_FORUM,
     API_LOGIN,
     API_USER,
     DELETE,
@@ -60,6 +61,7 @@ import {
     updateGID,
     updateFID,
     updateUID,
+    setObjId,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
@@ -69,6 +71,19 @@ import { direct, verifyUrlRecover } from "../actions/direct";
 import { getProfile, updateProfile } from "../actions/profile";
 import { openModalShare } from "../actions/modalShareCode";
 import { getShareCode } from "../actions/getShareCode";
+import {
+    createAnswer,
+    createThread,
+    deleteAnswer,
+    deleteThread,
+    getThreads,
+    setCircleProgress,
+    setLoadingForum,
+    setQuestion,
+    setQuestionLoadingForum,
+    updateAnswer,
+    updateThread,
+} from "../actions/forum";
 
 function* handleTest() {
     try {
@@ -105,6 +120,8 @@ function* handleCheckLogin() {
                 console.log("CHECK LOGIN SAGA LINE 100");
 
                 yield put(loginSuccess(res.data.name));
+                yield put(setObjId.setObjIdSuccess(res.data.user.objId));
+                console.log("CheckLOGIN with objID", res);
                 let picture;
                 if (res.data.picture) {
                     picture = res.data.picture.toString();
@@ -175,7 +192,11 @@ function* handleGetCode() {
                         thisAxios(API_LOGIN, POST, "check-login")
                     );
                     if (res.data.success) {
+                        console.log("Get Code with ObjId", res);
                         yield put(loginSuccess(res.data.name));
+                        // yield put(
+                        //     setObjId.setObjIdSuccess(res.data.user.objId)
+                        // );
                         setAuth(auth);
                     }
                 } catch (err) {
@@ -305,6 +326,9 @@ function* handleLogin(action) {
             if (res1.data.success) {
                 yield put(loginSuccess(res1.data.name));
 
+                //!
+                yield put(setObjId.setObjIdSuccess(res1.data.user.objId));
+
                 localStorage.removeItem("name");
                 yield put(push("/code"));
             }
@@ -326,6 +350,10 @@ function* handleLogin(action) {
                 localStorage.setItem("access_token", res.data.accessToken);
                 console.log("Check 1:", res.data.accessToken);
                 yield put(loginSuccess(res.data.name));
+
+                console.log(`res at login with account`, res);
+                yield put(setObjId.setObjIdSuccess(res.data.objId));
+
                 console.log("Line 314 Login successfully and have code in url");
                 if (url !== "code") {
                     try {
@@ -850,6 +878,8 @@ function* handleVerifyUrl(action) {
 function* handleGetProfile(action) {
     const url = action.payload.url;
     const auth = localStorage["access_token"];
+    yield put(setProgress(true));
+
     try {
         setAuth(auth);
         const res = yield call(() =>
@@ -1137,6 +1167,356 @@ function* handleGetShareCode(action) {
     }
 }
 
+function* handleCreateThread(action) {
+    const { title, content } = action.payload;
+    // yield put(setProgress(true));
+    yield put(setCircleProgress.setCircleProgressSuccess(true));
+    yield delay(1200);
+
+    if (!title || title.toString().trim().length <= 27) {
+        yield put(
+            createThread.createThreadFailure(
+                "Title must be longer than 27 characters"
+            )
+        );
+        // yield put(setProgress(false));
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        return;
+    }
+    if (!content || content.toString().trim().length <= 37) {
+        yield put(
+            createThread.createThreadFailure(
+                "Your question must be longer than 37 characters"
+            )
+        );
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        // yield put(setProgress(false));
+
+        return;
+    }
+    try {
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "create-thread", { title, content })
+        );
+        if (res.data.success) {
+            yield put(createThread.createThreadSuccess(res.data.thread));
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+            // yield put(setProgress(false));
+        }
+    } catch (err) {
+        if (err.data.response) {
+            console.log(err.data.response);
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+            yield delay(1200);
+            yield put(createThread.createThreadFailure(err.data.message));
+            // yield put(setProgress(false));
+            return;
+        }
+    }
+}
+function ChangeToSlug(title) {
+    var slug;
+
+    //Lấy text từ thẻ input title
+
+    //Đổi chữ hoa thành chữ thường
+    slug = title
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^\w-]+/g, "");
+    return slug;
+}
+function* handleGetThreads(action) {
+    const { match } = action.payload;
+    console.log("match", match);
+    yield put(setProgress(true));
+    yield put(setLoadingForum.setLoadingForumRequest());
+    try {
+        const res = yield call(() => thisAxios(API_FORUM, GET, ""));
+        if (res.data.success) {
+            const { threads, answers } = res.data;
+            // yield put(
+            //     getThreads.getThreadsSuccess({
+            //         threads,
+            //         answers,
+            //     })
+            // );
+
+            // yield put(setLoadingForum.setLoadingForumSuccess(false));
+            // yield put(
+            //     setQuestionLoadingForum.setQuestionLoadingForumSuccess(false)
+            // );
+
+            if (match !== null) {
+                console.log("threads", threads);
+                const find = threads.find(
+                    (thread) =>
+                        `/questions/${ChangeToSlug(match.params.title)}/${
+                            match.params.id
+                        }` ===
+                        `/questions/${ChangeToSlug(thread.title)}/${thread._id}`
+                );
+
+                if (find) {
+                    yield put(setQuestion.setQuestionSuccess(find));
+                    yield put(setLoadingForum.setLoadingForumSuccess(false));
+                    yield put(
+                        setQuestionLoadingForum.setQuestionLoadingForumSuccess(
+                            false
+                        )
+                    );
+                    yield put(
+                        getThreads.getThreadsSuccess({
+                            threads,
+                            answers,
+                        })
+                    );
+
+                    yield put(setProgress(false));
+                    return;
+                } else {
+                    yield put(setProgress(false));
+                    yield put(push("/not-found/error"));
+                    return;
+                }
+            }
+            // yield put(
+            //     verifyUrlRecover.verifyUrlRecoverSuccess({
+            //         isVerify: true,
+            //         isWaiting: false,
+            //         message: "Please wait! Almost ready...",
+            //     })
+            // );
+            // yield put(direct.directSuccess(""));
+            // yield delay(700);
+            // yield put(direct.directFailure(false));
+
+            yield put(setLoadingForum.setLoadingForumSuccess(false));
+
+            yield put(
+                getThreads.getThreadsSuccess({
+                    threads,
+                    answers,
+                })
+            );
+            // yield put(direct.directSuccess(0));
+            yield put(setProgress(false));
+            // yield put(
+            //     verifyUrlRecover.verifyUrlRecoverSuccess({
+            //         isVerify: false,
+            //         isWaiting: false,
+            //         message: "",
+            //     })
+            // );
+            // yield put(setProgress(false));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log(err.response.data);
+            yield put(getThreads.getThreadsFailure());
+            yield put(setLoadingForum.setLoadingForumSuccess(false));
+
+            return;
+        }
+        console.log("err", err);
+    }
+}
+
+function* handleCreateAnswer(action) {
+    const { id: questionId, text: content } = action.payload;
+    yield put(setCircleProgress.setCircleProgressSuccess(true));
+    yield delay(1200);
+    if (!content || content.toString().trim().length <= 37) {
+        yield put(
+            createAnswer.createAnswerFailure(
+                "Your answer must be longer than 37 characters"
+            )
+        );
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        return;
+    }
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "create-answer", { questionId, content })
+        );
+        if (res.data.success) {
+            yield put(createAnswer.createAnswerSuccess(res.data.answer));
+            console.log(res.data.answer);
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            console.log("err", err);
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+            return;
+        }
+        console.log(err);
+    }
+}
+
+function* handleUpdateAnswer(action) {
+    const { currentAnswer, text: content } = action.payload;
+    yield put(setCircleProgress.setCircleProgressSuccess(true));
+    yield delay(1200);
+    if (!content || content.toString().trim().length <= 37) {
+        yield put(
+            updateAnswer.updateAnswerFailure(
+                "Your answer must be longer than 37 characters"
+            )
+        );
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+        // yield delay(2000);
+        // yield put(push(`/#section${currentAnswer._id}`));
+        return;
+    }
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "update-answer", {
+                currentAnswer,
+                content,
+            })
+        );
+        console.log("res 1378", res);
+        if (res.data.success) {
+            yield put(updateAnswer.updateAnswerSuccess(res.data.answerUpdated));
+            console.log("res.data.answerUpdated", res.data.answerUpdated);
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+        }
+        return;
+    } catch (err) {
+        // if (err.response.data) {
+        //     console.log("err", err);
+        //     yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        //     return;
+        // }
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+        console.log("err", err);
+    }
+}
+
+function* handleDeleteAnswer(action) {
+    const { currentAnswer } = action.payload;
+    yield put(setProgress(true));
+    yield delay(1200);
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "delete-answer", {
+                currentAnswer,
+            })
+        );
+        console.log("res 1409", res);
+        if (res.data.success) {
+            yield put(deleteAnswer.deleteAnswerSuccess(res.data.deletedAnswer));
+            console.log("res.data.deletedAnswer", res.data.deletedAnswer);
+            yield put(setProgress(false));
+        }
+        return;
+    } catch (err) {
+        yield put(
+            deleteAnswer.deleteAnswerFailure(
+                "Something went wrong! Try again later.."
+            )
+        );
+        yield put(setProgress(false));
+        console.log("err", err);
+    }
+}
+
+function* handleUpdateThread(action) {
+    const { title, content, id } = action.payload;
+    // yield put(setProgress(true));
+    yield put(setCircleProgress.setCircleProgressSuccess(true));
+    yield delay(1200);
+
+    if (!title || title.toString().trim().length <= 27) {
+        yield put(
+            createThread.createThreadFailure(
+                "Title must be longer than 27 characters"
+            )
+        );
+        // yield put(setProgress(false));
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        return;
+    }
+    if (!content || content.toString().trim().length <= 37) {
+        yield put(
+            createThread.createThreadFailure(
+                "Your question must be longer than 37 characters"
+            )
+        );
+        yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+        // yield put(setProgress(false));
+
+        return;
+    }
+    try {
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "update-thread", { title, content, id })
+        );
+        if (res.data.success) {
+            yield put(updateThread.updateThreadSuccess(res.data.updatedThread));
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+            // yield put(setProgress(false));
+        }
+    } catch (err) {
+        if (err.data.response) {
+            console.log(err.data.response);
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+
+            yield delay(1200);
+            yield put(updateThread.updateThreadFailure(err.data.message));
+            // yield put(setProgress(false));
+            return;
+        }
+    }
+}
+
+function* handleDeleteThread(action) {
+    const { id } = action.payload;
+    yield put(setProgress(true));
+    yield delay(1200);
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "delete-thread", {
+                id,
+            })
+        );
+        console.log("res 1495", res);
+        if (res.data.success) {
+            console.log("res.data.deletedAnswer", res.data.deletedThread);
+            yield put(setProgress(false));
+            yield put(push("/forum"));
+            yield put(
+                deleteThread.deleteThreadSuccess({
+                    deletedThread: res.data.deletedThread,
+                    deletedAnswers: res.data.deletedAnswers,
+                })
+            );
+        }
+        return;
+    } catch (err) {
+        yield put(
+            deleteThread.deleteThreadFailure(
+                "Something went wrong! Try again later.."
+            )
+        );
+        yield put(setProgress(false));
+        console.log("err", err);
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
     yield takeLatest(
@@ -1177,6 +1557,31 @@ function* rootSaga() {
     yield takeLatest(
         recoverPassword.recoverPasswordRequest().type,
         handleRecoverPassword
+    );
+    yield takeLatest(
+        createThread.createThreadRequest().type,
+        handleCreateThread
+    );
+    yield takeLatest(getThreads.getThreadsRequest().type, handleGetThreads);
+    yield takeLatest(
+        createAnswer.createAnswerRequest().type,
+        handleCreateAnswer
+    );
+    yield takeLatest(
+        updateAnswer.updateAnswerRequest().type,
+        handleUpdateAnswer
+    );
+    yield takeLatest(
+        deleteAnswer.deleteAnswerRequest().type,
+        handleDeleteAnswer
+    );
+    yield takeLatest(
+        updateThread.updateThreadRequest().type,
+        handleUpdateThread
+    );
+    yield takeLatest(
+        deleteThread.deleteThreadRequest().type,
+        handleDeleteThread
     );
 }
 

@@ -7,6 +7,7 @@ import {
     POST,
     PUT,
     API_USER,
+    API_FORUM,
 } from "../../constant/axios";
 
 export const setAuth = (token) => {
@@ -20,6 +21,13 @@ export const setAuth = (token) => {
 };
 
 export const thisAxios = (url, method, endPoint = "", body = null) => {
+    if (url === API_FORUM) {
+        if (method === GET) {
+            return axios.get(`${url}/${endPoint}`);
+        } else if (method === POST) {
+            return axios.post(`${url}/${endPoint}`, body);
+        }
+    }
     if (url === API_USER) {
         if (method === GET) {
             return axios.get(`${url}/${endPoint}`);

@@ -2,6 +2,7 @@ import {
     fbLogin,
     ggLogin,
     setErrorStatus,
+    setObjId,
     setPicture,
     updateFID,
     updateGID,
@@ -19,6 +20,7 @@ const initialState = {
         name: null,
         picture: null,
         uid: null,
+        objId: null,
     },
     isAuthenticated: false,
     error: null,
@@ -202,6 +204,16 @@ const loginReducer = (state = initialState, action) => {
                 account: {
                     ...state.account,
                     uid: action.payload,
+                },
+            };
+        }
+
+        case setObjId.setObjIdSuccess().type: {
+            return {
+                ...state,
+                account: {
+                    ...state.account,
+                    objId: action.payload,
                 },
             };
         }

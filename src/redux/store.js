@@ -13,6 +13,7 @@ import { history } from "../components/App";
 import profileReducer from "./reducers/profileReducer";
 import getShareCodeReducer from "./reducers/getShareCodeReducer";
 import viewReducer from "./reducers/viewReducer";
+import forumReducer from "./reducers/forumReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -26,6 +27,7 @@ const reducer = combineReducers({
     modalShare: modalShareReducer,
     getShareCode: getShareCodeReducer,
     view: viewReducer,
+    forum: forumReducer,
     router: connectRouter(history),
 });
 

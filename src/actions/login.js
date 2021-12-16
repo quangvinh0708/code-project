@@ -92,3 +92,9 @@ export const updateGID = createActions({
 export const updateUID = createActions({
     updateUIDRequest: (val) => val,
 });
+
+export const setObjId = createActions({
+    setObjIdRequest: (val) => val,
+    setObjIdSuccess: (val) => val,
+    setObjIdFailure: (val) => val,
+});
