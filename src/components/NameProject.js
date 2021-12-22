@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
         outline: `none`,
         padding: 0,
         borderRadius: `8px 8px`,
+        "@media(max-width: 442px)": {
+            width: `95% !important`,
+        },
     },
     header: {
         backgroundColor: theme.color.textColor,

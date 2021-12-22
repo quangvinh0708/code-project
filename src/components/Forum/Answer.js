@@ -29,10 +29,13 @@ import Text from "./Text";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
-import moment from "moment";
+import moment from "moment-timezone";
+
 import {
     createAnswer,
     deleteAnswer,
+    dislikeAnswer,
+    likeAnswer,
     openModalDeleteAnswer,
     setDeleteSuccess,
     setNotify,
@@ -41,7 +44,11 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DeleteAnswerModal from "./DeleteAnswerModal";
-
+import LoginRequire from "./LoginRequire";
+import LikeAnswerStatistic from "./LikeAnswerStatistic";
+import { useEffect } from "react";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
         background: `#fff`,
@@ -122,6 +129,25 @@ const useStyles = makeStyles((theme) => ({
             padding: 0,
         },
     },
+    navigateBox: {
+        width: `100%`,
+        textAlign: `center`,
+        ["@media(max-width: 380px)"]: {
+            fontSize: `12px !important`,
+            whiteSpace: `nowrap`,
+        },
+    },
+    linkNavigate: {
+        width: `100%`,
+        padding: 7,
+        fontSize: `17px`,
+        margin: 0,
+    },
+    spanNavigate: {
+        ["@media(max-width: 380px)"]: {
+            fontSize: `15px !important`,
+        },
+    },
 }));
 
 const Answer = (props) => {
@@ -129,8 +155,12 @@ const Answer = (props) => {
     const [currentAnswer, setCurrentAnswer] = useState(null);
     const [isUpdating, setIsUpdating] = useState(null);
 
-    const { answers, id } = props;
+    const { answers, id, ChangeToSlug } = props;
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const likes = useSelector((state) => state.forum.likes);
+    const dislikes = useSelector((state) => state.forum.dislikes);
+    const question = useSelector((state) => state.forum.question);
+
     const error = useSelector((state) => state.forum.error);
     const notify = useSelector((state) => state.forum.notify);
     const isCircleProgress = useSelector(
@@ -140,6 +170,102 @@ const Answer = (props) => {
     const classes = useStyles();
     const dp = useDispatch();
     console.log("cardAnswer", answers);
+
+    const [answerArray, setAnswerArray] = useState(answers);
+    const { match } = props;
+    const page = Number(match.params.page);
+
+    let perPage = 3;
+    let start = perPage * (page - 1);
+    let end = page * perPage;
+    console.log("page answers", page);
+
+    useEffect(() => {
+        setAnswerArray(answers.slice(start, end));
+    }, [match, page, answers, question]);
+
+    const navigate = () => {
+        let jsx = [];
+        if (page === 1) {
+            for (var i = page; i <= page + 2; i++) {
+                jsx.push(
+                    <Button
+                        key={i}
+                        color="secondary"
+                        disabled={(i - 1) * perPage >= answers.length}
+                        sx={{
+                            padding: 0,
+                            display:
+                                (i - 1) * perPage >= answers.length && `none`,
+                        }}
+                    >
+                        <Link
+                            to={`/questions/${ChangeToSlug(question.title)}/${
+                                question._id
+                            }/${i}`}
+                            style={{
+                                width: `100%`,
+                                padding: 7,
+                                fontSize: `17px`,
+                                margin: 0,
+                            }}
+                        >
+                            <span
+                                className={cs(classes.spanNavigate)}
+                                style={{
+                                    width: `100%`,
+                                    display: `block`,
+                                    color: page === i && `#FFFFFF`,
+                                    background: page === i && `#1976D2`,
+                                }}
+                            >
+                                {i}
+                            </span>
+                        </Link>
+                    </Button>
+                );
+            }
+            return jsx;
+        }
+        for (var i = page - 1; i <= page + 1; i++) {
+            jsx.push(
+                <Button
+                    key={i}
+                    color="secondary"
+                    disabled={(i - 1) * perPage >= answers.length}
+                    sx={{
+                        padding: 0,
+                        display: (i - 1) * perPage >= answers.length && `none`,
+                    }}
+                >
+                    <Link
+                        to={`/questions/${ChangeToSlug(question.title)}/${
+                            question._id
+                        }/${i}`}
+                        style={{
+                            width: `100%`,
+                            padding: 7,
+                            fontSize: `17px`,
+                            margin: 0,
+                        }}
+                    >
+                        <span
+                            className={cs(classes.spanNavigate)}
+                            style={{
+                                width: `100%`,
+                                display: `block`,
+                                background: page === i && `#1976D2`,
+                                color: page === i && `#FFFFFF`,
+                            }}
+                        >
+                            {i}
+                        </span>
+                    </Link>
+                </Button>
+            );
+        }
+        return jsx;
+    };
 
     const [anchorEL, setAnchorEL] = useState(null);
     const handleOpen = (e, answer) => {
@@ -196,14 +322,101 @@ const Answer = (props) => {
         dp(setNotify.setNotifySuccess(""));
     };
 
+    const checkLiked = (answer) => {
+        let check;
+        check = likes.find(
+            (like) =>
+                like.objId === objId &&
+                like.questionId === answer.questionId &&
+                like.answerId === answer._id
+        );
+        console.log("CHECKliked", check);
+        return check;
+    };
+
+    const checkDisliked = (answer) => {
+        let check;
+        check = dislikes.find(
+            (dislike) =>
+                dislike.objId === objId &&
+                dislike.questionId === answer.questionId &&
+                dislike.answerId === answer._id
+        );
+        return check;
+    };
+
+    const handleLikeAnswer = (answer) => {
+        if (!isAuthenticated) {
+            handleOpenLoginRequire();
+        } else {
+            dp(
+                likeAnswer.likeAnswerRequest({
+                    questionId: question._id,
+                    objId,
+                    answerId: answer._id,
+                })
+            );
+        }
+    };
+
+    const handleDislikeAnswer = (answer) => {
+        if (!isAuthenticated) {
+            handleOpenLoginRequire();
+        } else {
+            dp(
+                dislikeAnswer.dislikeAnswerRequest({
+                    questionId: question._id,
+                    objId,
+                    answerId: answer._id,
+                })
+            );
+        }
+    };
+
+    const [openLoginRequire, setOpenLoginRequire] = React.useState(false);
+    const handleOpenLoginRequire = () => setOpenLoginRequire(true);
+    const handleCloseLoginRequire = () => setOpenLoginRequire(false);
+
+    const [viewStatus, setViewStatus] = React.useState(0);
+    const [openLikeQuestionStatistic, setOpenLikeQuestionStatistic] =
+        React.useState(false);
+
+    const [checkCondition, setCheckCondition] = React.useState("");
+
+    const handleOpenLikeQuestionStatistic = (x, answer) => {
+        setViewStatus(x);
+        setCurrentAnswer(answer);
+        setOpenLikeQuestionStatistic(true);
+    };
+    const handleCloseLikeQuestionStatistic = () => {
+        setOpenLikeQuestionStatistic(false);
+    };
+
     return (
         <Fragment>
+            <LoginRequire
+                open={openLoginRequire}
+                handleOpen={handleOpenLoginRequire}
+                handleClose={handleCloseLoginRequire}
+            />
+            <LikeAnswerStatistic
+                id={id}
+                viewStatus={viewStatus}
+                setViewStatus={setViewStatus}
+                likes={likes}
+                dislikes={dislikes}
+                open={openLikeQuestionStatistic}
+                handleOpen={handleOpenLikeQuestionStatistic}
+                handleClose={handleCloseLikeQuestionStatistic}
+                answer={currentAnswer}
+            />
             <DeleteAnswerModal
                 handleCloseDeleteModal={handleCloseDeleteModal}
                 handleDeleteAnswer={handleDeleteAnswer}
             />
             {answers.length > 0 &&
-                answers.map((answer) => (
+                // answers.map((answer) => (
+                answerArray.map((answer) => (
                     <Card className={classes.cardQuestion} key={answer._id}>
                         <CardHeader
                             avatar={
@@ -219,21 +432,14 @@ const Answer = (props) => {
                             }
                             // title={post.author}
                             title={answer.user.name}
-                            subheader={
-                                answer.updatedAt.toString().trim() ===
-                                answer.createdAt.toString().trim()
-                                    ? `Answer at ${moment(
-                                          answer.createdAt
-                                      ).format("HH:MM MMM DD, YYYY")}`
-                                    : `Updated at ${moment(
-                                          answer.updatedAt
-                                      ).format("HH:MM MMM DD, YYYY")}`
-                            }
+                            subheader={`Answer at ${moment(answer.createdAt)
+                                .tz("Asia/Ho_Chi_Minh")
+                                .format("hh:m MMM DD, YYYY")}`}
                             // subheader={"24 Dec, 2021"}
                             // action={<IconButton>{<MoreVertIcon />}</IconButton>}
                             action={
                                 answer.user.objId === objId ? (
-                                    <button
+                                    <IconButton
                                         className={cs(
                                             "btn",
                                             classes.moreInQuestion
@@ -241,9 +447,9 @@ const Answer = (props) => {
                                         onClick={(e) => handleOpen(e, answer)}
                                     >
                                         <MoreVertIcon />
-                                    </button>
+                                    </IconButton>
                                 ) : (
-                                    <button
+                                    <IconButton
                                         className={cs(
                                             "btn",
                                             classes.moreInQuestion
@@ -265,7 +471,7 @@ const Answer = (props) => {
                                                 color: `#8167a9 !important`,
                                             }}
                                         />
-                                    </button>
+                                    </IconButton>
                                 )
                             }
                             className={cs(classes.questionHeader)}
@@ -322,21 +528,136 @@ const Answer = (props) => {
                         </Typography> */}
                         </CardContent>
                         <CardActions className={cs(classes.cardActions)}>
-                            <Typography component="span" color="textSecondary">
+                            <Typography
+                                component="span"
+                                color="textSecondary"
+                                sx={{
+                                    marginLeft: `5px`,
+                                    cursor: `pointer`,
+                                    "&:hover": {
+                                        color: `#1976D2`,
+                                        borderBottom: `1px solid #1976D2`,
+                                        fontSize: `20px`,
+                                        transition: `all .5s`,
+                                    },
+                                }}
+                                onClick={() =>
+                                    handleOpenLikeQuestionStatistic(0, answer)
+                                }
+                            >
                                 {answer.likes}
                             </Typography>
-                            <IconButton>
-                                <ThumbUpIcon />
+                            <IconButton
+                                sx={{ marginLeft: `5px` }}
+                                onClick={() => handleLikeAnswer(answer)}
+                            >
+                                <ThumbUpIcon
+                                    sx={{
+                                        color: checkLiked(answer)
+                                            ? "#1976D2"
+                                            : "unset !important",
+                                    }}
+                                />
                             </IconButton>
-                            <Typography component="span" color="textSecondary">
+                            <Typography
+                                component="span"
+                                color="textSecondary"
+                                onClick={() =>
+                                    handleOpenLikeQuestionStatistic(1, answer)
+                                }
+                                sx={{
+                                    marginLeft: `5px`,
+                                    cursor: `pointer`,
+                                    "&:hover": {
+                                        color: `#1976D2`,
+                                        borderBottom: `1px solid #1976D2`,
+                                        fontSize: `20px`,
+                                        transition: `all .5s`,
+                                    },
+                                }}
+                            >
                                 {answer.dislikes}
                             </Typography>
-                            <IconButton>
-                                <ThumbDownIcon />
+                            <IconButton
+                                onClick={() => handleDislikeAnswer(answer)}
+                            >
+                                <ThumbDownIcon
+                                    sx={{
+                                        color: checkDisliked(answer)
+                                            ? "#1976D2"
+                                            : "unset !important",
+                                    }}
+                                />
                             </IconButton>
                         </CardActions>
                     </Card>
                 ))}
+
+            {answers.length > perPage && (
+                <div className={cs(classes.navigateBox)}>
+                    <Button
+                        disabled={start <= 0}
+                        color="secondary"
+                        sx={{
+                            padding: 0,
+                            ["@media(max-width: 380px)"]: {
+                                display: `none`,
+                            },
+                        }}
+                    >
+                        <Link
+                            to={`/questions/${ChangeToSlug(question.title)}/${
+                                question._id
+                            }/${page - 1}`}
+                            style={{
+                                width: `100%`,
+                                display: `block`,
+                                padding: 5,
+                                margin: 0,
+                            }}
+                        >
+                            <ArrowBackIosNewIcon
+                                sx={{
+                                    width: `100%`,
+                                    display: `block`,
+                                }}
+                            />
+                        </Link>
+                    </Button>
+                    {navigate()}
+
+                    <Button
+                        color="secondary"
+                        disabled={end >= answers.length}
+                        sx={{
+                            padding: 0,
+                            ["@media(max-width: 380px)"]: {
+                                display: `none`,
+                            },
+                        }}
+                    >
+                        <Link
+                            to={`/questions/${ChangeToSlug(question.title)}/${
+                                question._id
+                            }/${page + 1}`}
+                            style={{
+                                width: `100%`,
+                                display: `block`,
+                                padding: 5,
+                                margin: 0,
+                            }}
+                        >
+                            <ArrowForwardIosIcon
+                                sx={{
+                                    width: `100%`,
+                                    display: `block`,
+                                }}
+                            />
+                        </Link>
+                    </Button>
+                </div>
+            )}
+
             {isAuthenticated ? (
                 <Fragment>
                     <Text
@@ -376,7 +697,7 @@ const Answer = (props) => {
                                 marginTop: `12px`,
                             }}
                         >
-                            Create
+                            Answer
                         </Button>
                     ) : (
                         <Fragment>

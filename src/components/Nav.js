@@ -36,6 +36,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { makeStyles } from "@mui/styles";
+import { setFriends } from "../actions/messenger";
 const Nav = ({
     openModalSuccessCreator,
     updateCodeCreator,
@@ -49,6 +50,8 @@ const Nav = ({
     setIsChangingCreator,
     setIsDeletingCreator,
     url,
+    locationForNav,
+    socketRef,
 }) => {
     const useStyles = makeStyles((theme) => ({
         displaySave: {
@@ -86,8 +89,15 @@ const Nav = ({
         dispatch(setNameCode(null));
     };
 
+    const objId = useSelector((state) => state.auth.account.objId);
+
     const handleLogout = (e, x) => {
         e.preventDefault();
+
+        // Socket logout
+        socketRef.current.emit("sendLogout", objId);
+        // dispatch(setFriends.setFriendsSuccess([]));
+
         x();
 
         // console.log("Answer", typeof window.FB.logout === 'function');
@@ -371,6 +381,10 @@ const Nav = ({
         getProjectsCreator();
     }, [nameCode, name]);
 
+    // let checkLocation = useSelector((state) => state.tutorial.location);
+    // checkLocation = checkLocation.split("/")[1];
+    // // console.log("checkLocation", checkLocation);
+
     return (
         <div className="navigation-wrap bg-light start-header start-style">
             <div className="container1">
@@ -401,6 +415,11 @@ const Nav = ({
                                     color="inherit"
                                     aria-label="open drawer"
                                     onClick={(e) => handleToggleSidebar(e)}
+                                    // disabled={
+                                    //     checkLocation === "tutorials"
+                                    //         ? false
+                                    //         : true
+                                    // }
                                 >
                                     <MenuIcon fontSize="medium" />
                                 </IconButton>
@@ -418,6 +437,7 @@ const Nav = ({
                                             dispatch(
                                                 setView.setViewSuccess(false)
                                             );
+                                        dispatch(push("/code"));
                                     }}
                                     style={{
                                         color: "#8167a9",
@@ -425,10 +445,19 @@ const Nav = ({
                                         fontWeight: 680,
                                         padding: `2px 8px`,
                                         textDecoration: `none`,
+                                        fontFamily: `'Roboto Condensed', sans-serif`,
                                         // boxShadow: "2px 2px",
                                     }}
                                 >
-                                    {"<Code Yourself />"}
+                                    <span>
+                                        <span
+                                            style={{ visibility: `hidden` }}
+                                        >{`<`}</span>
+                                        Code Online{" "}
+                                        <span
+                                            style={{ visibility: `hidden` }}
+                                        >{`aaaa/>`}</span>
+                                    </span>
                                 </Link>
                             </div>
 
@@ -880,9 +909,16 @@ const Nav = ({
                                                     // marginLeft: `25%`
                                                 }}
                                             >
-                                                Tutorials
+                                                More
                                             </Link>
                                             <div className="dropdown-menu">
+                                                <Link
+                                                    className="dropdown-item"
+                                                    to="/forum/1"
+                                                >
+                                                    Forum
+                                                </Link>
+
                                                 <button
                                                     className="dropdown-item"
                                                     onClick={openListHTML}

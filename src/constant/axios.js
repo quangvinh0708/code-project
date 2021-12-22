@@ -6,6 +6,11 @@ export const DELETE = "DELETE";
 export const CODES_ONLINE = "CODES - ONLINE";
 
 /** LOCAL */
+// export const host = "http://localhost:5000";
+/** HOST */
+export const host = "https://code-project-app.herokuapp.com";
+
+/** LOCAL */
 // export const CODE = "http://localhost:3000/code";
 /** HOST */
 export const CODE = "https://focused-ritchie-73a1e5.netlify.app/code";

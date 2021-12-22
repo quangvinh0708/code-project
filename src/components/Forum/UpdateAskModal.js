@@ -130,7 +130,7 @@ export default function UpdateAskModal(props) {
                             Cancel
                         </Button>
                         <Button onClick={handleUpdate} variant="contained">
-                            Create
+                            Update
                         </Button>
                     </div>
 

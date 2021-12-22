@@ -8,8 +8,11 @@ import {
 const initialState = {
     open: false,
     tutorialList: null,
+    // location: null,
     location: null,
     openSidebar: false,
+    
+    locationNav: "",
 };
 
 const tutorialReducer = (state = initialState, action) => {

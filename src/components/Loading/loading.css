@@ -132,9 +132,41 @@ h1.h1-type1:before {
     top: 140px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) and (max-height: 700px) {
     .server-content {
         position: relative;
         margin-top: 10%;
     }
 }
+
+@media (min-width: 768px) and (min-height: 700px) {
+    .server-content {
+        position: relative;
+        margin-top: 15%;
+    }
+}
+@media (min-width: 900px) and (min-height: 700px) {
+    .server-content {
+        position: relative;
+        margin-top: 19%;
+    }
+}
+@media (min-width: 1300px) and (min-height: 700px) {
+    .server-content {
+        position: relative;
+        margin-top: 15%;
+    }
+}
+/* @media screen and (min-width: 768px) and (max-height: 700px) {
+    .server-content {
+        position: relative;
+        margin-top: 12% !important;
+    }
+}
+
+@media (min-width: 2300px) {
+    .server-content {
+        position: relative;
+        margin-top: 20% !important;
+    }
+} */

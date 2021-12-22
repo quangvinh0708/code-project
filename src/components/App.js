@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
     BrowserRouter as Router,
@@ -12,7 +12,6 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import Code from "./Code";
 import MainPage from "./MainPage";
 import NotFound from "./NotFound";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
@@ -40,6 +39,14 @@ import Forum from "./Forum/Forum";
 import Question from "./Forum/Question";
 import { getThreads, setLoadingForum } from "../actions/forum";
 import ScrollHandler from "./Forum/ScrollHandler";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import WifiOffIcon from "@mui/icons-material/WifiOff";
+import socketIOClient from "socket.io-client";
+import { host } from "../constant/axios";
+import Chat from "./Messengers/Chat";
+import { setFriends, setId, setMess } from "../actions/messenger";
+import ImageModal from "./Messengers/ImageModal";
 
 var createGuest = require("cross-domain-storage/guest");
 var createHost = require("cross-domain-storage/host");
@@ -81,10 +88,23 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
     // const [srcDoc, setSrcDoc] = useState("");
 
     // const name = useSelector((state) => state.auth.account.name);
-    checkLoginCreator();
+
     // useEffect(() => {
     //     checkLoginCreator();
-    // }, []);
+    // }, [isAuthenticated]);
+
+    // if (!isAuthenticated) {
+    // checkLoginCreator();
+    // }
+
+    // checkLoginCreator();
+    const objId = useSelector((state) => state.auth.account.objId);
+
+    useEffect(() => {
+        if (!objId) {
+            checkLoginCreator();
+        }
+    }, [objId]);
 
     // useEffect(() => {
     //     const timeout = setTimeout(() => {
@@ -191,16 +211,101 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
     //     })
     // );
 
+    useEffect(() => {
+        var condition = navigator.onLine ? "online" : "offline";
+        if (condition === "online") {
+            console.log("ONLINE");
+            fetch("https://www.google.com/", {
+                // Check for internet connectivity
+                mode: "no-cors",
+            })
+                .then(() => {
+                    console.log("CONNECTED TO INTERNET");
+                })
+                .catch(() => {
+                    toast("Your internet connectivity issue!");
+                    console.log("INTERNET CONNECTIVITY ISSUE");
+                });
+        } else {
+            toast.warning(
+                <div>
+                    <WifiOffIcon sx={{ marginBottom: `3px` }} />
+                    <span
+                        style={{
+                            display: `inline-block`,
+                            margin: `0px 0px 0px 12px`,
+                        }}
+                    >
+                        You are now offline!
+                    </span>
+                </div>
+            );
+        }
+    }, []);
+
+    const socketRef = useRef();
+    // const display = useSelector((state) => state.messenger.display);
+
     return (
         // <Router>
         <ConnectedRouter history={history}>
-            <Nav />
-            <div style={{ marginTop: 90 }}>
-                <ToastContainer />
-                <TutorialList />
+            <Nav
+                locationForNav={history.location.pathname.split("/")[1]}
+                socketRef={socketRef}
+            />
 
+            <div style={{ marginTop: 90 }}>
+                {/* <ToastContainer /> */}
+                <TutorialList />
+                <ToastContainer
+                    position="bottom-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+                {/* <button
+                    style={{ position: `relative`, zIndex: `2500` }}
+                    onClick={() => {
+                        toast(
+                            <div>
+                                <WifiOffIcon sx={{ marginBottom: `3px` }} />
+                                <span
+                                    style={{
+                                        display: `inline-block`,
+                                        margin: `0px 0px 0px 12px`,
+                                    }}
+                                >
+                                    You are now offline!
+                                </span>
+                            </div>
+                        );
+                    }}
+                >
+                    ABC
+                </button> */}
+                {objId && <Chat socketRef={socketRef} />}
+                <ImageModal />
                 <Switch>
                     {/* <Route to="/Sidebar" exact component={Sidebar}/> */}
+                    <Route
+                        path="/messenger"
+                        exact
+                        component={({ match }) => (
+                            <Chat
+                                // scrollToBottom={scrollToBottom}
+                                // messagesEnd={messagesEnd}
+                                socketRef={socketRef}
+                                // // id={id}
+                                // setId={setId}
+                                // renderMess={renderMess}
+                            />
+                        )}
+                    />
                     <Route
                         path="/questions/:title/:id/"
                         exact

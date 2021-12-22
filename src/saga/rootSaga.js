@@ -76,14 +76,21 @@ import {
     createThread,
     deleteAnswer,
     deleteThread,
+    dislike,
+    dislikeAnswer,
     getThreads,
+    like,
+    likeAnswer,
     setCircleProgress,
     setLoadingForum,
     setQuestion,
     setQuestionLoadingForum,
+    setViewThread,
     updateAnswer,
     updateThread,
 } from "../actions/forum";
+
+import { setFriends } from "../actions/messenger";
 
 function* handleTest() {
     try {
@@ -110,6 +117,11 @@ function* handleCheckLogin() {
     const auth = localStorage["access_token"];
     const url = yield select((state) => state.code.url);
     console.log("Handle Check Login", url);
+
+    if (!auth) {
+        return;
+    }
+
     if (auth) {
         setAuth(auth);
         try {
@@ -118,6 +130,8 @@ function* handleCheckLogin() {
             );
             if (res.data.success) {
                 console.log("CHECK LOGIN SAGA LINE 100");
+
+                yield put(setFriends.setFriendsSuccess(res.data.friends));
 
                 yield put(loginSuccess(res.data.name));
                 yield put(setObjId.setObjIdSuccess(res.data.user.objId));
@@ -497,6 +511,12 @@ function* handleDirect() {
 }
 
 function* handleLogout() {
+    // const objId = yield select((state) => state.auth.account.objId);
+
+    // const res = yield call(() =>
+    //     thisAxios(API_LOGIN, POST, "logout", { objId })
+    // );
+    // yield put(setFriends.setFriendsSuccess(res.data.friends));
     yield delay(300);
     setAuth(null);
     localStorage.removeItem("access_token");
@@ -629,6 +649,8 @@ function* handleGGLogin(action) {
         if (res.data.success) {
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(ggLogin.ggLoginSuccess(x));
+            yield put(setObjId.setObjIdSuccess(res.data.objId));
+
             yield delay(500);
             yield put(setProgress(false));
             yield put(push("/code"));
@@ -671,6 +693,8 @@ function* handleFBLogin(action) {
             console.log("FB LOGIN SUCCESS");
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(fbLogin.fbLoginSuccess(body));
+            yield put(setObjId.setObjIdSuccess(res.data.objId));
+
             yield delay(500);
             yield put(setProgress(false));
             yield put(push("/code"));
@@ -1237,7 +1261,7 @@ function* handleGetThreads(action) {
     try {
         const res = yield call(() => thisAxios(API_FORUM, GET, ""));
         if (res.data.success) {
-            const { threads, answers } = res.data;
+            const { threads, answers, likes, dislikes } = res.data;
             // yield put(
             //     getThreads.getThreadsSuccess({
             //         threads,
@@ -1272,6 +1296,8 @@ function* handleGetThreads(action) {
                         getThreads.getThreadsSuccess({
                             threads,
                             answers,
+                            likes,
+                            dislikes,
                         })
                     );
 
@@ -1300,6 +1326,8 @@ function* handleGetThreads(action) {
                 getThreads.getThreadsSuccess({
                     threads,
                     answers,
+                    likes,
+                    dislikes,
                 })
             );
             // yield put(direct.directSuccess(0));
@@ -1517,6 +1545,140 @@ function* handleDeleteThread(action) {
     }
 }
 
+function* handleSetViewThread(action) {
+    const id = action.payload;
+    try {
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "set/view-thread", { id })
+        );
+        if (res.data.success) {
+            yield put(setViewThread.setViewThreadSuccess(id));
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function* handleLike(action) {
+    // yield delay(500);
+    const { question, objId, answer } = action.payload;
+    console.log("1538", question, objId, "answer", answer);
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "like/question", {
+                questionId: question._id,
+                answer,
+                objId,
+            })
+        );
+        if (res.data.success) {
+            yield put(
+                like.likeSuccess({
+                    like: res.data.like,
+                    cancelLike: res.data.cancelLike,
+                    likes: res.data.likes,
+                    dislikes: res.data.dislikes,
+                })
+            );
+            console.log("Like", res.data.like);
+        }
+    } catch (err) {
+        console.log("err", err);
+    }
+}
+
+function* handleDislike(action) {
+    // yield delay(500);
+
+    const { question, objId, answer } = action.payload;
+    console.log("1538", question, objId);
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "dislike/question", {
+                questionId: question._id,
+                answer,
+                objId,
+            })
+        );
+        if (res.data.success) {
+            yield put(
+                dislike.dislikeSuccess({
+                    dislike: res.data.dislike,
+                    cancelDislike: res.data.cancelDislike,
+                    likes: res.data.likes,
+                    dislikes: res.data.dislikes,
+                })
+            );
+            console.log("Like", res.data.dislike);
+        }
+    } catch (err) {
+        console.log("err", err);
+    }
+}
+
+function* handleLikeAnswer(action) {
+    // yield delay(500);
+
+    const { questionId, objId, answerId } = action.payload;
+    console.log("1538", questionId, objId, "answer", answerId);
+    // return;
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "like/answer", {
+                questionId,
+                answerId,
+                objId,
+            })
+        );
+        if (res.data.success) {
+            yield put(
+                likeAnswer.likeAnswerSuccess({
+                    like: res.data.like,
+                    cancelLike: res.data.cancelLike,
+                    likes: res.data.likes,
+                    dislikes: res.data.dislikes,
+                })
+            );
+            console.log("Like", res.data.like);
+        }
+    } catch (err) {
+        console.log("err", err);
+    }
+}
+
+function* handleDislikeAnswer(action) {
+    // yield delay(500);
+
+    const { questionId, objId, answerId } = action.payload;
+    console.log("1538", questionId, objId, answerId);
+    try {
+        setAuth(localStorage["access_token"]);
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "dislike/answer", {
+                questionId,
+                answerId,
+                objId,
+            })
+        );
+        if (res.data.success) {
+            yield put(
+                dislikeAnswer.dislikeAnswerSuccess({
+                    dislike: res.data.dislike,
+                    cancelDislike: res.data.cancelDislike,
+                    likes: res.data.likes,
+                    dislikes: res.data.dislikes,
+                })
+            );
+            console.log("Like", res.data.dislike);
+        }
+    } catch (err) {
+        console.log("err", err);
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
     yield takeLatest(
@@ -1582,6 +1744,20 @@ function* rootSaga() {
     yield takeLatest(
         deleteThread.deleteThreadRequest().type,
         handleDeleteThread
+    );
+
+    yield takeLatest(
+        setViewThread.setViewThreadRequest().type,
+        handleSetViewThread
+    );
+
+    yield takeLatest(like.likeRequest().type, handleLike);
+    yield takeLatest(dislike.dislikeRequest().type, handleDislike);
+
+    yield takeLatest(likeAnswer.likeAnswerRequest().type, handleLikeAnswer);
+    yield takeLatest(
+        dislikeAnswer.dislikeAnswerRequest().type,
+        handleDislikeAnswer
     );
 }
 

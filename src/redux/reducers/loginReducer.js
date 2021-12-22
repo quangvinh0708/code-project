@@ -114,6 +114,7 @@ const loginReducer = (state = initialState, action) => {
                     name: null,
                     picture: null,
                     uid: null,
+                    objId: null,
                 },
                 ggAccountInfo: {
                     gid: null,

@@ -14,6 +14,7 @@ import profileReducer from "./reducers/profileReducer";
 import getShareCodeReducer from "./reducers/getShareCodeReducer";
 import viewReducer from "./reducers/viewReducer";
 import forumReducer from "./reducers/forumReducer";
+import messengerReducer from "./reducers/messengerReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,6 +29,7 @@ const reducer = combineReducers({
     getShareCode: getShareCodeReducer,
     view: viewReducer,
     forum: forumReducer,
+    messenger: messengerReducer,
     router: connectRouter(history),
 });
 

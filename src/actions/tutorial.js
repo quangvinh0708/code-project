@@ -15,3 +15,7 @@ export const setLocation = createActions({
 export const setSidebar = createActions({
     setSidebar: (val) => val,
 });
+
+export const setLocationNav = createActions({
+    setLocationNav: (val) => val,
+});

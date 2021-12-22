@@ -103,7 +103,7 @@ const styles = () => ({
     textInfo: {
         width: `89%`,
         margin: `auto`,
-        marginTop: `5px`,
+        marginTop: `5px !important`,
         fontWeight: `520`,
         // float: `right`,
     },

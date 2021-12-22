@@ -159,7 +159,6 @@ textarea {
     .pane {
         overflow-x: auto !important;
     }
-    
 }
 @media (max-width: 810px) {
     .pane {
@@ -687,4 +686,47 @@ textarea {
         display: flex !important;
         flex-direction: column !important;
     }
+}
+
+.message-left {
+    float: left !important;
+}
+.message-right {
+    float: right !important;
+}
+
+#m-left {
+    max-width: 220px !important;
+    text-align: left !important;
+    color: #000;
+    float: left !important;
+}
+#m-right {
+    max-width: 220px !important;
+    text-align: left !important;
+    float: right !important;
+}
+
+.boxChat {
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat-back.svg");
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 17% !important;
+    background-color: #fff !important;
+}
+
+.boxAllImg {
+    display: flex !important;
+    width: 100% !important;
+    float: left;
+    white-space: nowrap !important;
+    /* overflow-x: scroll !important; */
+    /* overflow: scroll; */
+    overflow: auto !important;
+}
+
+.emoji-picker-react {
+    position: absolute !important;
+    bottom: 60px !important;
+    z-index: 1000 !important;
 }

@@ -93,6 +93,40 @@ export const openDeleteThreadModal = createActions({
     openDeleteThreadModalSuccess: (val) => val,
     openDeleteThreadModalFailure: (val) => val,
 });
+
+export const setViewThread = createActions({
+    setViewThreadRequest: (val) => val,
+    setViewThreadSuccess: (val) => val,
+    setViewThreadFailure: (val) => val,
+});
+
+export const like = createActions({
+    likeRequest: (val) => val,
+    likeSuccess: (val) => val,
+    likeFailure: (val) => val,
+});
+export const dislike = createActions({
+    dislikeRequest: (val) => val,
+    dislikeSuccess: (val) => val,
+    dislikeFailure: (val) => val,
+});
+
+export const likeAnswer = createActions({
+    likeAnswerRequest: (val) => val,
+    likeAnswerSuccess: (val) => val,
+    likeAnswerFailure: (val) => val,
+});
+export const dislikeAnswer = createActions({
+    dislikeAnswerRequest: (val) => val,
+    dislikeAnswerSuccess: (val) => val,
+    dislikeAnswerFailure: (val) => val,
+});
+
+export const setThread = createActions({
+    setThreadRequest: (val) => val,
+    setThreadSuccess: (val) => val,
+    setThreadFailure: (val) => val,
+});
 // export const setLargeScreen = createActions({
 //     setLargeScreenRequest: (val) => val,
 //     setLargeScreenSuccess: (val) => val,
