@@ -25,93 +25,96 @@ import CloseIcon from "@mui/icons-material/Close";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { closeModal } from "../actions/modal";
 
-const useStyles = makeStyles((theme) => ({
-    modal: {
-        top: `57%`,
-        left: `50%`,
-        transform: `translate(-50%, -90%)`,
-        position: `absolute`,
-        width: 400,
-        backgroundColor: theme.palette.background.paper,
-        border: `2px solid rgb(167, 202, 237)`,
-        boxShadow: theme.shadows[5],
-        // padding: theme.spacing(2, 4, 4),
-        outline: `none`,
-        padding: 0,
-        borderRadius: `8px 8px`,
-        "@media(max-width: 442px)": {
-            width: `95% !important`,
-        },
-    },
-    header: {
-        backgroundColor: theme.color.textColor,
-        color: theme.color.textColor,
-        padding: theme.spacing(2),
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    title: {
-        color: theme.color.textColor,
-        fontWeight: 700,
+// const useStyles = makeStyles((theme) => ({
+//     modal: {
+//         top: `57%`,
+//         left: `50%`,
+//         transform: `translate(-50%, -90%)`,
+//         position: `absolute`,
+//         width: 400,
+//         backgroundColor: theme.palette.background.paper,
+//         border: `2px solid rgb(167, 202, 237)`,
+//         boxShadow: theme.shadows[5],
+//         // padding: theme.spacing(2, 4, 4),
+//         outline: `none`,
+//         padding: 0,
+//         borderRadius: `8px 8px`,
+//         "@media(max-width: 442px)": {
+//             width: `95% !important`,
+//         },
+//         "@media(max-height: 560px)": {
+//             // width: `95% !important`,
+//             top: `70% !important`,
+//         },
+//     },
+//     header: {
+//         backgroundColor: theme.color.textColor,
+//         color: theme.color.textColor,
+//         padding: theme.spacing(2),
+//         display: "flex",
+//         alignItems: "center",
+//         justifyContent: "space-between",
+//     },
+//     title: {
+//         color: theme.color.textColor,
+//         fontWeight: 700,
 
-        width: `100%`,
-    },
-    content: {
-        padding: theme.spacing(2),
-    },
-    textField: {
-        width: `100%`,
-    },
-    textFieldOld: {
-        display: `block`,
-        minWidth: `100%`,
-        // marginBottom: `50px`,
-    },
-    box: {
-        margin: `0 15px 10px 0`,
-    },
-    typography1: {
-        margin: `5px 0 0 0px`,
-        fontSize: `15.5px`,
-        color: theme.color.error,
-    },
-    progress: {
-        color: "#ff6278",
-    },
-    typography2: {
-        textTransform: `none`,
-        width: `max-content`,
-        color: `#1ba700`,
-        fontWeight: `bold`,
-        fontSize: `13px !important`,
-    },
-    typography3: {
-        textTransform: `none`,
-        width: `max-content`,
-        color: `#29b117`,
-        fontSize: `16px !important`,
-        textDecoration: `none`,
-        "& > a:hover": {
-            color: `#5dd0e8`,
-        },
-    },
-    box1: {
-        marginLeft: `7px`,
-        marginTop: `9x`,
-    },
-    box2: {
-        marginTop: `9x`,
-        marginLeft: `5px`,
-    },
-    icon: {
-        marginTop: 5,
-        cursor: `pointer`,
-    },
-}));
+//         width: `100%`,
+//     },
+//     content: {
+//         padding: theme.spacing(2),
+//     },
+//     textField: {
+//         width: `100%`,
+//     },
+//     textFieldOld: {
+//         display: `block`,
+//         minWidth: `100%`,
+//         // marginBottom: `50px`,
+//     },
+//     box: {
+//         margin: `0 15px 10px 0`,
+//     },
+//     typography1: {
+//         margin: `5px 0 0 0px`,
+//         fontSize: `15.5px`,
+//         color: theme.color.error,
+//     },
+//     progress: {
+//         color: "#ff6278",
+//     },
+//     typography2: {
+//         textTransform: `none`,
+//         width: `max-content`,
+//         color: `#1ba700`,
+//         fontWeight: `bold`,
+//         fontSize: `13px !important`,
+//     },
+//     typography3: {
+//         textTransform: `none`,
+//         width: `max-content`,
+//         color: `#29b117`,
+//         fontSize: `16px !important`,
+//         textDecoration: `none`,
+//         "& > a:hover": {
+//             color: `#5dd0e8`,
+//         },
+//     },
+//     box1: {
+//         marginLeft: `7px`,
+//         marginTop: `9x`,
+//     },
+//     box2: {
+//         marginTop: `9x`,
+//         marginLeft: `5px`,
+//     },
+//     icon: {
+//         marginTop: 5,
+//         cursor: `pointer`,
+//     },
+// }));
 
 const NameProject = (props) => {
-    const classes = useStyles();
     const {
         modalIsOpen,
         handleCloseModal,
@@ -132,6 +135,103 @@ const NameProject = (props) => {
         closeModalCreator,
     } = props;
 
+    const useStyles = makeStyles((theme) => ({
+        modal: {
+            top: !isChanging ? `57%` : "62% !important",
+            left: `50%`,
+            transform: `translate(-50%, -90%)`,
+            position: `absolute`,
+            width: 400,
+            backgroundColor: theme.palette.background.paper,
+            border: `2px solid rgb(167, 202, 237)`,
+            boxShadow: theme.shadows[5],
+            // padding: theme.spacing(2, 4, 4),
+            outline: `none`,
+            padding: 0,
+            borderRadius: `8px 8px`,
+            "@media(max-width: 442px)": {
+                width: `95% !important`,
+            },
+            "@media(max-height: 560px)": {
+                // width: `95% !important`,
+                top: `70% !important`,
+            },
+            "@media(max-height: 499px)": {
+                // width: `95% !important`,
+                top: `80% !important`,
+            },
+            "@media screen and (min-width: 2500px) and (min-height:1200px)": {
+                // width: `95% !important`,
+                top: `57% !important`,
+            },
+        },
+        header: {
+            backgroundColor: theme.color.textColor,
+            color: theme.color.textColor,
+            padding: theme.spacing(2),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
+        title: {
+            color: theme.color.textColor,
+            fontWeight: 700,
+
+            width: `100%`,
+        },
+        content: {
+            padding: theme.spacing(2),
+        },
+        textField: {
+            width: `100%`,
+        },
+        textFieldOld: {
+            display: `block`,
+            minWidth: `100%`,
+            // marginBottom: `50px`,
+        },
+        box: {
+            margin: `0 15px 10px 0`,
+        },
+        typography1: {
+            margin: `5px 0 0 0px`,
+            fontSize: `15.5px`,
+            color: theme.color.error,
+        },
+        progress: {
+            color: "#ff6278",
+        },
+        typography2: {
+            textTransform: `none`,
+            width: `max-content`,
+            color: `#1ba700`,
+            fontWeight: `bold`,
+            fontSize: `13px !important`,
+        },
+        typography3: {
+            textTransform: `none`,
+            width: `max-content`,
+            color: `#29b117`,
+            fontSize: `16px !important`,
+            textDecoration: `none`,
+            "& > a:hover": {
+                color: `#5dd0e8`,
+            },
+        },
+        box1: {
+            marginLeft: `7px`,
+            marginTop: `9x`,
+        },
+        box2: {
+            marginTop: `9x`,
+            marginLeft: `5px`,
+        },
+        icon: {
+            marginTop: 5,
+            cursor: `pointer`,
+        },
+    }));
+    const classes = useStyles();
     const renderCheck = () => {
         let jsx = null;
         jsx = (

@@ -14,14 +14,14 @@ import { makeStyles } from "@mui/styles";
 
 const style = {
     position: "absolute",
-    top: "51%",
+    top: "49%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: `85% !important`,
     // bgcolor: "background.paper",
     // boxShadow: 24,
-    padding: `15px !important`,
-    // p: 3,
+    // padding: `60px 0px !important`,
+    p: 5,
 
     outline: `none !important`,
     border: `none !important`,
@@ -52,15 +52,21 @@ const style = {
 const useStyles = makeStyles((theme) => ({
     closeImageShow: {
         zIndex: `1000 !important`,
-        position: "relative !important",
-        top: "-12px !important",
+        position: "absolute !important",
+        top: "50% !important",
         background: "#FFFFFF !important",
-        left: "0px !important",
+        right: "-18px !important",
         ["@media(max-width: 1032px)"]: {
             zIndex: `1000 !important`,
             position: "absolute !important",
             top: "-9px !important",
             left: "-15px !important",
+        },
+        ["@media(min-width: 2200px)"]: {
+            zIndex: `1000 !important`,
+            position: "relative !important",
+            top: "-9px !important",
+            // left: "-15px !important",
         },
     },
     boxImage: {

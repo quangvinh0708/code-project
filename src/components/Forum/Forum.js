@@ -1027,6 +1027,10 @@ const Forum = (props) => {
                                         sx={{
                                             marginLeft: `21px`,
                                             marginTop: `2.7%`,
+                                            "&:focus": {
+                                                outline: `none !important`,
+                                                border: `none !important`,
+                                            },
                                         }}
                                     >
                                         Ask question{" "}

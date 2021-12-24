@@ -11,6 +11,7 @@ import { host } from "../../constant/axios";
 import socketIOClient from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    setAllMess,
     setCurrentObj,
     setDisplay,
     setFriends,
@@ -93,7 +94,7 @@ const Chat = (props) => {
             // background: `#fff`,
             // borderRight: `1px solid #e0e0e0`,
             // boxShadow: `-5px -5px 10px 9px #e0e0e0`,
-            boxShadow: `-5px -5px 10px 5px #e0e0e0`,
+            boxShadow: `0px 0px 9px #e0e0e0`,
 
             // boxShadow: `0 0 5px 2px #000`,
             borderRadius: `9px`,
@@ -289,7 +290,7 @@ const Chat = (props) => {
     const message = useSelector((state) => state.messenger.message);
     const mess = useSelector((state) => state.messenger.mess);
     const id = useSelector((state) => state.messenger.id);
-    // const account = useSelector((state) => state.auth.account);
+    const account = useSelector((state) => state.auth.account);
     const friends = useSelector((state) => state.messenger.friends);
     const currentObj = useSelector((state) => state.messenger.currentObj);
     const currentMess = useSelector((state) => state.messenger.currentMess);
@@ -355,7 +356,7 @@ const Chat = (props) => {
             //
             socketRef.current.on("sendListMessage", (data) => {
                 console.log("sendListMessage", data);
-                dp(setMess.setMessSuccess(data.mess));
+                dp(setAllMess.setAllMessSuccess(data.mess));
             });
 
             socketRef.current.on("getUpdateSeen", (data) => {
@@ -370,6 +371,7 @@ const Chat = (props) => {
 
             socketRef.current.on("getId", (data) => {
                 socketRef.current.emit("sendObjId", objId);
+                // socketRef.current.emit("getFriendListOnline", objId);
                 console.log("data", data);
                 dp(setId.setIdSuccess(data.id));
 
@@ -429,6 +431,8 @@ const Chat = (props) => {
                     currentObjId: currentObj.objId,
                     objIds: [objId, currentObj.objId],
                     pictures: previewImg,
+                    name: account.name,
+                    picture: account.picture,
                 };
                 console.log("Success: ", previewImg.slice());
                 socketRef.current.emit("sendDataClient", msg);
@@ -1043,7 +1047,16 @@ const Chat = (props) => {
                                 onClick={handleOpenTool}
                                 title={
                                     <span>
-                                        {currentObj.name}
+                                        <Typography
+                                            component={"span"}
+                                            variant={"body2"}
+                                            sx={{
+                                                fontSize: `15px !important`,
+                                                fontWeight: `500 !important`,
+                                            }}
+                                        >
+                                            {currentObj.name}
+                                        </Typography>
                                         {countUnreadMessage() > 0 && (
                                             <Typography
                                                 component={"span"}
@@ -1506,7 +1519,7 @@ const Chat = (props) => {
                                             <Button
                                                 disableElevation={false}
                                                 sx={{
-                                                    padding: `0 !important`,
+                                                    // padding: `0 !important`,
                                                     "&:focus": {
                                                         outline: `none !important`,
                                                         border: `none !important`,

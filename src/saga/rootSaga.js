@@ -62,6 +62,7 @@ import {
     updateFID,
     updateUID,
     setObjId,
+    setAdmin,
 } from "../actions/login";
 import { LOGIN } from "../constant/login";
 import { push } from "connected-react-router";
@@ -135,6 +136,12 @@ function* handleCheckLogin() {
 
                 yield put(loginSuccess(res.data.name));
                 yield put(setObjId.setObjIdSuccess(res.data.user.objId));
+                if (res.data.user.isAdmin) {
+                    yield put(setAdmin.setAdminSuccess(res.data.user.isAdmin));
+                } else {
+                    yield put(setAdmin.setAdminSuccess(false));
+                }
+
                 console.log("CheckLOGIN with objID", res);
                 let picture;
                 if (res.data.picture) {
@@ -228,16 +235,22 @@ function* handleGetCode() {
             //! BELOW
             yield put(push("/code"));
         } else if (auth && q !== "code") {
+            console.log("auth && q !== code");
+
             setAuth(auth);
             try {
                 const res = yield call(() =>
                     thisAxios(API_LOGIN, POST, "check-login")
                 );
                 if (res.data.success) {
+                    console.log("auth && q !== code success");
+
                     yield put(loginSuccess(res.data.name));
                     setAuth(auth);
                 }
             } catch (err) {
+                console.log("auth && q !== code failed");
+
                 setAuth(null);
                 localStorage.removeItem("access_token");
                 yield put(push("/login"));
@@ -264,6 +277,7 @@ function* handleGetCode() {
 
                     //! RECOMMEND IN THIS BELOW
                     yield put(push(`/${q}`));
+                    return;
                 }
             } catch (err) {
                 // toast.error("You don't have permission to access this page");
@@ -342,6 +356,11 @@ function* handleLogin(action) {
 
                 //!
                 yield put(setObjId.setObjIdSuccess(res1.data.user.objId));
+                if (res1.data.user.isAdmin) {
+                    yield put(setAdmin.setAdminSuccess(res1.data.user.isAdmin));
+                } else {
+                    yield put(setAdmin.setAdminSuccess(false));
+                }
 
                 localStorage.removeItem("name");
                 yield put(push("/code"));
@@ -367,6 +386,7 @@ function* handleLogin(action) {
 
                 console.log(`res at login with account`, res);
                 yield put(setObjId.setObjIdSuccess(res.data.objId));
+                yield put(setAdmin.setAdminSuccess(false));
 
                 console.log("Line 314 Login successfully and have code in url");
                 if (url !== "code") {
@@ -495,7 +515,7 @@ function* handleUpdate(action) {
             } catch (err) {
                 if (err.response.data) {
                     console.log(err.response.data);
-                    yield put(setError(err.response.data));
+                    yield put(setError(err.response.data.message));
                     yield put(setProgress(false));
                     return;
                 }
@@ -624,7 +644,7 @@ function* handleDelete(action) {
     } catch (err) {
         if (err.response.data) {
             // console.log(err.response.data);
-            yield put(setError(err.response.data));
+            yield put(setError(err.response.data.message));
             yield put(setProgress(false));
             return;
         }
@@ -650,6 +670,11 @@ function* handleGGLogin(action) {
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(ggLogin.ggLoginSuccess(x));
             yield put(setObjId.setObjIdSuccess(res.data.objId));
+            if (res.data.isAdmin) {
+                yield put(setAdmin.setAdminSuccess(res.data.isAdmin));
+            } else {
+                yield put(setAdmin.setAdminSuccess(false));
+            }
 
             yield delay(500);
             yield put(setProgress(false));
@@ -694,6 +719,7 @@ function* handleFBLogin(action) {
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(fbLogin.fbLoginSuccess(body));
             yield put(setObjId.setObjIdSuccess(res.data.objId));
+            yield put(setAdmin.setAdminSuccess(false));
 
             yield delay(500);
             yield put(setProgress(false));
@@ -1064,13 +1090,15 @@ function* handleUpdateProfile(action) {
         yield put(setProgress(false));
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
-                isVerify: true,
+                isVerify: false,
                 isWaiting: false,
                 message: "",
             })
         );
-        yield put(push(`/code`));
+        // yield put(push(`/code`));
+        yield put(push(`/users/profile/${url}`));
     }
+    yield put(push(`/users/profile/${url}`));
 }
 
 function* handleOpenModalShare(action) {

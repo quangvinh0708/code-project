@@ -22,6 +22,7 @@ import {
     GGLogin,
     login,
     setErrorLogin,
+    checkLogin,
 } from "../../actions/login";
 import { setProgress } from "../../actions/modal";
 import { set } from "mongoose";
@@ -45,6 +46,7 @@ const Login = (props) => {
         progress,
         isAuthenticated,
         setErrorLoginCreator,
+        checkLoginCreator,
     } = props;
     // const [email, setEmail] = useState("");
     const [account, setAccount] = useState({
@@ -60,7 +62,9 @@ const Login = (props) => {
         if (nameCode === null && !isAuthenticated) {
             setErrorLoginCreator(null);
         }
+        checkLoginCreator();
     }, []);
+    // checkLoginCreator();
 
     const onChange = (e) => {
         setAccount({
@@ -279,6 +283,7 @@ const mapActionsToProps = {
     loginCreator: login,
     setProgressCreator: setProgress,
     setErrorLoginCreator: setErrorLogin,
+    checkLoginCreator: checkLogin,
 };
 
 const withConnect = connect(mapStateToProps, mapActionsToProps);

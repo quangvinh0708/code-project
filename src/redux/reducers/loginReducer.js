@@ -1,6 +1,7 @@
 import {
     fbLogin,
     ggLogin,
+    setAdmin,
     setErrorStatus,
     setObjId,
     setPicture,
@@ -21,6 +22,7 @@ const initialState = {
         picture: null,
         uid: null,
         objId: null,
+        isAdmin: false,
     },
     isAuthenticated: false,
     error: null,
@@ -115,6 +117,7 @@ const loginReducer = (state = initialState, action) => {
                     picture: null,
                     uid: null,
                     objId: null,
+                    isAdmin: false,
                 },
                 ggAccountInfo: {
                     gid: null,
@@ -215,6 +218,16 @@ const loginReducer = (state = initialState, action) => {
                 account: {
                     ...state.account,
                     objId: action.payload,
+                },
+            };
+        }
+
+        case setAdmin.setAdminSuccess().type: {
+            return {
+                ...state,
+                account: {
+                    ...state.account,
+                    isAdmin: action.payload,
                 },
             };
         }

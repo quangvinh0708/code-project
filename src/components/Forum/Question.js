@@ -102,6 +102,9 @@ const useStyles = makeStyles((theme) => ({
     },
     questionHeader: {
         borderBottom: `1px solid rgba(26, 54, 126, 0.2)`,
+        "&:hover": {
+            background: `rgba(224, 224, 224, 40%) !important`,
+        },
         // background: `#98DBC6`,
         // backgroundImage: `linear-gradient(45deg, #98DBC6 50%, #fff 10%)`,
     },
@@ -202,6 +205,7 @@ const Question = (props) => {
     const isVerify = useSelector((state) => state.direct.isVerify);
     const question = useSelector((state) => state.forum.question);
     const objId = useSelector((state) => state.auth.account.objId);
+    const isAdmin = useSelector((state) => state.auth.account.isAdmin);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const [anchorEL, setAnchorEL] = useState(null);
     const open = useSelector((state) => state.forum.open);
@@ -504,8 +508,9 @@ const Question = (props) => {
                                         .format("hh:m MMM DD, YYYY")}`}
                                     // action={<IconButton>{<MoreVertIcon />}</IconButton>}
                                     action={
-                                        question.user.objId === objId &&
-                                        isAuthenticated ? (
+                                        (question.user.objId === objId &&
+                                            isAuthenticated) ||
+                                        (isAdmin && isAuthenticated) ? (
                                             <IconButton
                                                 className={cs(
                                                     "",

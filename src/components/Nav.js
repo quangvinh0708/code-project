@@ -36,7 +36,9 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { makeStyles } from "@mui/styles";
-import { setFriends } from "../actions/messenger";
+import { openMessenger, setFriends } from "../actions/messenger";
+import { setUrl } from "../actions/code";
+
 const Nav = ({
     openModalSuccessCreator,
     updateCodeCreator,
@@ -69,6 +71,7 @@ const Nav = ({
     const progress = useSelector((state) => state.modal.progress);
     const fullScreen = useSelector((state) => state.view.fullScreen);
     const largeScreen = useSelector((state) => state.view.largeScreen);
+    const mess = useSelector((state) => state.messenger.mess);
 
     const dispatch = useDispatch();
 
@@ -349,18 +352,18 @@ const Nav = ({
     };
 
     const openListHTML = () => {
-        dispatch(setNameCode(null));
+        // dispatch(setNameCode(null));
         dispatch(setListTutorial.setListTutorial(HTML_TUTORIALS));
         dispatch(setOpen.setOpen(true));
     };
 
     const openListCSS = () => {
-        dispatch(setNameCode(null));
+        // dispatch(setNameCode(null));
         dispatch(setListTutorial.setListTutorial(CSS_TUTORIALS));
         dispatch(setOpen.setOpen(true));
     };
     const openListJS = () => {
-        dispatch(setNameCode(null));
+        // dispatch(setNameCode(null));
         dispatch(setListTutorial.setListTutorial(JS_TUTORIALS));
         dispatch(setOpen.setOpen(true));
     };
@@ -384,6 +387,19 @@ const Nav = ({
     // let checkLocation = useSelector((state) => state.tutorial.location);
     // checkLocation = checkLocation.split("/")[1];
     // // console.log("checkLocation", checkLocation);
+
+    const handleOpenMessenger = (e) => {
+        e.preventDefault();
+        console.log("ABC");
+        dispatch(openMessenger.openMessengerSuccess(true));
+    };
+
+    const handleCountNotify = () => {
+        const x = mess.filter(
+            (m) => m.objIds.includes(objId) && m.objId !== objId && !m.seen && m
+        );
+        return x.length;
+    };
 
     return (
         <div className="navigation-wrap bg-light start-header start-style">
@@ -438,6 +454,7 @@ const Nav = ({
                                                 setView.setViewSuccess(false)
                                             );
                                         dispatch(push("/code"));
+                                        // dispatch(push(`/${url}`));
                                     }}
                                     style={{
                                         color: "#8167a9",
@@ -841,6 +858,30 @@ const Nav = ({
                                                                     alignSelf: `center`,
                                                                 }}
                                                             >{` ${name}`}</span>
+                                                            {handleCountNotify() >
+                                                                0 && (
+                                                                <Typography
+                                                                    component={
+                                                                        "span"
+                                                                    }
+                                                                    variant={
+                                                                        "body2"
+                                                                    }
+                                                                    sx={{
+                                                                        position: `relative !important`,
+                                                                        background: `#FF0000`,
+                                                                        color: `#FFFFFF`,
+                                                                        borderRadius: `15px !important`,
+                                                                        fontSize: `13px !important`,
+                                                                        left: `5px !important`,
+                                                                        top: `-5px !important`,
+                                                                        padding:
+                                                                            "5px 8px !important",
+                                                                    }}
+                                                                >
+                                                                    {` ${handleCountNotify()}`}
+                                                                </Typography>
+                                                            )}
                                                         </Fragment>
                                                     </div>
                                                 </span>
@@ -854,6 +895,37 @@ const Nav = ({
                                             >
                                                 Sign out
                                             </Link> */}
+                                            <Typography
+                                                component="p"
+                                                className="dropdown-item"
+                                                onClick={handleOpenMessenger}
+                                                sx={{
+                                                    cursor: `pointer !important`,
+                                                    fontSize: `15px !important`,
+                                                }}
+                                            >
+                                                Messenger
+                                                {handleCountNotify() > 0 && (
+                                                    <Typography
+                                                        component={"span"}
+                                                        variant={"body2"}
+                                                        sx={{
+                                                            position: `relative !important`,
+                                                            background: `#FF0000`,
+                                                            color: `#FFFFFF`,
+                                                            borderRadius: `15px !important`,
+                                                            fontSize: `13px !important`,
+                                                            left: `5px !important`,
+                                                            top: `-5px !important`,
+                                                            padding:
+                                                                "5px 6px !important",
+                                                            paddingRight: `9px !important`,
+                                                        }}
+                                                    >
+                                                        {` ${handleCountNotify()}`}
+                                                    </Typography>
+                                                )}
+                                            </Typography>
                                             <Link
                                                 className="dropdown-item"
                                                 to={`/users/profile/${localStorage["access_token"]}`}
@@ -912,12 +984,24 @@ const Nav = ({
                                                 More
                                             </Link>
                                             <div className="dropdown-menu">
-                                                <Link
+                                                <button
                                                     className="dropdown-item"
-                                                    to="/forum/1"
+                                                    // to="/forum/1"
+                                                    onClick={() => {
+                                                        dispatch(
+                                                            setUrl("code")
+                                                        );
+
+                                                        dispatch(
+                                                            setNameCode(null)
+                                                        );
+                                                        dispatch(
+                                                            push("/forum/1")
+                                                        );
+                                                    }}
                                                 >
                                                     Forum
-                                                </Link>
+                                                </button>
 
                                                 <button
                                                     className="dropdown-item"

@@ -49,6 +49,7 @@ import LikeAnswerStatistic from "./LikeAnswerStatistic";
 import { useEffect } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { setCurrentObj, setDisplay } from "../../actions/messenger";
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
         background: `#fff`,
@@ -72,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
     questionHeader: {
         borderBottom: `1px solid rgba(26, 54, 126, 0.2)`,
         // background: `#98DBC6`,
+        "&:hover": {
+            background: `rgba(224, 224, 224, 40%) !important`,
+        },
     },
     cardActions: {
         backgroundColor: `rgba(0,0,0,.03)`,
@@ -157,6 +161,8 @@ const Answer = (props) => {
 
     const { answers, id, ChangeToSlug } = props;
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const isAdmin = useSelector((state) => state.auth.account.isAdmin);
+
     const likes = useSelector((state) => state.forum.likes);
     const dislikes = useSelector((state) => state.forum.dislikes);
     const question = useSelector((state) => state.forum.question);
@@ -392,6 +398,15 @@ const Answer = (props) => {
         setOpenLikeQuestionStatistic(false);
     };
 
+    const handleOpenChat = (objId) => {
+        if (!isAuthenticated) {
+            handleOpenLoginRequire();
+            return;
+        }
+        dp(setCurrentObj.setCurrentObjSuccess(objId));
+        dp(setDisplay.setDisplaySuccess(true));
+    };
+
     return (
         <Fragment>
             <LoginRequire
@@ -431,14 +446,23 @@ const Answer = (props) => {
                                 </Avatar>
                             }
                             // title={post.author}
-                            title={answer.user.name}
+                            title={
+                                <span
+                                    style={{ cursor: `pointer` }}
+                                    onClick={() => handleOpenChat(answer.objId)}
+                                >
+                                    {answer.user.name}
+                                </span>
+                            }
                             subheader={`Answer at ${moment(answer.createdAt)
                                 .tz("Asia/Ho_Chi_Minh")
                                 .format("hh:m MMM DD, YYYY")}`}
                             // subheader={"24 Dec, 2021"}
                             // action={<IconButton>{<MoreVertIcon />}</IconButton>}
                             action={
-                                answer.user.objId === objId ? (
+                                (answer.user.objId === objId &&
+                                    isAuthenticated) ||
+                                (isAdmin && isAuthenticated) ? (
                                     <IconButton
                                         className={cs(
                                             "btn",

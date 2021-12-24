@@ -35,6 +35,21 @@ const useStyles = makeStyles((theme) => ({
         outline: `none`,
         padding: 0,
         borderRadius: `8px 8px`,
+        "@media(max-width: 442px)": {
+            width: `95% !important`,
+        },
+        "@media(max-height: 560px)": {
+            // width: `95% !important`,
+            top: `70% !important`,
+        },
+        "@media(max-height: 499px)": {
+            // width: `95% !important`,
+            top: `70% !important`,
+        },
+        "@media screen and (min-width: 2500px) and (min-height:1200px)": {
+            // width: `95% !important`,
+            top: `57% !important`,
+        },
     },
     header: {
         backgroundColor: theme.color.textColor,

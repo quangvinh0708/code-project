@@ -12,6 +12,12 @@ export const setMess = createActions({
     setMessFailure: (val) => val,
 });
 
+export const setAllMess = createActions({
+    setAllMessRequest: (val) => val,
+    setAllMessSuccess: (val) => val,
+    setAllMessFailure: (val) => val,
+});
+
 export const setId = createActions({
     setIdRequest: (val) => val,
     setIdSuccess: (val) => val,
@@ -46,4 +52,16 @@ export const setUpdateSeen = createActions({
     setUpdateSeenRequest: (val) => val,
     setUpdateSeenSuccess: (val) => val,
     setUpdateSeenFailure: (val) => val,
+});
+
+export const openMessenger = createActions({
+    openMessengerRequest: (val) => val,
+    openMessengerSuccess: (val) => val,
+    openMessengerFailure: (val) => val,
+});
+
+export const setViewMessenger = createActions({
+    setViewMessengerRequest: (val) => val,
+    setViewMessengerSuccess: (val) => val,
+    setViewMessengerFailure: (val) => val,
 });

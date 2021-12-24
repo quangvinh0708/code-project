@@ -98,3 +98,9 @@ export const setObjId = createActions({
     setObjIdSuccess: (val) => val,
     setObjIdFailure: (val) => val,
 });
+
+export const setAdmin = createActions({
+    setAdminRequest: (val) => val,
+    setAdminSuccess: (val) => val,
+    setAdminFailure: (val) => val,
+});

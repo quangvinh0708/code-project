@@ -47,6 +47,7 @@ import { host } from "../constant/axios";
 import Chat from "./Messengers/Chat";
 import { setFriends, setId, setMess } from "../actions/messenger";
 import ImageModal from "./Messengers/ImageModal";
+import BoxMessenger from "./Messengers/BoxMessenger";
 
 var createGuest = require("cross-domain-storage/guest");
 var createHost = require("cross-domain-storage/host");
@@ -289,6 +290,7 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
                     ABC
                 </button> */}
                 {objId && <Chat socketRef={socketRef} />}
+                {objId && <BoxMessenger socketRef={socketRef} />}
                 <ImageModal />
                 <Switch>
                     {/* <Route to="/Sidebar" exact component={Sidebar}/> */}

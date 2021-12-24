@@ -1,4 +1,6 @@
 import {
+    openMessenger,
+    setAllMess,
     setCurrentObj,
     setDisplay,
     setFriends,
@@ -7,6 +9,7 @@ import {
     setMess,
     setMessage,
     setUpdateSeen,
+    setViewMessenger,
 } from "../../actions/messenger";
 
 const initialState = {
@@ -22,6 +25,9 @@ const initialState = {
     openImageModal: false,
     blocklist: [],
     myObj: {},
+    viewMessenger: 0,
+    isOpenMessenger: false,
+    arrDisplay: [],
 };
 
 const messengerReducer = (state = initialState, action) => {
@@ -61,6 +67,13 @@ const messengerReducer = (state = initialState, action) => {
             return {
                 ...state,
                 mess: state.mess.concat(action.payload),
+            };
+        }
+
+        case setAllMess.setAllMessSuccess().type: {
+            return {
+                ...state,
+                mess: action.payload,
             };
         }
 
@@ -113,6 +126,21 @@ const messengerReducer = (state = initialState, action) => {
             return {
                 ...state,
                 mess: action.payload,
+            };
+        }
+
+        case setViewMessenger.setViewMessengerSuccess().type: {
+            return {
+                ...state,
+                viewMessenger: action.payload,
+            };
+        }
+
+        case openMessenger.openMessengerSuccess().type: {
+            return {
+                ...state,
+                isOpenMessenger: action.payload,
+                viewMessenger: 0,
             };
         }
 

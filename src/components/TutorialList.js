@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { HTML_TUTORIALS } from "../common/constants/HTMLconstants";
 import { makeStyles } from "@mui/styles";
+import { setNameCode } from "../actions/login";
+import { setUrl } from "../actions/code";
 
 // const useStyles = makeStyles({
 //     link: {
@@ -44,6 +46,13 @@ function TutorialList() {
     };
 
     const handleClose = () => {
+        dispatch(setNameCode(null));
+        dispatch(setUrl("code"));
+
+        dispatch(setOpen.setOpen(false));
+    };
+
+    const handleCloseDialog = () => {
         dispatch(setOpen.setOpen(false));
     };
 
@@ -105,7 +114,7 @@ function TutorialList() {
             <Dialog
                 fullScreen
                 open={open}
-                onClose={handleClose}
+                onClose={handleCloseDialog}
                 TransitionComponent={Transition}
             >
                 <AppBar
@@ -119,7 +128,7 @@ function TutorialList() {
                         <IconButton
                             edge="start"
                             color="inherit"
-                            onClick={handleClose}
+                            onClick={handleCloseDialog}
                             aria-label="close"
                         >
                             <CloseIcon />
@@ -129,7 +138,7 @@ function TutorialList() {
                             variant="h6"
                             component="div"
                         >
-                            <Button autoFocus onClick={handleClose}>
+                            <Button autoFocus onClick={handleCloseDialog}>
                                 <Link
                                     to="/code"
                                     style={{
@@ -141,15 +150,15 @@ function TutorialList() {
                                 </Link>
                             </Button>
                         </Typography>
-                        <Button autoFocus onClick={handleClose}>
+                        <Button autoFocus>
                             <Link
-                                to="/code"
+                                to="/forum/1"
                                 style={{
                                     color: `#fff`,
                                     textDecoration: `none`,
                                 }}
                             >
-                                Your Project
+                                FORUM
                             </Link>
                         </Button>
                     </Toolbar>
