@@ -10,6 +10,8 @@ import {
     likeAnswer,
     openDeleteThreadModal,
     openModalDeleteAnswer,
+    setBan,
+    setBanModal,
     setCircleProgress,
     setDeleteSuccess,
     setLoading,
@@ -19,10 +21,14 @@ import {
     setQuestion,
     setQuestionLoadingForum,
     setThread,
+    setUnbanModal,
     setView,
     setViewThread,
     updateAnswer,
     updateThread,
+    ban,
+    unban,
+    setBanAnswerModal,
 } from "../../actions/forum";
 import moment from "moment-timezone";
 
@@ -42,6 +48,10 @@ const initialState = {
     isOpenDeleteThreadModal: false,
     likes: [],
     dislikes: [],
+    isBanned: false,
+    banModal: false,
+    unbanModal: false,
+    banAnswerModal: false,
 };
 
 const forumReducer = (state = initialState, action) => {
@@ -721,6 +731,64 @@ const forumReducer = (state = initialState, action) => {
             return {
                 ...state,
                 threads,
+            };
+        }
+
+        case setBan.setBanSuccess().type: {
+            return {
+                ...state,
+                isBanned: action.payload,
+            };
+        }
+
+        case setBanModal.setBanModalSuccess().type: {
+            return {
+                ...state,
+                banModal: action.payload,
+            };
+        }
+
+        case setBanAnswerModal.setBanAnswerModalSuccess().type: {
+            return {
+                ...state,
+                banAnswerModal: action.payload,
+            };
+        }
+
+        case setUnbanModal.setUnbanModalSuccess().type: {
+            return {
+                ...state,
+                unbanModal: action.payload,
+            };
+        }
+
+        case ban.banSuccess().type: {
+            return {
+                ...state,
+                notify: action.payload,
+                error: false,
+            };
+        }
+        case ban.banFailure().type: {
+            return {
+                ...state,
+                notify: action.payload,
+                error: false,
+            };
+        }
+
+        case unban.unbanSuccess().type: {
+            return {
+                ...state,
+                notify: action.payload,
+                error: false,
+            };
+        }
+        case unban.unbanFailure().type: {
+            return {
+                ...state,
+                notify: action.payload,
+                error: false,
             };
         }
 

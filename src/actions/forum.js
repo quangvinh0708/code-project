@@ -127,6 +127,42 @@ export const setThread = createActions({
     setThreadSuccess: (val) => val,
     setThreadFailure: (val) => val,
 });
+
+export const ban = createActions({
+    banRequest: (val) => val,
+    banSuccess: (val) => val,
+    banFailure: (val) => val,
+});
+
+export const unban = createActions({
+    unbanRequest: (val) => val,
+    unbanSuccess: (val) => val,
+    unbanFailure: (val) => val,
+});
+
+export const setBan = createActions({
+    setBanRequest: (val) => val,
+    setBanSuccess: (val) => val,
+    setBanFailure: (val) => val,
+});
+
+export const setBanModal = createActions({
+    setBanModalRequest: (val) => val,
+    setBanModalSuccess: (val) => val,
+    setBanModalFailure: (val) => val,
+});
+
+export const setBanAnswerModal = createActions({
+    setBanAnswerModalRequest: (val) => val,
+    setBanAnswerModalSuccess: (val) => val,
+    setBanAnswerModalFailure: (val) => val,
+});
+
+export const setUnbanModal = createActions({
+    setUnbanModalRequest: (val) => val,
+    setUnbanModalSuccess: (val) => val,
+    setUnbanModalFailure: (val) => val,
+});
 // export const setLargeScreen = createActions({
 //     setLargeScreenRequest: (val) => val,
 //     setLargeScreenSuccess: (val) => val,

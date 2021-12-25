@@ -55,7 +55,7 @@ const Login = (props) => {
     });
     const nameCode = useSelector((state) => state.auth.nameCode);
     const dispatch = useDispatch();
-    console.log("Login Component render");
+    // console.log("Login Component render");
     useEffect(() => {
         // setErrorLoginCreator(null);
         loginCreator(null);
@@ -88,13 +88,13 @@ const Login = (props) => {
         dispatch(ggLogin.ggLoginRequest(res));
     };
     const responseFailureGoogle = (res) => {
-        console.log("Just failed:", res);
+        // console.log("Just failed:", res);
         dispatch(push("/login"));
     };
 
     const responseFacebook = (res) => {
         dispatch(fbLogin.fbLoginRequest(res));
-        console.log("FB Login:", res);
+        // console.log("FB Login:", res);
         // dispatch(setProgress(false));
     };
 

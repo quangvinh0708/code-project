@@ -895,6 +895,9 @@ const Chat = (props) => {
     };
 
     const clickFocus = (e) => {
+        if (Object.keys(currentObj).length > 0) {
+            dp(setCurrentObj.setCurrentObjSuccess(currentObj.objId));
+        }
         if (openPicker) {
             setOpenPicker(!openPicker);
         }

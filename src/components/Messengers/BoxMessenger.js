@@ -271,15 +271,20 @@ export default function BoxMessenger({}) {
     };
 
     const handleOpenChat = (objId) => {
+        console.log("objId ne:", objId);
         dp(setCurrentObj.setCurrentObjSuccess(objId));
         dp(setDisplay.setDisplaySuccess(true));
         dp(openMessenger.openMessengerSuccess(false));
+        setArrDisplay([]);
     };
 
     const handleOpenChatByMenu = () => {
+        console.log("objId ne:", objId);
+        setArrDisplay([]);
         dp(setCurrentObj.setCurrentObjSuccess(currentTarget));
         dp(setDisplay.setDisplaySuccess(true));
         handleCloseMenu();
+        dp(openMessenger.openMessengerSuccess(false));
     };
 
     useEffect(() => {
@@ -359,6 +364,9 @@ export default function BoxMessenger({}) {
             return `${Math.round(y.asDays())} days`;
         else if (x >= 24 * 30 * 60) return `${Math.round(y.asMonths())} months`;
     };
+
+    console.log("currentTarget", currentTarget);
+    console.log("currentTarget", currentTarget);
 
     return (
         <div>

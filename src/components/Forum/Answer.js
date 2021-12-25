@@ -30,13 +30,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 import moment from "moment-timezone";
-
+import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import BlockIcon from "@mui/icons-material/Block";
 import {
     createAnswer,
     deleteAnswer,
     dislikeAnswer,
     likeAnswer,
     openModalDeleteAnswer,
+    setBanAnswerModal,
     setDeleteSuccess,
     setNotify,
     updateAnswer,
@@ -50,6 +52,7 @@ import { useEffect } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { setCurrentObj, setDisplay } from "../../actions/messenger";
+import BanAnswerModal from "./BanAnswerModal";
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
         background: `#fff`,
@@ -156,16 +159,23 @@ const useStyles = makeStyles((theme) => ({
 
 const Answer = (props) => {
     const [text, setText] = useState("");
-    const [currentAnswer, setCurrentAnswer] = useState(null);
+    const [currentAnswer, setCurrentAnswer] = useState({});
     const [isUpdating, setIsUpdating] = useState(null);
 
-    const { answers, id, ChangeToSlug } = props;
+    const {
+        answers,
+        id,
+        ChangeToSlug,
+        // handleOpenBanModal,
+        // handleCloseBanModal,
+    } = props;
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const isAdmin = useSelector((state) => state.auth.account.isAdmin);
 
     const likes = useSelector((state) => state.forum.likes);
     const dislikes = useSelector((state) => state.forum.dislikes);
     const question = useSelector((state) => state.forum.question);
+    const banAnswerModal = useSelector((state) => state.forum.banAnswerModal);
 
     const error = useSelector((state) => state.forum.error);
     const notify = useSelector((state) => state.forum.notify);
@@ -407,6 +417,16 @@ const Answer = (props) => {
         dp(setDisplay.setDisplaySuccess(true));
     };
 
+    const handleOpenBanAnswerModal = () => {
+        handleClose();
+        dp(setNotify.setNotifySuccess(""));
+        dp(setBanAnswerModal.setBanAnswerModalSuccess(true));
+    };
+    const handleCloseBanAnswerModal = () => {
+        dp(setBanAnswerModal.setBanAnswerModalSuccess(false));
+        dp(setNotify.setNotifySuccess(""));
+    };
+
     return (
         <Fragment>
             <LoginRequire
@@ -428,6 +448,13 @@ const Answer = (props) => {
             <DeleteAnswerModal
                 handleCloseDeleteModal={handleCloseDeleteModal}
                 handleDeleteAnswer={handleDeleteAnswer}
+                currentAnswer={currentAnswer}
+            />
+            <BanAnswerModal
+                banModal={banAnswerModal}
+                handleOpenBanModal={handleOpenBanAnswerModal}
+                handleCloseBanModal={handleCloseBanAnswerModal}
+                currentAnswer={currentAnswer}
             />
             {answers.length > 0 &&
                 // answers.map((answer) => (
@@ -451,7 +478,23 @@ const Answer = (props) => {
                                     style={{ cursor: `pointer` }}
                                     onClick={() => handleOpenChat(answer.objId)}
                                 >
-                                    {answer.user.name}
+                                    {answer.user.name}{" "}
+                                    {answer.isBanned ? (
+                                        <Typography
+                                            component={"span"}
+                                            variant={"body2"}
+                                            sx={{
+                                                background: `red !important`,
+                                                color: `#FFFFFF !important`,
+                                                padding: `3px 5px !important`,
+                                                fontWeight: `500 !important`,
+                                            }}
+                                        >
+                                            BANNED
+                                        </Typography>
+                                    ) : (
+                                        ""
+                                    )}
                                 </span>
                             }
                             subheader={`Answer at ${moment(answer.createdAt)
@@ -518,7 +561,7 @@ const Answer = (props) => {
                                 <span>
                                     <EditIcon
                                         fontSize="small"
-                                        sx={{ marginRight: 1, marginTop: 0.7 }}
+                                        sx={{ marginRight: 1 }}
                                     />
                                 </span>
                                 <Button>Update</Button>
@@ -528,11 +571,52 @@ const Answer = (props) => {
                                 <span>
                                     <DeleteSweepIcon
                                         fontSize="small"
-                                        sx={{ marginRight: 1, marginTop: 0.7 }}
+                                        sx={{
+                                            marginRight: 1,
+                                            marginTop: `-4px`,
+                                        }}
                                     />
                                 </span>
                                 <Button>Delete</Button>
                             </MenuItem>
+                            {isAdmin && (
+                                <MenuItem
+                                    onClick={handleOpenBanAnswerModal}
+                                    disabled={
+                                        currentAnswer.isBanned ? false : true
+                                    }
+                                >
+                                    <span>
+                                        <SentimentVerySatisfiedIcon
+                                            fontSize="small"
+                                            sx={{
+                                                marginRight: 1,
+                                                marginTop: `-1px`,
+                                            }}
+                                        />
+                                    </span>
+                                    <Button>UNBAN</Button>
+                                </MenuItem>
+                            )}
+                            {isAdmin && (
+                                <MenuItem
+                                    onClick={handleOpenBanAnswerModal}
+                                    disabled={
+                                        !currentAnswer.isBanned ? false : true
+                                    }
+                                >
+                                    <span>
+                                        <BlockIcon
+                                            fontSize="small"
+                                            sx={{
+                                                marginRight: 1,
+                                                marginTop: `-4px`,
+                                            }}
+                                        />
+                                    </span>
+                                    <Button>BAN</Button>
+                                </MenuItem>
+                            )}
                         </Menu>
 
                         <CardContent>

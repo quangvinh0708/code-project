@@ -38,6 +38,9 @@ import {
     setViewThread,
     like,
     dislike,
+    ban,
+    unban,
+    setBanModal,
 } from "../../actions/forum";
 import moment from "moment-timezone";
 
@@ -52,6 +55,10 @@ import LoginRequire from "./LoginRequire";
 import LikeStatistic from "./LikeStatistic";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { setCurrentObj, setDisplay } from "../../actions/messenger";
+import BanModal from "./BanModal";
+import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import BlockIcon from "@mui/icons-material/Block";
+
 const useStyles = makeStyles((theme) => ({
     questionContainer: {
         // background: `#fff`,
@@ -209,6 +216,8 @@ const Question = (props) => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const [anchorEL, setAnchorEL] = useState(null);
     const open = useSelector((state) => state.forum.open);
+    const banModal = useSelector((state) => state.forum.banModal);
+    const isBanned = useSelector((state) => state.forum.isBanned);
     const isOpenDeleteThreadModal = useSelector(
         (state) => state.forum.isOpenDeleteThreadModal
     );
@@ -216,6 +225,20 @@ const Question = (props) => {
     const [openLoginRequire, setOpenLoginRequire] = React.useState(false);
     const handleOpenLoginRequire = () => setOpenLoginRequire(true);
     const handleCloseLoginRequire = () => setOpenLoginRequire(false);
+
+    const handleOpenBanModal = (a) => {
+        dp(setNotify.setNotifySuccess(""));
+        handleClose();
+        dp(setBanModal.setBanModalSuccess(true));
+    };
+    const handleCloseBanModal = (a) => {
+        dp(setNotify.setNotifySuccess(""));
+        dp(setBanModal.setBanModalSuccess(false));
+    };
+
+    const handleOpenUnbanModal = (a) => {
+        dp(unban.unbanRequest(a));
+    };
 
     const handleOpenModal = () => {
         dp(setNotify.setNotifySuccess(""));
@@ -404,6 +427,12 @@ const Question = (props) => {
                         }
                         id={id}
                     />
+                    <BanModal
+                        banModal={banModal}
+                        handleOpenBanModal={handleOpenBanModal}
+                        handleCloseBanModal={handleCloseBanModal}
+                        question={question}
+                    />
                     <UpdateAskModal
                         handleOpen={handleOpenModal}
                         handleClose={handleCloseModal}
@@ -495,7 +524,23 @@ const Question = (props) => {
                                             style={{ cursor: `pointer` }}
                                             onClick={handleOpenChat}
                                         >
-                                            {question.user.name}
+                                            {question.user.name}{" "}
+                                            {question.isBanned ? (
+                                                <Typography
+                                                    component={"span"}
+                                                    variant={"body2"}
+                                                    sx={{
+                                                        background: `red !important`,
+                                                        color: `#FFFFFF !important`,
+                                                        padding: `3px 5px !important`,
+                                                        fontWeight: `bold !important`,
+                                                    }}
+                                                >
+                                                    BANNED
+                                                </Typography>
+                                            ) : (
+                                                ""
+                                            )}
                                         </span>
                                     }
                                     // subheader={moment(post.updatedAt).format(
@@ -509,8 +554,11 @@ const Question = (props) => {
                                     // action={<IconButton>{<MoreVertIcon />}</IconButton>}
                                     action={
                                         (question.user.objId === objId &&
-                                            isAuthenticated) ||
-                                        (isAdmin && isAuthenticated) ? (
+                                            isAuthenticated &&
+                                            !isBanned) ||
+                                        (isAdmin &&
+                                            isAuthenticated &&
+                                            !isBanned) ? (
                                             <IconButton
                                                 className={cs(
                                                     "",
@@ -568,7 +616,6 @@ const Question = (props) => {
                                                 fontSize="small"
                                                 sx={{
                                                     marginRight: 1,
-                                                    marginTop: 0.7,
                                                 }}
                                             />
                                         </span>
@@ -582,13 +629,53 @@ const Question = (props) => {
                                             <DeleteSweepIcon
                                                 fontSize="small"
                                                 sx={{
+                                                    marginTop: `-4px`,
                                                     marginRight: 1,
-                                                    marginTop: 0.7,
                                                 }}
                                             />
                                         </span>
                                         <Button>Delete</Button>
                                     </MenuItem>
+                                    {isAdmin && (
+                                        <MenuItem
+                                            onClick={handleOpenBanModal}
+                                            disabled={
+                                                question.isBanned ? false : true
+                                            }
+                                        >
+                                            <span>
+                                                <SentimentVerySatisfiedIcon
+                                                    fontSize="small"
+                                                    sx={{
+                                                        marginRight: 1,
+                                                        marginTop: `-1px`,
+                                                    }}
+                                                />
+                                            </span>
+                                            <Button>UNBAN</Button>
+                                        </MenuItem>
+                                    )}
+                                    {isAdmin && (
+                                        <MenuItem
+                                            onClick={handleOpenBanModal}
+                                            disabled={
+                                                !question.isBanned
+                                                    ? false
+                                                    : true
+                                            }
+                                        >
+                                            <span>
+                                                <BlockIcon
+                                                    fontSize="small"
+                                                    sx={{
+                                                        marginTop: `-4px`,
+                                                        marginRight: 1,
+                                                    }}
+                                                />
+                                            </span>
+                                            <Button>BAN</Button>
+                                        </MenuItem>
+                                    )}
                                 </Menu>
 
                                 <CardContent
@@ -695,6 +782,9 @@ const Question = (props) => {
                                 id={id}
                                 question={question}
                                 match={match}
+                                // banModal={banModal}
+                                handleOpenBanModal={handleOpenBanModal}
+                                handleCloseBanModal={handleCloseBanModal}
                             />
                         </div>
                     </div>

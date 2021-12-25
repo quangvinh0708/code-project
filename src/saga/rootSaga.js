@@ -73,6 +73,7 @@ import { getProfile, updateProfile } from "../actions/profile";
 import { openModalShare } from "../actions/modalShareCode";
 import { getShareCode } from "../actions/getShareCode";
 import {
+    ban,
     createAnswer,
     createThread,
     deleteAnswer,
@@ -87,8 +88,10 @@ import {
     setQuestion,
     setQuestionLoadingForum,
     setViewThread,
+    unban,
     updateAnswer,
     updateThread,
+    setBan,
 } from "../actions/forum";
 
 import { setFriends } from "../actions/messenger";
@@ -141,6 +144,7 @@ function* handleCheckLogin() {
                 } else {
                     yield put(setAdmin.setAdminSuccess(false));
                 }
+                // yield put(setBan.setBanSuccess(res.data.user.isBanned));
 
                 console.log("CheckLOGIN with objID", res);
                 let picture;
@@ -1258,12 +1262,14 @@ function* handleCreateThread(action) {
             // yield put(setProgress(false));
         }
     } catch (err) {
-        if (err.data.response) {
-            console.log(err.data.response);
+        if (err.response.data) {
+            console.log(err.response.response);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
 
             yield delay(1200);
-            yield put(createThread.createThreadFailure(err.data.message));
+            yield put(
+                createThread.createThreadFailure(err.response.data.message)
+            );
             // yield put(setProgress(false));
             return;
         }
@@ -1408,6 +1414,9 @@ function* handleCreateAnswer(action) {
     } catch (err) {
         if (err.response.data) {
             console.log("err", err);
+            yield put(
+                createAnswer.createAnswerFailure(err.response.data.message)
+            );
             yield put(setCircleProgress.setCircleProgressSuccess(false));
 
             return;
@@ -1447,14 +1456,16 @@ function* handleUpdateAnswer(action) {
         }
         return;
     } catch (err) {
-        // if (err.response.data) {
-        //     console.log("err", err);
-        //     yield put(setCircleProgress.setCircleProgressSuccess(false));
-
-        //     return;
-        // }
-        yield put(setCircleProgress.setCircleProgressSuccess(false));
-        console.log("err", err);
+        if (err.response.data) {
+            console.log("err", err);
+            yield put(
+                updateAnswer.updateAnswerFailure(err.response.data.message)
+            );
+            yield put(setCircleProgress.setCircleProgressSuccess(false));
+            return;
+        }
+        // yield put(setCircleProgress.setCircleProgressSuccess(false));
+        // console.log("err", err);
     }
 }
 
@@ -1477,13 +1488,20 @@ function* handleDeleteAnswer(action) {
         }
         return;
     } catch (err) {
-        yield put(
-            deleteAnswer.deleteAnswerFailure(
-                "Something went wrong! Try again later.."
-            )
-        );
-        yield put(setProgress(false));
-        console.log("err", err);
+        if (err.response.data) {
+            yield put(
+                deleteAnswer.deleteAnswerFailure(err.response.data.message)
+            );
+            yield put(setProgress(false));
+            console.log("err", err);
+        }
+        // yield put(
+        //     deleteAnswer.deleteAnswerFailure(
+        //         "Something went wrong! Try again later.."
+        //     )
+        // );
+        // yield put(setProgress(false));
+        // console.log("err", err);
     }
 }
 
@@ -1526,12 +1544,14 @@ function* handleUpdateThread(action) {
             // yield put(setProgress(false));
         }
     } catch (err) {
-        if (err.data.response) {
-            console.log(err.data.response);
+        if (err.response.data) {
+            console.log(err.response.data);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
 
             yield delay(1200);
-            yield put(updateThread.updateThreadFailure(err.data.message));
+            yield put(
+                updateThread.updateThreadFailure(err.response.data.message)
+            );
             // yield put(setProgress(false));
             return;
         }
@@ -1563,13 +1583,13 @@ function* handleDeleteThread(action) {
         }
         return;
     } catch (err) {
-        yield put(
-            deleteThread.deleteThreadFailure(
-                "Something went wrong! Try again later.."
-            )
-        );
-        yield put(setProgress(false));
-        console.log("err", err);
+        if (err.response.data) {
+            yield put(
+                deleteThread.deleteThreadFailure(err.response.data.message)
+            );
+            yield put(setProgress(false));
+            console.log("err", err);
+        }
     }
 }
 
@@ -1707,6 +1727,57 @@ function* handleDislikeAnswer(action) {
     }
 }
 
+function* handleBan(action) {
+    const question = action.payload;
+    const {
+        objId,
+        user: { email, name },
+    } = question;
+    yield put(setProgress(true));
+
+    yield delay(1200);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "ban", { objId, email, name })
+        );
+        if (res.data.success) {
+            yield put(setProgress(false));
+
+            yield put(ban.banSuccess(res.data.message));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            yield put(setProgress(false));
+            yield put(ban.banFailure(err.response.data.message));
+            console.log("err", err);
+        }
+    }
+}
+
+function* handleUnban(action) {
+    const question = action.payload;
+    const { objId } = question;
+    yield put(setProgress(true));
+
+    yield delay(1200);
+    try {
+        const res = yield call(() =>
+            thisAxios(API_FORUM, POST, "unban", { objId })
+        );
+        if (res.data.success) {
+            yield put(setProgress(false));
+
+            yield put(unban.unbanSuccess(res.data.message));
+        }
+    } catch (err) {
+        if (err.response.data) {
+            yield put(setProgress(false));
+            yield put(unban.unbanFailure(err.response.data.message));
+            console.log("err", err);
+        }
+    }
+}
+
 function* rootSaga() {
     yield fork(handleGetCode);
     yield takeLatest(
@@ -1787,6 +1858,9 @@ function* rootSaga() {
         dislikeAnswer.dislikeAnswerRequest().type,
         handleDislikeAnswer
     );
+
+    yield takeLatest(ban.banRequest().type, handleBan);
+    yield takeLatest(unban.unbanRequest().type, handleUnban);
 }
 
 export default rootSaga;
