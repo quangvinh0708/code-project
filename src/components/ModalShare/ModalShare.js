@@ -10,13 +10,13 @@ import {
     LinearProgress,
     Alert,
     Tooltip,
-    SliderValueLabel,
+    // SliderValueLabel,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { connect } from "react-redux";
 
-import { Link } from "react-router-dom";
-import CloseIcon from "@mui/icons-material/Close";
+// import { Link } from "react-router-dom";
+// import CloseIcon from "@mui/icons-material/Close";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { openModalShare } from "../../actions/modalShareCode";
 import Loading from "../Loading/Loading";
@@ -122,23 +122,23 @@ const useStyles = makeStyles((theme) => ({
 const ModalShare = (props) => {
     const classes = useStyles();
     const {
-        modalIsOpen,
-        handleCloseModal,
-        isAuthenticated,
-        err,
+        // modalIsOpen,
+        // handleCloseModal,
+        // isAuthenticated,
+        // err,
         progress,
-        updateCodeCreator,
+        // updateCodeCreator,
         errCode,
-        setCodeCreator,
+        // setCodeCreator,
         nameCode,
         isChanging,
-        changeNameCreator,
-        setIsChangingCreator,
+        // changeNameCreator,
+        // setIsChangingCreator,
         isDeleting,
-        deleteProjectCreator,
-        setIsDeletingCreator,
-        setErrorCreator,
-        closeModalCreator,
+        // deleteProjectCreator,
+        // setIsDeletingCreator,
+        // setErrorCreator,
+        // closeModalCreator,
     } = props;
 
     const renderCheck = () => {
@@ -183,7 +183,7 @@ const ModalShare = (props) => {
     };
 
     const onCopy = (e) => {
-        console.log("textAreaRef", textRef.current.value);
+        // console.log("textAreaRef", textRef.current.value);
         navigator.clipboard.writeText(
             textRef.current._wrapperState.initialValue
         );

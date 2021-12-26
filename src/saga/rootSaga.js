@@ -120,7 +120,7 @@ function* handleTest() {
 function* handleCheckLogin() {
     const auth = localStorage["access_token"];
     const url = yield select((state) => state.code.url);
-    console.log("Handle Check Login", url);
+    // console.log("Handle Check Login", url);
 
     if (!auth) {
         return;
@@ -133,7 +133,7 @@ function* handleCheckLogin() {
                 thisAxios(API_LOGIN, POST, "check-login")
             );
             if (res.data.success) {
-                console.log("CHECK LOGIN SAGA LINE 100");
+                // console.log("CHECK LOGIN SAGA LINE 100");
 
                 yield put(setFriends.setFriendsSuccess(res.data.friends));
 
@@ -146,30 +146,30 @@ function* handleCheckLogin() {
                 }
                 // yield put(setBan.setBanSuccess(res.data.user.isBanned));
 
-                console.log("CheckLOGIN with objID", res);
+                // console.log("CheckLOGIN with objID", res);
                 let picture;
                 if (res.data.picture) {
                     picture = res.data.picture.toString();
                 } else picture = null;
                 yield put(setPicture.setPictureRequest(picture));
                 if (res.data.user.fid) {
-                    console.log("Go into if FID");
+                    // console.log("Go into if FID");
                     yield put(updateFID.updateFIDRequest(res.data.user.fid));
                 } else if (res.data.user.gid) {
-                    console.log("Go into if GID");
+                    // console.log("Go into if GID");
 
                     yield put(updateGID.updateGIDRequest(res.data.user.gid));
                 } else {
                     yield put(updateUID.updateUIDRequest(res.data.user.objId));
                 }
-                console.log("PICTURE:", picture);
+                // console.log("PICTURE:", picture);
 
                 setAuth(auth);
                 // yield put(push(`/${url}`));
                 if (url !== "code") {
                     try {
                         const res1 = yield call(() => thisAxios(API, GET, url));
-                        console.log("res1", res1);
+                        // console.log("res1", res1);
                         const { html, css, js, name } = res1.data.code;
                         if (res1.data.status) {
                             yield put(push(`/${url}`));
@@ -182,7 +182,7 @@ function* handleCheckLogin() {
                 }
             }
         } catch (err) {
-            console.log("LINE 129 CHECK LOGIN SAGA", err);
+            // console.log("LINE 129 CHECK LOGIN SAGA", err);
             yield put(setProgress(false));
             setAuth(null);
             localStorage.removeItem("access_token");
@@ -191,7 +191,7 @@ function* handleCheckLogin() {
         }
     } else {
         yield put(setProgress(false));
-        console.log("Line 136: Else not auth");
+        // console.log("Line 136: Else not auth");
         yield put(push("/login"));
     }
 }
@@ -201,7 +201,7 @@ function* handleGetCode() {
         let {
             payload: { q },
         } = yield take(GET_CODE);
-        console.log("this is q in handleGetCodeSaga:", q);
+        // console.log("this is q in handleGetCodeSaga:", q);
         const auth = localStorage["access_token"];
         yield put(closeModal());
         yield put(setError(null));
@@ -209,7 +209,7 @@ function* handleGetCode() {
         yield put(setLocation.setLocation(null));
         q = q.split("/")[1].trim();
         if (q === "code") {
-            console.log("DAU TIEN:", q);
+            // console.log("DAU TIEN:", q);
             if (auth) {
                 setAuth(auth);
                 try {
@@ -217,7 +217,7 @@ function* handleGetCode() {
                         thisAxios(API_LOGIN, POST, "check-login")
                     );
                     if (res.data.success) {
-                        console.log("Get Code with ObjId", res);
+                        // console.log("Get Code with ObjId", res);
                         yield put(loginSuccess(res.data.name));
                         // yield put(
                         //     setObjId.setObjIdSuccess(res.data.user.objId)
@@ -231,7 +231,7 @@ function* handleGetCode() {
                     yield put(push("/login"));
                 }
             }
-            console.log(auth);
+            // console.log(auth);
             localStorage.removeItem("name");
             yield put(setNameCode(null));
             yield put(setUrl("code"));
@@ -239,7 +239,7 @@ function* handleGetCode() {
             //! BELOW
             yield put(push("/code"));
         } else if (auth && q !== "code") {
-            console.log("auth && q !== code");
+            // console.log("auth && q !== code");
 
             setAuth(auth);
             try {
@@ -247,13 +247,13 @@ function* handleGetCode() {
                     thisAxios(API_LOGIN, POST, "check-login")
                 );
                 if (res.data.success) {
-                    console.log("auth && q !== code success");
+                    // console.log("auth && q !== code success");
 
                     yield put(loginSuccess(res.data.name));
                     setAuth(auth);
                 }
             } catch (err) {
-                console.log("auth && q !== code failed");
+                // console.log("auth && q !== code failed");
 
                 setAuth(null);
                 localStorage.removeItem("access_token");
@@ -261,9 +261,9 @@ function* handleGetCode() {
             }
 
             try {
-                console.log("auth && q !== code");
+                // console.log("auth && q !== code");
                 const res = yield call(() => thisAxios(API, GET, q));
-                console.log("q:", q);
+                // console.log("q:", q);
                 const { html, css, js, name } = res.data.code;
                 if (res.data.status && q !== "code") {
                     // setHtml(html);
@@ -273,7 +273,7 @@ function* handleGetCode() {
                     setLocal(CSS, css);
                     setLocal(JS, js);
                     yield put(setCode({ html, css, js, name }));
-                    console.log("res ne", res);
+                    // console.log("res ne", res);
                     yield put(setNameCode(name));
                     localStorage.setItem("name", res.data.code.name);
                     // localStorage.setItem('access_token', JSON.stringify(auth));
@@ -296,7 +296,7 @@ function* handleGetCode() {
         } else if (q === "code") {
             yield put(push("/code"));
         } else {
-            console.log("FINAl");
+            // console.log("FINAl");
             setAuth(null);
             localStorage.removeItem("access_token");
             yield put(push("/login"));
@@ -313,7 +313,7 @@ function* handleRegister(action) {
             thisAxios(API_LOGIN, POST, "register", action.payload)
         );
         if (res.data.success) {
-            console.log("HERE");
+            // console.log("HERE");
             // yield put(loginSuccess(action.payload.name));
             // localStorage.setItem("access_token", res.data.accessToken);
             yield delay(500);
@@ -329,7 +329,7 @@ function* handleRegister(action) {
     } catch (err) {
         if (err.response.data) {
             yield put(setErrorStatus.setErrorStatusRequest(true));
-            console.log(err.response.data);
+            // console.log(err.response.data);
             yield delay(500);
             yield put(setProgress(false));
             yield put(setErrorLogin(err.response.data.message));
@@ -346,10 +346,10 @@ function* handleLogin(action) {
     const url = yield select((state) => state.code.url);
     let res;
     const auth = localStorage["access_token"];
-    console.log("CHECK LOGIN NEU DA CO AUTH:", auth);
+    // console.log("CHECK LOGIN NEU DA CO AUTH:", auth);
     if (auth && url === "code") {
         setAuth(auth);
-        console.log("EHE");
+        // console.log("EHE");
         yield delay(380);
         try {
             const res1 = yield call(() =>
@@ -383,25 +383,25 @@ function* handleLogin(action) {
             );
             if (res.data.success) {
                 const x = setAuth(res.data.accessToken);
-                console.log("x:", x);
+                // console.log("x:", x);
                 localStorage.setItem("access_token", res.data.accessToken);
-                console.log("Check 1:", res.data.accessToken);
+                // console.log("Check 1:", res.data.accessToken);
                 yield put(loginSuccess(res.data.name));
 
-                console.log(`res at login with account`, res);
+                // console.log(`res at login with account`, res);
                 yield put(setObjId.setObjIdSuccess(res.data.objId));
                 yield put(setAdmin.setAdminSuccess(false));
 
-                console.log("Line 314 Login successfully and have code in url");
+                // console.log("Line 314 Login successfully and have code in url");
                 if (url !== "code") {
                     try {
                         const res1 = yield call(() => thisAxios(API, GET, url));
-                        console.log("res1", res1);
+                        // console.log("res1", res1);
                         const { html, css, js, name } = res1.data.code;
                         if (res1.data.status) {
-                            console.log(
-                                "Line 321 Login successfully and have code in url"
-                            );
+                            // console.log(
+                            //     "Line 321 Login successfully and have code in url"
+                            // );
                             setLocal(HTML, html);
                             setLocal(CSS, css);
                             setLocal(JS, js);
@@ -423,14 +423,14 @@ function* handleLogin(action) {
             }
         } catch (err) {
             if (err.response.data) {
-                console.log("Line 346 Error", err);
+                // console.log("Line 346 Error", err);
                 yield put(loginFailed(err.response.data));
-                console.log(err.response.data);
+                // console.log(err.response.data);
 
                 yield put(setProgress(false));
                 return;
             }
-            console.log("Line 353 Error", err);
+            // console.log("Line 353 Error", err);
         }
     } else {
         yield delay(370);
@@ -462,7 +462,7 @@ function* handleUpdate(action) {
     yield delay(300);
     const isAuthenticated = yield select((state) => state.auth.isAuthenticated);
     const name = action.payload;
-    console.log("name:", name);
+    // console.log("name:", name);
     const url = yield select((state) => state.code.url);
     const html = JSON.parse(getLocal(HTML));
     const css = JSON.parse(getLocal(CSS));
@@ -475,7 +475,7 @@ function* handleUpdate(action) {
         yield put(setProgress(false));
     } else if (isAuthenticated) {
         if (url === "code") {
-            console.log("in here:", url);
+            // console.log("in here:", url);
             try {
                 const res = yield call(() =>
                     thisAxios(`${API}`, POST, "create", body)
@@ -495,14 +495,14 @@ function* handleUpdate(action) {
 
                     yield put(setError(err.response.data.message));
                     yield put(setProgress(false));
-                    console.log("ERROR LA:", err.response.data);
+                    // console.log("ERROR LA:", err.response.data);
                     return;
-                } else console.log("in here:");
+                }
             }
         } else {
-            console.log("in here:", url);
+            // console.log("in here:", url);
             try {
-                console.log("body is:", body);
+                // console.log("body is:", body);
                 const name = yield select((state) => state.auth.nameCode);
                 const res = yield call(() =>
                     thisAxios(`${API}`, PUT, url, { html, css, js, name })
@@ -518,7 +518,7 @@ function* handleUpdate(action) {
                 }
             } catch (err) {
                 if (err.response.data) {
-                    console.log(err.response.data);
+                    // console.log(err.response.data);
                     yield put(setError(err.response.data.message));
                     yield put(setProgress(false));
                     return;
@@ -565,7 +565,7 @@ function* handleGetProjects(action) {
                     picture = res.data.picture.toString();
                 } else picture = null;
                 yield put(setPicture.setPictureRequest(picture));
-                console.log("PICTURE:", picture);
+                // console.log("PICTURE:", picture);
                 setAuth(auth);
             }
             try {
@@ -592,7 +592,7 @@ function* handleChangeName(action) {
     yield delay(300);
     const name = action.payload;
     const url = yield select((state) => state.code.url);
-    console.log(name);
+    // console.log(name);
     if (!name) {
         yield delay(200);
         yield put(setProgress(false));
@@ -622,7 +622,7 @@ function* handleDelete(action) {
     const url = yield select((state) => state.code.url);
     try {
         const res = yield call(() => thisAxios(API, DELETE, url));
-        console.log("DELETE:", res);
+        // console.log("DELETE:", res);
         yield put(getProjects());
         yield put(setIsDeleting(false));
         // yield put(deleteProjectSuccess(res.data.project));
@@ -664,7 +664,7 @@ function* handleGGLogin(action) {
     } = action.payload;
     // console.log({ email, name, picture, gid, access_token });
     const x = { email, name, picture, gid, access_token };
-    console.log({ x });
+    // console.log({ x });
     setAuth(access_token);
     try {
         const res = yield call(() =>
@@ -693,7 +693,7 @@ function* handleGGLogin(action) {
         if (err.response.data) {
             yield delay(500);
             yield put(setProgress(false));
-            console.log(err.response.data);
+            // console.log(err.response.data);
         }
     }
     yield delay(500);
@@ -712,14 +712,14 @@ function* handleFBLogin(action) {
         },
     } = action.payload;
 
-    console.log({ fid, name, email, picture });
+    // console.log({ fid, name, email, picture });
     try {
         const body = { fid, name, email: email ? email : "", picture };
         const res = yield call(() =>
             thisAxios(API_LOGIN, POST, "fb/verify", body)
         );
         if (res.data.success) {
-            console.log("FB LOGIN SUCCESS");
+            // console.log("FB LOGIN SUCCESS");
             localStorage.setItem("access_token", res.data.accessToken);
             yield put(fbLogin.fbLoginSuccess(body));
             yield put(setObjId.setObjIdSuccess(res.data.objId));
@@ -729,7 +729,7 @@ function* handleFBLogin(action) {
             yield put(setProgress(false));
             yield put(push("/code"));
         } else {
-            console.log("FB LOGIN FAILURE");
+            // console.log("FB LOGIN FAILURE");
             localStorage.removeItem("access_token");
             yield put(setProgress(false));
             yield put(push("/login"));
@@ -737,7 +737,7 @@ function* handleFBLogin(action) {
     } catch (err) {
         if (err.response.data) {
             yield put(setProgress(false));
-            console.log(err.response.data);
+            // console.log(err.response.data);
         }
         yield put(setProgress(false));
     }
@@ -748,7 +748,7 @@ function* handleCheckLastPwd(action) {
     yield put(setProgress(true));
     yield delay(500);
     const { email, recentPassword: password } = action.payload;
-    console.log({ email, password });
+    // console.log({ email, password });
     try {
         const res = yield call(() =>
             thisAxios(API_LOGIN, POST, "verify/last-pwd", { email, password })
@@ -769,7 +769,7 @@ function* handleCheckLastPwd(action) {
         yield delay(500);
         yield put(setProgress(false));
         if (err.response.data) {
-            console.log(err);
+            // console.log(err);
             yield put(setErrorStatus.setErrorStatusRequest(true));
             yield put(setErrorLogin(err.response.data.message));
         }
@@ -796,12 +796,12 @@ function* handleRecoverPassword(action) {
             yield put(loginSuccess(res.data.name));
             yield put(push("/login"));
 
-            console.log(body);
+            // console.log(body);
         }
     } catch (err) {
         if (err.response.data) {
             yield delay(500);
-            console.log(err.response.data);
+            // console.log(err.response.data);
             yield put(setProgress(false));
             yield put(setErrorStatus.setErrorStatusRequest(true));
             yield put(setErrorLogin(err.response.data.message));
@@ -821,7 +821,7 @@ function* handleRecoverPassword(action) {
 
 function* handleVerifyUrl(action) {
     const { url } = action.payload;
-    console.log("Url after dispatch:", url);
+    // console.log("Url after dispatch:", url);
     yield put(setProgress(true));
     // yield put(
     //     verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -940,9 +940,9 @@ function* handleGetProfile(action) {
             thisAxios(API_USER, GET, `profile/${url}}`)
         );
         if (res.data.success) {
-            console.log("CHECK handleGetPRofile LINE 819");
+            // console.log("CHECK handleGetPRofile LINE 819");
 
-            console.log(res);
+            // console.log(res);
             yield delay(2000);
             yield put(
                 verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -964,7 +964,7 @@ function* handleGetProfile(action) {
                     message: "",
                 })
             );
-            console.log("CHECK handleGetPRofile LINE 843");
+            // console.log("CHECK handleGetPRofile LINE 843");
 
             if (res.data.user.password) {
                 res.data.user.password = res.data.user.password.slice(0, 18);
@@ -975,7 +975,7 @@ function* handleGetProfile(action) {
             return;
         }
     } catch (err) {
-        console.log("error lan 1", err);
+        // console.log("error lan 1", err);
         yield delay(4000);
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -987,7 +987,7 @@ function* handleGetProfile(action) {
         yield put(direct.directSuccess(""));
         yield delay(4000);
         yield put(direct.directFailure(false));
-        console.log("CHECK handleGetPRofile LINE 859");
+        // console.log("CHECK handleGetPRofile LINE 859");
 
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -1008,7 +1008,7 @@ function* handleGetProfile(action) {
                 message: "",
             })
         );
-        console.log("Eror lan 2", err);
+        // console.log("Eror lan 2", err);
     }
     localStorage.setItem("access_token", "");
     yield put(loginFailed(""));
@@ -1020,8 +1020,8 @@ function* handleUpdateProfile(action) {
         account: { name, job, country, phone, picture, fid, gid },
         url,
     } = action.payload;
-    console.log("FID la: ", fid);
-    console.log("GID la: ", gid);
+    // console.log("FID la: ", fid);
+    // console.log("GID la: ", gid);
     const auth = localStorage["access_token"];
     setAuth(auth);
     yield put(setProgress(true));
@@ -1066,7 +1066,7 @@ function* handleUpdateProfile(action) {
             yield put(push(`/users/profile/${url}`));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         yield delay(1500);
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -1111,7 +1111,7 @@ function* handleOpenModalShare(action) {
         const res = yield call(() => thisAxios(API, POST, `share/${url}`));
         if (res.data.success) {
             yield delay(2200);
-            console.log("Res successfully", res);
+            // console.log("Res successfully", res);
             yield put(
                 openModalShare.openModalShareSuccess(
                     `${SHARE_CODE}/${res.data.endLink}`
@@ -1121,7 +1121,7 @@ function* handleOpenModalShare(action) {
         }
     } catch (err) {
         yield put(openModalShare.openModalShareFailure());
-        console.log(err);
+        // console.log(err);
     }
 }
 
@@ -1133,7 +1133,7 @@ function* handleGetShareCode(action) {
         const res = yield call(() => thisAxios(API, POST, `cs/share/${id}`));
         if (res.data.success) {
             const { html, css, js } = res.data.code;
-            console.log({ html, css, js });
+            // console.log({ html, css, js });
             yield delay(1500);
             yield put(
                 verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -1167,7 +1167,7 @@ function* handleGetShareCode(action) {
         }
     } catch (err) {
         if (err.response.data) {
-            console.log("err data", err);
+            // console.log("err data", err);
 
             yield delay(1500);
             yield put(
@@ -1195,7 +1195,7 @@ function* handleGetShareCode(action) {
             return;
         }
         // else
-        console.log("err except", err);
+        // console.log("err except", err);
         yield delay(1500);
         yield put(
             verifyUrlRecover.verifyUrlRecoverSuccess({
@@ -1263,7 +1263,7 @@ function* handleCreateThread(action) {
         }
     } catch (err) {
         if (err.response.data) {
-            console.log(err.response.response);
+            // console.log(err.response.response);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
 
             yield delay(1200);
@@ -1289,7 +1289,7 @@ function ChangeToSlug(title) {
 }
 function* handleGetThreads(action) {
     const { match } = action.payload;
-    console.log("match", match);
+    // console.log("match", match);
     yield put(setProgress(true));
     yield put(setLoadingForum.setLoadingForumRequest());
     try {
@@ -1309,7 +1309,7 @@ function* handleGetThreads(action) {
             // );
 
             if (match !== null) {
-                console.log("threads", threads);
+                // console.log("threads", threads);
                 const find = threads.find(
                     (thread) =>
                         `/questions/${ChangeToSlug(match.params.title)}/${
@@ -1377,13 +1377,13 @@ function* handleGetThreads(action) {
         }
     } catch (err) {
         if (err.response.data) {
-            console.log(err.response.data);
+            // console.log(err.response.data);
             yield put(getThreads.getThreadsFailure());
             yield put(setLoadingForum.setLoadingForumSuccess(false));
 
             return;
         }
-        console.log("err", err);
+        // console.log("err", err);
     }
 }
 
@@ -1408,12 +1408,12 @@ function* handleCreateAnswer(action) {
         );
         if (res.data.success) {
             yield put(createAnswer.createAnswerSuccess(res.data.answer));
-            console.log(res.data.answer);
+            // console.log(res.data.answer);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
         }
     } catch (err) {
         if (err.response.data) {
-            console.log("err", err);
+            // console.log("err", err);
             yield put(
                 createAnswer.createAnswerFailure(err.response.data.message)
             );
@@ -1421,7 +1421,7 @@ function* handleCreateAnswer(action) {
 
             return;
         }
-        console.log(err);
+        // console.log(err);
     }
 }
 
@@ -1448,16 +1448,16 @@ function* handleUpdateAnswer(action) {
                 content,
             })
         );
-        console.log("res 1378", res);
+        // console.log("res 1378", res);
         if (res.data.success) {
             yield put(updateAnswer.updateAnswerSuccess(res.data.answerUpdated));
-            console.log("res.data.answerUpdated", res.data.answerUpdated);
+            // console.log("res.data.answerUpdated", res.data.answerUpdated);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
         }
         return;
     } catch (err) {
         if (err.response.data) {
-            console.log("err", err);
+            // console.log("err", err);
             yield put(
                 updateAnswer.updateAnswerFailure(err.response.data.message)
             );
@@ -1480,10 +1480,10 @@ function* handleDeleteAnswer(action) {
                 currentAnswer,
             })
         );
-        console.log("res 1409", res);
+        // console.log("res 1409", res);
         if (res.data.success) {
             yield put(deleteAnswer.deleteAnswerSuccess(res.data.deletedAnswer));
-            console.log("res.data.deletedAnswer", res.data.deletedAnswer);
+            // console.log("res.data.deletedAnswer", res.data.deletedAnswer);
             yield put(setProgress(false));
         }
         return;
@@ -1493,7 +1493,7 @@ function* handleDeleteAnswer(action) {
                 deleteAnswer.deleteAnswerFailure(err.response.data.message)
             );
             yield put(setProgress(false));
-            console.log("err", err);
+            // console.log("err", err);
         }
         // yield put(
         //     deleteAnswer.deleteAnswerFailure(
@@ -1545,7 +1545,7 @@ function* handleUpdateThread(action) {
         }
     } catch (err) {
         if (err.response.data) {
-            console.log(err.response.data);
+            // console.log(err.response.data);
             yield put(setCircleProgress.setCircleProgressSuccess(false));
 
             yield delay(1200);
@@ -1569,9 +1569,9 @@ function* handleDeleteThread(action) {
                 id,
             })
         );
-        console.log("res 1495", res);
+        // console.log("res 1495", res);
         if (res.data.success) {
-            console.log("res.data.deletedAnswer", res.data.deletedThread);
+            // console.log("res.data.deletedAnswer", res.data.deletedThread);
             yield put(setProgress(false));
             yield put(push("/forum"));
             yield put(
@@ -1588,7 +1588,7 @@ function* handleDeleteThread(action) {
                 deleteThread.deleteThreadFailure(err.response.data.message)
             );
             yield put(setProgress(false));
-            console.log("err", err);
+            // console.log("err", err);
         }
     }
 }
@@ -1603,14 +1603,14 @@ function* handleSetViewThread(action) {
             yield put(setViewThread.setViewThreadSuccess(id));
         }
     } catch (err) {
-        console.log(err);
+        // console.log(err);
     }
 }
 
 function* handleLike(action) {
     // yield delay(500);
     const { question, objId, answer } = action.payload;
-    console.log("1538", question, objId, "answer", answer);
+    // console.log("1538", question, objId, "answer", answer);
     try {
         setAuth(localStorage["access_token"]);
         const res = yield call(() =>
@@ -1629,10 +1629,10 @@ function* handleLike(action) {
                     dislikes: res.data.dislikes,
                 })
             );
-            console.log("Like", res.data.like);
+            // console.log("Like", res.data.like);
         }
     } catch (err) {
-        console.log("err", err);
+        // console.log("err", err);
     }
 }
 
@@ -1640,7 +1640,7 @@ function* handleDislike(action) {
     // yield delay(500);
 
     const { question, objId, answer } = action.payload;
-    console.log("1538", question, objId);
+    // console.log("1538", question, objId);
     try {
         setAuth(localStorage["access_token"]);
         const res = yield call(() =>
@@ -1659,10 +1659,10 @@ function* handleDislike(action) {
                     dislikes: res.data.dislikes,
                 })
             );
-            console.log("Like", res.data.dislike);
+            // console.log("Like", res.data.dislike);
         }
     } catch (err) {
-        console.log("err", err);
+        // console.log("err", err);
     }
 }
 
@@ -1670,7 +1670,7 @@ function* handleLikeAnswer(action) {
     // yield delay(500);
 
     const { questionId, objId, answerId } = action.payload;
-    console.log("1538", questionId, objId, "answer", answerId);
+    // console.log("1538", questionId, objId, "answer", answerId);
     // return;
     try {
         setAuth(localStorage["access_token"]);
@@ -1690,10 +1690,10 @@ function* handleLikeAnswer(action) {
                     dislikes: res.data.dislikes,
                 })
             );
-            console.log("Like", res.data.like);
+            // console.log("Like", res.data.like);
         }
     } catch (err) {
-        console.log("err", err);
+        // console.log("err", err);
     }
 }
 
@@ -1701,7 +1701,7 @@ function* handleDislikeAnswer(action) {
     // yield delay(500);
 
     const { questionId, objId, answerId } = action.payload;
-    console.log("1538", questionId, objId, answerId);
+    // console.log("1538", questionId, objId, answerId);
     try {
         setAuth(localStorage["access_token"]);
         const res = yield call(() =>
@@ -1720,10 +1720,10 @@ function* handleDislikeAnswer(action) {
                     dislikes: res.data.dislikes,
                 })
             );
-            console.log("Like", res.data.dislike);
+            // console.log("Like", res.data.dislike);
         }
     } catch (err) {
-        console.log("err", err);
+        // console.log("err", err);
     }
 }
 
@@ -1749,7 +1749,7 @@ function* handleBan(action) {
         if (err.response.data) {
             yield put(setProgress(false));
             yield put(ban.banFailure(err.response.data.message));
-            console.log("err", err);
+            // console.log("err", err);
         }
     }
 }
@@ -1773,7 +1773,7 @@ function* handleUnban(action) {
         if (err.response.data) {
             yield put(setProgress(false));
             yield put(unban.unbanFailure(err.response.data.message));
-            console.log("err", err);
+            // console.log("err", err);
         }
     }
 }

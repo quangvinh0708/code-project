@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { makeStyles, withStyles } from "@mui/styles";
-import { CopyBlock, dracula, googlecode } from "react-code-blocks";
+import React from "react";
+import { withStyles } from "@mui/styles";
+import { CopyBlock, googlecode } from "react-code-blocks";
 import ex from "./example";
 import "../Introduction/Introduction.css";
 import Divider from "@mui/material/Divider";

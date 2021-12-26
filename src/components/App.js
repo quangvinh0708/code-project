@@ -1,4 +1,8 @@
-import React, { Fragment, useEffect, useState, useRef } from "react";
+import React, {
+     Fragment,
+      useEffect,
+       useState, 
+       useRef } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
     BrowserRouter as Router,
@@ -215,17 +219,17 @@ function App({ updateCodeCreator, codeData, checkLoginCreator }) {
     useEffect(() => {
         var condition = navigator.onLine ? "online" : "offline";
         if (condition === "online") {
-            console.log("ONLINE");
+            // console.log("ONLINE");
             fetch("https://www.google.com/", {
                 // Check for internet connectivity
                 mode: "no-cors",
             })
                 .then(() => {
-                    console.log("CONNECTED TO INTERNET");
+                    // console.log("CONNECTED TO INTERNET");
                 })
                 .catch(() => {
                     toast("Your internet connectivity issue!");
-                    console.log("INTERNET CONNECTIVITY ISSUE");
+                    // console.log("INTERNET CONNECTIVITY ISSUE");
                 });
         } else {
             toast.warning(

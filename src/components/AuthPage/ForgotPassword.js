@@ -56,7 +56,7 @@ const ForgotPassword = (props) => {
     //     // setErrorLoginCreator(null);
     //     loginCreator(null);
     // }, []);
-    console.log("ForgotPassword Component render");
+    // console.log("ForgotPassword Component render");
 
     const onChange = (e) => {
         setAccount({

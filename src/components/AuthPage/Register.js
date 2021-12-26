@@ -61,7 +61,7 @@ const Register = (props) => {
         // setErrorLoginCreator(null);
         loginCreator(null);
     }, []);
-    console.log("Register Component render");
+    // console.log("Register Component render");
 
     const onChange = (e) => {
         setAccount({
@@ -85,18 +85,18 @@ const Register = (props) => {
         dispatch(ggLogin.ggLoginRequest(res));
     };
     const responseFailureGoogle = (res) => {
-        console.log("Just failed:", res);
+        // console.log("Just failed:", res);
     };
     const check = () => {
-        console.log("CHECK!!!");
+        // console.log("CHECK!!!");
     };
     const logout = (res) => {
-        console.log(res);
+        // console.log(res);
     };
 
     const responseFacebook = (res) => {
         dispatch(fbLogin.fbLoginRequest(res));
-        console.log("FB Login:", res);
+        // console.log("FB Login:", res);
     };
 
     const jsx = (
@@ -105,7 +105,7 @@ const Register = (props) => {
             component={({ match }) => <Login match={match} />}
         ></Redirect>
     );
-    console.log(`isAuthenticated ${isAuthenticated}`);
+    // console.log(`isAuthenticated ${isAuthenticated}`);
     return (
         <Fragment>
             {localStorage["access_token"] ? (

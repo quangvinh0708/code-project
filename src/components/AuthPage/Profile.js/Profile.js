@@ -6,27 +6,27 @@ import { compose } from "redux";
 import { withStyles } from "@mui/styles";
 
 import {
-    Typography,
-    Card,
-    CardContent,
+    // Typography,
+    // Card,
+    // CardContent,
     Button,
     TextField,
-    Alert,
+    // Alert,
     Box,
-    LinearProgress,
+    // LinearProgress,
     Grid,
     CardHeader,
-    Avatar,
+    // Avatar,
     CardMedia,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
-    ggLogin,
-    fbLogin,
-    GGLogin,
+    // ggLogin,
+    // fbLogin,
+    // GGLogin,
     login,
     setErrorLogin,
-    recoverPassword,
+    // recoverPassword,
 } from "../../../actions/login";
 import { setProgress } from "../../../actions/modal";
 import { set } from "mongoose";
@@ -63,7 +63,7 @@ const Profile = (props) => {
     const name = useSelector((state) => state.auth.account.name);
     // const time = useSelector(state => state.direct.time)
 
-    console.log("Profile Component render");
+    // console.log("Profile Component render");
     const onChange = (e) => {
         dispatch(
             updateProfile.updateProfileSuccess({
@@ -114,7 +114,7 @@ const Profile = (props) => {
 
     useEffect(() => {
         const i = Number(match.url.lastIndexOf("/"));
-        console.log("useEffect Profile run...");
+        // console.log("useEffect Profile run...");
         dispatch(
             getProfile.getProfileRequest({
                 isVerify: true,

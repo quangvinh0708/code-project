@@ -8,6 +8,8 @@ import BasicOperator from "../../contentLibrary/js/BasicOperator/BasicOperator";
 import Switch from "../../contentLibrary/js/Switch/Switch";
 import Function from "../../contentLibrary/js/Function/Function";
 import Variables from "../../contentLibrary/js/Variables/Variables";
+import Size from "../../contentLibrary/js/Size/Size";
+import MouseEvent from "../../contentLibrary/js/MouseEvent.js/MouseEvent";
 
 export const JS_TUTORIALS = [
     {
@@ -63,5 +65,17 @@ export const JS_TUTORIALS = [
         name: "Variables",
         exact: true,
         component: (props) => <Variables {...props} />,
+    },
+    {
+        path: "/tutorials/js/size-scrolling",
+        name: "Size - Scrolling",
+        exact: true,
+        component: (props) => <Size {...props} />,
+    },
+    {
+        path: "/tutorials/js/mouse-event",
+        name: "Mouse event",
+        exact: true,
+        component: (props) => <MouseEvent {...props} />,
     },
 ];

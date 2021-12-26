@@ -63,7 +63,7 @@ const RecoveryPassword = (props) => {
     const isVerify = useSelector((state) => state.direct.isVerify);
     // const time = useSelector(state => state.direct.time)
 
-    console.log("RecoveryPassword Component render");
+    // console.log("RecoveryPassword Component render");
     const onChange = (e) => {
         setAccount({
             ...account,
@@ -81,7 +81,7 @@ const RecoveryPassword = (props) => {
     };
 
     useEffect(() => {
-        console.log("VerifyUrlRecover: ", match.url.slice(1));
+        // console.log("VerifyUrlRecover: ", match.url.slice(1));
         dispatch(
             verifyUrlRecover.verifyUrlRecoverRequest({
                 isVerify: true,

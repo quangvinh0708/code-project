@@ -8,11 +8,14 @@ import { ThemeProvider } from "@mui/styles";
 import theme from "./common/theme/theme.js";
 import { CssBaseline } from "@mui/material";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import { StylesProvider, createGenerateClassName } from "@mui/styles";
-const generateClassName = createGenerateClassName({
-    productionPrefix: "cApp",
-    seed: "ABC",
-});
+import {
+    // StylesProvider,
+    // createGenerateClassName,
+} from "@mui/styles";
+// const generateClassName = createGenerateClassName({
+//     productionPrefix: "cApp",
+//     seed: "ABC",
+// });
 
 ReactDOM.render(
     <React.StrictMode>

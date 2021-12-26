@@ -10,7 +10,7 @@ import { JS_TUTORIALS } from "../common/constants/JSconstants";
 import { push } from "connected-react-router";
 
 const Direct = () => {
-    const location = useSelector((state) => state.tutorial.location);
+    // const location = useSelector((state) => state.tutorial.location);
     const dispatch = useDispatch();
 
     const prevPage = () => {

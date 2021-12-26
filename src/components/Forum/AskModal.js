@@ -9,7 +9,7 @@ import { makeStyles } from "@mui/styles";
 import cs from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { createThread } from "../../actions/forum";
-import DirectHelper from "../AuthPage/DirectHelper";
+// import DirectHelper from "../AuthPage/DirectHelper";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({

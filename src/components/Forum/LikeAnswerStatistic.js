@@ -15,8 +15,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment-timezone";
+import { setCurrentObj, setDisplay } from "../../actions/messenger";
 
 const style = {
     position: "absolute",
@@ -73,11 +74,12 @@ export default function LikeAnswerStatistic({
     setViewStatus,
     id,
     answer,
+    handleOpenLoginRequire,
 }) {
     const classes = useStyles();
 
     const [arrDisplay, setArrDisplay] = useState(likes);
-    console.log("Likes", likes);
+    // console.log("Likes", likes);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
     const viewStatisticLike = () => {};
@@ -152,6 +154,18 @@ export default function LikeAnswerStatistic({
             );
         }
         return jsx;
+    };
+
+    const dp = useDispatch();
+
+    const handleOpenChat = (objId) => {
+        if (!isAuthenticated) {
+            handleOpenLoginRequire();
+            return;
+        }
+        dp(setCurrentObj.setCurrentObjSuccess(objId));
+        dp(setDisplay.setDisplaySuccess(true));
+        handleClose();
     };
 
     return (
@@ -292,30 +306,36 @@ export default function LikeAnswerStatistic({
                                                             )}
                                                         // action={<IconButton>{<MoreVertIcon />}</IconButton>}
                                                         action={
-                                                            isAuthenticated ? (
-                                                                <IconButton
-                                                                    className={cs(
-                                                                        classes.iconButton
-                                                                    )}
-                                                                    // onClick={handleOpen}
-                                                                >
-                                                                    <MoreVertIcon
-                                                                        className={cs(
-                                                                            classes.more
-                                                                        )}
-                                                                    />
-                                                                </IconButton>
-                                                            ) : (
+                                                            isAuthenticated && (
+                                                                // (
+                                                                //     <IconButton
+                                                                //         className={cs(
+                                                                //             classes.iconButton
+                                                                //         )}
+                                                                //         // onClick={handleOpen}
+                                                                //     >
+                                                                //         <MoreVertIcon
+                                                                //             className={cs(
+                                                                //                 classes.more
+                                                                //             )}
+                                                                //         />
+                                                                //     </IconButton>
+                                                                // ) :
                                                                 <IconButton
                                                                     className={cs(
                                                                         classes.moreInQuestion
                                                                     )}
+                                                                    onClick={() =>
+                                                                        handleOpenChat(
+                                                                            people.objId
+                                                                        )
+                                                                    }
                                                                 >
                                                                     {" "}
                                                                     <QuestionAnswerIcon
                                                                         sx={{
                                                                             // background: `#fff !important`,
-                                                                            color: `#8167a9 !important`,
+                                                                            color: `#555 !important`,
                                                                         }}
                                                                     />
                                                                 </IconButton>

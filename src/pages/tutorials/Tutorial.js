@@ -14,7 +14,7 @@ const Tutorial = (props) => {
     const openSidebar = useSelector((state) => state.tutorial.openSidebar);
     const dispatch = useDispatch();
     useEffect(() => {
-        console.log("routerProps.match.url", routerProps.match.url);
+        // console.log("routerProps.match.url", routerProps.match.url);
         dispatch(setLocation.setLocation(routerProps.match.url));
     }, []);
     // console.log(routerProps);

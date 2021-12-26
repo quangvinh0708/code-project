@@ -11,7 +11,7 @@ import {
     CardContent,
     CardHeader,
     CardMedia,
-    CssBaseline,
+    // CssBaseline,
     IconButton,
     Menu,
     MenuItem,
@@ -21,7 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 // import AlertDialogSlide from "../../Helpers/AlertDialogSlide";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+// import FavoriteIcon from "@mui/icons-material/Favorite";
 import "./styles.css";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
@@ -185,7 +185,7 @@ const Answer = (props) => {
     const objId = useSelector((state) => state.auth.account.objId);
     const classes = useStyles();
     const dp = useDispatch();
-    console.log("cardAnswer", answers);
+    // console.log("cardAnswer", answers);
 
     const [answerArray, setAnswerArray] = useState(answers);
     const { match } = props;
@@ -194,11 +194,11 @@ const Answer = (props) => {
     let perPage = 3;
     let start = perPage * (page - 1);
     let end = page * perPage;
-    console.log("page answers", page);
+    // console.log("page answers", page);
 
     useEffect(() => {
         setAnswerArray(answers.slice(start, end));
-    }, [match, page, answers, question]);
+    }, [match, page, answers, question, start, end]);
 
     const navigate = () => {
         let jsx = [];
@@ -243,7 +243,7 @@ const Answer = (props) => {
             }
             return jsx;
         }
-        for (var i = page - 1; i <= page + 1; i++) {
+        for (let i = page - 1; i <= page + 1; i++) {
             jsx.push(
                 <Button
                     key={i}
@@ -346,7 +346,7 @@ const Answer = (props) => {
                 like.questionId === answer.questionId &&
                 like.answerId === answer._id
         );
-        console.log("CHECKliked", check);
+        // console.log("CHECKliked", check);
         return check;
     };
 
@@ -397,7 +397,7 @@ const Answer = (props) => {
     const [openLikeQuestionStatistic, setOpenLikeQuestionStatistic] =
         React.useState(false);
 
-    const [checkCondition, setCheckCondition] = React.useState("");
+    // const [checkCondition, setCheckCondition] = React.useState("");
 
     const handleOpenLikeQuestionStatistic = (x, answer) => {
         setViewStatus(x);
@@ -444,6 +444,7 @@ const Answer = (props) => {
                 handleOpen={handleOpenLikeQuestionStatistic}
                 handleClose={handleCloseLikeQuestionStatistic}
                 answer={currentAnswer}
+                handleOpenLoginRequire={handleOpenLoginRequire}
             />
             <DeleteAnswerModal
                 handleCloseDeleteModal={handleCloseDeleteModal}

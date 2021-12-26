@@ -270,7 +270,7 @@ const Question = (props) => {
             if (threads.length <= 0) {
                 dp(getThreads.getThreadsRequest({ match }));
             } else if (threads.length > 0) {
-                console.log("HERE !!!!!!");
+                // console.log("HERE !!!!!!");
                 var x = threads.find((thread) => thread._id === id);
                 if (!x) {
                     dp(push("/not-found/error"));
@@ -304,7 +304,7 @@ const Question = (props) => {
         (answer) => id === answer.questionId && answer
     );
 
-    console.log("question", question);
+    // console.log("question", question);
 
     const handleOpenDeleteThreadModal = () => {
         handleClose();
@@ -324,7 +324,7 @@ const Question = (props) => {
                 like.questionId === question._id &&
                 like.answerId === ""
         );
-        console.log("CHECKliked", check);
+        // console.log("CHECKliked", check);
         return check;
     };
 
@@ -416,6 +416,7 @@ const Question = (props) => {
                         open={openLikeQuestionStatistic}
                         handleOpen={handleOpenLikeQuestionStatistic}
                         handleClose={handleCloseLikeQuestionStatistic}
+                        handleOpenLoginRequire={handleOpenLoginRequire}
                     />
                     <DeleteThreadModal
                         isOpenDeleteThreadModal={isOpenDeleteThreadModal}

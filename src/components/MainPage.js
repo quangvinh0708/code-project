@@ -11,14 +11,14 @@ import { closeModal, openModal } from "../actions/modal";
 import NameProject from "./NameProject";
 import Login from "./AuthPage/Login";
 import { login, setErrorLogin } from "../actions/login";
-import { Redirect } from "react-router";
-import Navbar from "./Navbar";
-import Nav from "./Nav.js";
+// import { Redirect } from "react-router";
+// import Navbar from "./Navbar";
+// import Nav from "./Nav.js";
 import ModalShare from "./ModalShare/ModalShare";
 import { makeStyles } from "@mui/styles";
 import cs from "classnames";
-import Loading from "./Loading/Loading";
-import { openModalShare } from "../actions/modalShareCode";
+// import Loading from "./Loading/Loading";
+// import { openModalShare } from "../actions/modalShareCode";
 const useStyles = makeStyles((them) => ({
     codeContainer: {
         // background: `#fff`,

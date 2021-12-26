@@ -1,4 +1,4 @@
-import { push } from "connected-react-router";
+// import { push } from "connected-react-router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { direct } from "../../actions/direct";
@@ -23,7 +23,7 @@ const DirectHelper = () => {
                 dispatch(direct.directFailure(false));
                 dispatch(setErrorLogin(null));
                 // dispatch(push("/identify/user"));
-                console.log("Time here:", timeRun);
+                // console.log("Time here:", timeRun);
             }, 999);
         } else if (timeRun) {
             setTimeout(() => {
@@ -31,7 +31,7 @@ const DirectHelper = () => {
             }, 1000);
         }
     }, [timeRun, time]);
-    console.log("DirectHelper", timeRun);
+    // console.log("DirectHelper", timeRun);
     return (
         <div
             style={{

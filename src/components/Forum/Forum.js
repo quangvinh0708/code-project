@@ -832,8 +832,8 @@ const Forum = (props) => {
     // const clickQuestion = (e) => {
     //     e.preventDefault();
     // }
-    console.log("threadArray", threadArray);
-    console.log("threads", threads);
+    // console.log("threadArray", threadArray);
+    // console.log("threads", threads);
 
     const navigate = () => {
         let jsx = [];

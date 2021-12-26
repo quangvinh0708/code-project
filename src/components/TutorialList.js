@@ -79,7 +79,7 @@ function TutorialList() {
     const renderList = () => {
         const jsx = tutorialList
             ? tutorialList.map((lesson) => {
-                  console.log("lesson path: ", lesson.path);
+                //   console.log("lesson path: ", lesson.path);
                   return (
                       <React.Fragment key={lesson.path}>
                           {/* <ListItemText primary="Phone ringtone" /> */}

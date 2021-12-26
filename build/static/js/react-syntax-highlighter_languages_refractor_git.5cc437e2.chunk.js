@@ -1,2 +1,0 @@
-(this["webpackJsonpcodepen-clone"]=this["webpackJsonpcodepen-clone"]||[]).push([[45],{543:function(e,t,m){"use strict";function n(e){e.languages.git={comment:/^#.*/m,deleted:/^[-\u2013].*/m,inserted:/^\+.*/m,string:/("|')(?:\\.|(?!\1)[^\\\r\n])*\1/m,command:{pattern:/^.*\$ git .*$/m,inside:{parameter:/\s--?\w+/m}},coord:/^@@.*@@$/m,commit_sha1:/^commit \w{40}$/m}}e.exports=n,n.displayName="git",n.aliases=[]}}]);
-//# sourceMappingURL=react-syntax-highlighter_languages_refractor_git.5cc437e2.chunk.js.map

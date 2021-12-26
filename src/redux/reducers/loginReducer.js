@@ -100,7 +100,7 @@ const loginReducer = (state = initialState, action) => {
         }
         case "SET_NAME_CODE": {
             const nameCode = action.payload;
-            console.log("Day la nameCode:", nameCode);
+            // console.log("Day la nameCode:", nameCode);
             return {
                 ...state,
                 nameCode,

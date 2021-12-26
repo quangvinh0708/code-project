@@ -158,7 +158,7 @@ export default function BoxMessenger({}) {
     const handleOpenMenu = (e) => {
         e.stopPropagation();
 
-        console.log("OPEN");
+        // console.log("OPEN");
         setAnchorEL(e.currentTarget);
     };
 
@@ -172,7 +172,7 @@ export default function BoxMessenger({}) {
     const [currentTarget, setCurrentTarget] = useState("");
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    console.log("messssss", mess);
+    // console.log("messssss", mess);
     const style = {
         position: "absolute",
         top: "50%",
@@ -198,7 +198,7 @@ export default function BoxMessenger({}) {
         },
     };
     useEffect(() => {
-        console.log("messssss11111111111111", mess);
+        // console.log("messssss11111111111111", mess);
 
         if (viewMessenger === 0) {
             const x =
@@ -251,11 +251,11 @@ export default function BoxMessenger({}) {
 
             setArrDisplay(y);
             setArrMessage(y);
-            console.log("y loop", y);
-            console.log("x loop", x);
+            // console.log("y loop", y);
+            // console.log("x loop", x);
         } else {
             setArrDisplay(friends);
-            console.log("friends", friends);
+            // console.log("friends", friends);
         }
     }, [mess, viewMessenger, friends, isOpenMessenger]);
 
@@ -271,7 +271,7 @@ export default function BoxMessenger({}) {
     };
 
     const handleOpenChat = (objId) => {
-        console.log("objId ne:", objId);
+        // console.log("objId ne:", objId);
         dp(setCurrentObj.setCurrentObjSuccess(objId));
         dp(setDisplay.setDisplaySuccess(true));
         dp(openMessenger.openMessengerSuccess(false));
@@ -279,7 +279,7 @@ export default function BoxMessenger({}) {
     };
 
     const handleOpenChatByMenu = () => {
-        console.log("objId ne:", objId);
+        // console.log("objId ne:", objId);
         setArrDisplay([]);
         dp(setCurrentObj.setCurrentObjSuccess(currentTarget));
         dp(setDisplay.setDisplaySuccess(true));
@@ -346,8 +346,8 @@ export default function BoxMessenger({}) {
                     m
             );
 
-        console.log("countLengthUnreadMessage", x);
-        console.log("currentObj", a);
+        // console.log("countLengthUnreadMessage", x);
+        // console.log("currentObj", a);
 
         return x.length;
     };
@@ -365,8 +365,8 @@ export default function BoxMessenger({}) {
         else if (x >= 24 * 30 * 60) return `${Math.round(y.asMonths())} months`;
     };
 
-    console.log("currentTarget", currentTarget);
-    console.log("currentTarget", currentTarget);
+    // console.log("currentTarget", currentTarget);
+    // console.log("currentTarget", currentTarget);
 
     return (
         <div>
@@ -629,7 +629,11 @@ export default function BoxMessenger({}) {
                                                                 objId
                                                                     ? "You"
                                                                     : m.name
-                                                            }: ${m.message}`}
+                                                            }: ${
+                                                                m.message
+                                                                    ? m.message
+                                                                    : `send ${m.pictures.length} images`
+                                                            }`}
                                                         </Typography>
                                                         <Typography
                                                             component="span"

@@ -14,7 +14,7 @@ import {
     setBanModal,
     setCircleProgress,
     setDeleteSuccess,
-    setLoading,
+    // setLoading,
     setLoadingForum,
     setNotify,
     setOpenAskModal,
@@ -22,7 +22,7 @@ import {
     setQuestionLoadingForum,
     setThread,
     setUnbanModal,
-    setView,
+    // setView,
     setViewThread,
     updateAnswer,
     updateThread,
@@ -97,7 +97,7 @@ const forumReducer = (state = initialState, action) => {
             };
         }
         case createThread.createThreadSuccess().type: {
-            const x = state.threads.unshift(action.payload);
+            // const x = state.threads.unshift(action.payload);
             return {
                 ...state,
                 notify: "Your question has been posted successfully",
@@ -341,7 +341,10 @@ const forumReducer = (state = initialState, action) => {
         }
 
         case deleteThread.deleteThreadSuccess().type: {
-            const { deletedThread, deletedAnswers } = action.payload;
+            const {
+                deletedThread,
+                //  deletedAnswers
+            } = action.payload;
             const threads = state.threads.filter(
                 (thread) => thread._id !== deletedThread._id && thread
             );

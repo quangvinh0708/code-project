@@ -303,7 +303,7 @@ const Chat = (props) => {
     const handleOpen = (e) => {
         e.stopPropagation();
 
-        console.log("OPEN");
+        // console.log("OPEN");
         setAnchorEL(e.currentTarget);
     };
 
@@ -312,7 +312,7 @@ const Chat = (props) => {
     }, []);
 
     const handleOpenBoxIcon = (e) => {
-        console.log("OPEN");
+        // console.log("OPEN");
         setAnchorELBoxIcon(e.currentTarget);
     };
 
@@ -346,46 +346,46 @@ const Chat = (props) => {
     useEffect(() => {
         if (objId) {
             socketRef.current = socketIOClient.connect(host);
-            console.log("socketRef", socketRef);
+            // console.log("socketRef", socketRef);
 
             socketRef.current.on("getFriendList", (data) => {
-                console.log("FriendList", data);
+                // console.log("FriendList", data);
                 dp(setFriends.setFriendsSuccess(data));
             });
 
             //
             socketRef.current.on("sendListMessage", (data) => {
-                console.log("sendListMessage", data);
+                // console.log("sendListMessage", data);
                 dp(setAllMess.setAllMessSuccess(data.mess));
             });
 
             socketRef.current.on("getUpdateSeen", (data) => {
-                console.log("getUpdateSeen", data);
+                // console.log("getUpdateSeen", data);
                 dp(setUpdateSeen.setUpdateSeenSuccess(data.mess));
             });
 
             socketRef.current.on("getFriendListAfterLogout", (data) => {
-                console.log("FriendListAfterLogout", data);
+                // console.log("FriendListAfterLogout", data);
                 dp(setFriends.setFriendsSuccess(data));
             });
 
             socketRef.current.on("getId", (data) => {
                 socketRef.current.emit("sendObjId", objId);
                 // socketRef.current.emit("getFriendListOnline", objId);
-                console.log("data", data);
+                // console.log("data", data);
                 dp(setId.setIdSuccess(data.id));
 
                 // dp(setId.setIdSuccess(data.id));
             });
 
             socketRef.current.on("sendDataServer", (dataGot) => {
-                console.log("dataGot", dataGot);
+                // console.log("dataGot", dataGot);
                 dp(setMess.setMessSuccess([dataGot.data]));
                 scrollToBottom();
             });
 
             socketRef.current.on("getUpdateBlock", (data) => {
-                console.log("getUpdateBlock", data);
+                // console.log("getUpdateBlock", data);
                 dp(setFriends.setFriendsSuccess(data.friends));
 
                 // scrollToBottom();
@@ -394,7 +394,7 @@ const Chat = (props) => {
             return () => {
                 // socketRef.current.emit("forceDisconnect");
 
-                console.log("Disconnect!");
+                // console.log("Disconnect!");
                 socketRef.current.disconnect();
                 // socketRef.current.emit("forceDisconnect", id);
             };
@@ -422,7 +422,7 @@ const Chat = (props) => {
         }
         if (message || previewImg.length > 0) {
             if (objId !== currentObj.objId) {
-                console.log(message);
+                // console.log(message);
                 const msg = {
                     message: message.toString().trim() !== "" ? message : "",
                     id: id,
@@ -434,7 +434,7 @@ const Chat = (props) => {
                     name: account.name,
                     picture: account.picture,
                 };
-                console.log("Success: ", previewImg.slice());
+                // console.log("Success: ", previewImg.slice());
                 socketRef.current.emit("sendDataClient", msg);
                 dp(setMessage.setMessageSuccess(""));
                 setPreviewImg([]);
@@ -493,12 +493,23 @@ const Chat = (props) => {
                       currentObj.objId !== objId && (
                           <Fragment key={index}>
                               {m.objIds[0] !== objId && (
-                                  <span className={cs(classes.imgSmall)}>
-                                      <img
-                                          className={cs(classes.imgUser)}
-                                          src={currentObj.picture}
-                                      ></img>
-                                  </span>
+                                  <Fragment>
+                                      <span className={cs(classes.imgSmall)}>
+                                          <img
+                                              className={cs(classes.imgUser)}
+                                              src={currentObj.picture}
+                                          ></img>
+                                      </span>
+                                      {/* <Typography
+                                          component={"span"}
+                                          variant={"body2"}
+                                          sx={{
+                                              float: `left !important`,
+                                          }}
+                                      >
+                                          {currentObj.name}
+                                      </Typography> */}
+                                  </Fragment>
                               )}
                               {m.message && (
                                   <div
@@ -844,8 +855,8 @@ const Chat = (props) => {
         }
     };
 
-    console.log("mess", mess);
-    console.log("id", id);
+    // console.log("mess", mess);
+    // console.log("id", id);
 
     const setObj = (objId) => {
         dp(setCurrentObj.setCurrentObjSuccess(objId));
@@ -865,7 +876,7 @@ const Chat = (props) => {
     const onPaste = (event) => {
         var items = (event.clipboardData || event.originalEvent.clipboardData)
             .items;
-        console.log(JSON.stringify(items)); // will give you the mime types
+        // console.log(JSON.stringify(items)); // will give you the mime types
         // find pasted image among pasted items
         var blob = null;
         for (var i = 0; i < items.length; i++) {
@@ -879,7 +890,7 @@ const Chat = (props) => {
             reader.readAsDataURL(blob);
 
             reader.onload = function (event) {
-                console.log("event.target.result", event.target.result); // data url!
+                // console.log("event.target.result", event.target.result); // data url!
                 // document.getElementById("pastedImage").src =
                 //     event.target.result;
                 const x = previewImg.concat(event.target.result);
@@ -911,7 +922,7 @@ const Chat = (props) => {
                     currentObj.objId !== objId
             );
         const finalMes = x[x.length - 1];
-        console.log("finalMes", finalMes);
+        // console.log("finalMes", finalMes);
         const y = finalMes && finalMes.seen ? finalMes.seen : false;
         const z = finalMes && finalMes.objIds ? finalMes.objIds[0] : null;
         // const y = finalMes.seen;
@@ -922,10 +933,10 @@ const Chat = (props) => {
             if (z === objId) {
                 return;
             } else if (!z) {
-                console.log("z null");
+                // console.log("z null");
                 return;
             } else {
-                console.log("y ne:", y);
+                // console.log("y ne:", y);
 
                 socketRef.current.emit(
                     "sendUpdateSeen",
@@ -953,7 +964,7 @@ const Chat = (props) => {
                     currentObj.objId !== objId
             );
 
-        console.log("countLengthUnreadMessage", x);
+        // console.log("countLengthUnreadMessage", x);
 
         return x.length;
     };
@@ -979,7 +990,7 @@ const Chat = (props) => {
         reader.readAsDataURL(file);
         reader.onloadend = (e) => {
             const x = previewImg.concat(e.target.result);
-            console.log("x", x);
+            // console.log("x", x);
             setPreviewImg(x);
         };
     };
@@ -1000,13 +1011,13 @@ const Chat = (props) => {
         handleCloseTool();
     };
 
-    console.log("previewImg:", previewImg);
+    // console.log("previewImg:", previewImg);
 
     const beforeMyObj = friends.find((ele) => ele.objId === objId);
 
     // const myObj = friends.find((ele) => ele.objId === objId) ? ;
     const myObj = beforeMyObj ? beforeMyObj : {};
-    console.log("myObj:", myObj);
+    // console.log("myObj:", myObj);
     return (
         <Fragment>
             <Fragment>

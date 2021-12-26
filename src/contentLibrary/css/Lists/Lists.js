@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, withStyles } from "@mui/styles";
-import { CopyBlock, dracula, googlecode } from "react-code-blocks";
+import { CopyBlock, googlecode } from "react-code-blocks";
 import ex from "./example";
 import "../Introduction/Introduction.css";
 import Divider from "@mui/material/Divider";
 import { styles } from "../Introduction/styles";
-import { Button } from "@mui/material";
 import Direct from "../../../components/Direct";
 import { CODES_ONLINE, SHARE_CODE } from "../../../constant/axios";
 

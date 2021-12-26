@@ -36,7 +36,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FolderIcon from "@mui/icons-material/Folder";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { makeStyles } from "@mui/styles";
-import { openMessenger, setFriends } from "../actions/messenger";
+import { openMessenger, setDisplay, setFriends } from "../actions/messenger";
 import { setUrl } from "../actions/code";
 
 const Nav = ({
@@ -100,6 +100,7 @@ const Nav = ({
         // Socket logout
         socketRef.current.emit("sendLogout", objId);
         // dispatch(setFriends.setFriendsSuccess([]));
+        dispatch(setDisplay.setDisplaySuccess(false));
 
         x();
 
@@ -116,7 +117,7 @@ const Nav = ({
 
     const handleGetProjects = (e) => {
         e.preventDefault();
-        console.log("handleGetProjects run...");
+        // console.log("handleGetProjects run...");
         getProjectsCreator();
     };
 
@@ -220,13 +221,15 @@ const Nav = ({
     const [keySearch, setKeySearch] = useState("");
     useEffect(() => {
         setProjectsFiltered(
-            projects.filter(
-                (x) =>
-                    x.name
-                        .toString()
-                        .toLowerCase()
-                        .indexOf(keySearch.toLowerCase()) > -1 && x
-            )
+            projects
+                .reverse()
+                .filter(
+                    (x) =>
+                        x.name
+                            .toString()
+                            .toLowerCase()
+                            .indexOf(keySearch.toLowerCase()) > -1 && x
+                )
         );
     }, [keySearch, projects]);
     const onSearch = (e) => {
@@ -390,7 +393,7 @@ const Nav = ({
 
     const handleOpenMessenger = (e) => {
         e.preventDefault();
-        console.log("ABC");
+        // console.log("ABC");
         dispatch(openMessenger.openMessengerSuccess(true));
     };
 
@@ -453,8 +456,10 @@ const Nav = ({
                                             dispatch(
                                                 setView.setViewSuccess(false)
                                             );
-                                        dispatch(push("/code"));
-                                        // dispatch(push(`/${url}`));
+                                        // dispatch(setNameCode(null));
+
+                                        // dispatch(push("/code"));
+                                        dispatch(push(`/${url}`));
                                     }}
                                     style={{
                                         color: "#8167a9",

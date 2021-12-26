@@ -15,7 +15,7 @@ const AvatarUser = () => {
         //     body: formData,
         // }).then((res) => res.json());
         const res = axios.post("http://localhost:5000/ava/test", formData);
-        console.log(res);
+        // console.log(res);
     };
 
     const uploadImage = async (e) => {
@@ -34,7 +34,7 @@ const AvatarUser = () => {
         fd.append("t", 1);
         fd.append("picture", image);
         const res = axios.post("http://localhost:5000/ava/test", fd);
-        console.log(res);
+        // console.log(res);
     };
     return (
         // <form onSubmit={handleSubmit(onSubmit)}>
